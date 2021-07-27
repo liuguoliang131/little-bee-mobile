@@ -1,5 +1,5 @@
 <template>
-  <div>indexaaaa</div>
+  <div class="box">indexaaaa</div>
 </template>
 
 <script>
@@ -22,5 +22,9 @@ export default {
 </script>
 
 <style>
-
+.box {
+  width: 100px;
+  height:100px;
+  background-color: yellow;
+}
 </style>
