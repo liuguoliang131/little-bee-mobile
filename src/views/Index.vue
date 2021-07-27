@@ -25,6 +25,7 @@ export default {
 .box {
   width: 100px;
   height:100px;
+  font-size: 20px;
   background-color: yellow;
 }
 </style>
