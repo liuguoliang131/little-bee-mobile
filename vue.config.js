@@ -4,9 +4,17 @@ module.exports = {
   // 输出文件目录
   outputDir: 'dist',
   lintOnSave: false,
+  assetsDir: 'static',
+  productionSourceMap: true, //去掉打包的时候生成的map
   devServer: {
+    open:true,//自动打开浏览器-
     port: 8080,
-    host:'192.168.0.29',
+    host: '192.168.0.29',
+    hotOnly: false,
+    overlay: {
+      warnings: false, //警告信息
+      errors:false//错误信息
+    },
     proxy: {
       '/api': {     //这里最好有一个 /
           target: process.env.VUE_APP_BASE_URL,  // 后台接口域名
@@ -19,15 +27,6 @@ module.exports = {
       }
     }
   },
-  // css: {
-  //   loaderOptions: {
-  //     // 给 stylus-loader 传递选项
-  //     stylus: {
-  //       // @/ 是 src/ 的别名
-  //       import: "~@/assets/css/style.styl"
-  //     }
-  //   }
-  // },
   configureWebpack: config =>  {
     config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
   }
