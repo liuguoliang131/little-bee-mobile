@@ -1,14 +1,20 @@
 <template>
-  <div class="box">indexaaaa</div>
+  <div class="index">
+    <container></container>
+  </div>
 </template>
 
 <script>
+import Container from '@/components/Container'
 export default {
+  components:{
+    Container
+  },
   name:'Index',
   methods:{
     async testAxios() {
       try {
-        const res = await this.$http.post(this.$apis.test_api,{})
+        const res = await this.$http.post(this.$getApi('test_api'),{})
         console.log(res)
       } catch (error) {
         console.log(error)
@@ -21,11 +27,10 @@ export default {
 }
 </script>
 
-<style>
-.box {
-  width: 100px;
-  height:100px;
-  font-size: 20px;
-  background-color: yellow;
+<style scoped lang="less">
+.index {
+  width: 100%;
+  height: 100%;
+  background-color: skyblue;
 }
 </style>

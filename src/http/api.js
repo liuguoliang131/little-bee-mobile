@@ -1,4 +1,7 @@
 const apis = {
   test_api:'/api/user/select'
 }
-export default apis
+function getApi(url) {
+  return apis[url]||''
+}
+export default getApi

@@ -4,10 +4,11 @@ import router from '@/router/index'
 // import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import store from '@/store/index'
-import Apis  from '@/http/api'
+import GetApi  from '@/http/api'
 import Axios from '@/http/index'
+import '@/style/index.css'
 // Vue.use(ElementUI)
-Vue.prototype.$apis = Apis
+Vue.prototype.$getApi = GetApi
 Vue.prototype.$http = Axios
 Vue.config.productionTip = false
 new Vue({
