@@ -1,41 +1,68 @@
+/*
+ * @Date: 2022-03-22 09:46:05
+ * @LastEditors: 刘国亮
+ * @LastEditTime: 2022-04-15 10:18:21
+ * @FilePath: \vue_init\src\router\index.js
+ * @Description: 
+ */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import store from '@/store/index'
+import constantRouterMap from './constantRouterMap'
+import dynamicRouterMap from './dynamicRouterMap'
+import store from '@/store/index'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
 
-const router = new VueRouter({
-  routes: [
-    {
-      path: '/index',
-      name: 'index',
-      component:()=>import('@/views/Index.vue')
-    },
-    {
-      path: '*',
-      redirect:'/index'
-    }
-  ]
+
+const router = new VueRouter({ routes:[] })
+
+/**
+ * 在router/index.js中定义$addRoutes,调用这个方法来添加路由，这个方法会先重置路由
+ 这个路由只会包括非权限页，比如登录页，再调用router.addRoutes添加权限路由，
+ 此方法亲测，完美解决，方法来自GitHub的issues,https://github.com/vuejs/vue-router/issues/2886
+ */
+
+ router.$addRoutes = (params) => {
+  router.matcher = new VueRouter({ // 重置路由规则
+    routes: constantRouterMap
+  }).matcher
+  router.addRoutes(params) // 添加路由
+}
+router.onReady(() => {
+  const status = store.state.user.token // 判断用户已登录且已有权限
+  if (status) {
+    store.dispatch('jurisdiction/getDynamicRoutes',null) // 请求动态路由
+      .then(list => {
+        console.log('动态路由',list)
+        // 根据获取回来的信息判断是否要添加到路由表里
+        const addList = []
+        list.forEach(item=>{
+          dynamicRouterMap.forEach(routeItem=>{
+            if(item.path===routeItem.path) {
+              console.log('routeItem',routeItem)
+              addList.push(routeItem)
+            }
+          })
+        })
+        router.addRoutes(addList) // 添加动态路由,这里不必用$addRoutes，因为刷新后就没有上一次的动态路由，故不必清除
+      })
+  }else {
+    console.log('没有token')
+  }
 })
+
+
 router.beforeEach((from, to, next) => {
-  // if (!store.getters['user/get_token']) {
-  //   NProgress.start()
-  //   next('/login')
-  // } else {
-  //   Message.success(to.path)
-  //   NProgress.start()
-  //   next()
-  // }
   NProgress.start()
   Message.success(to.path)
-  console.log(from,to)
+  // console.log(from,to)
   next()
   
 })
 router.afterEach((from, to, next) => {
-  console.log(from,to,next)
+  // console.log(from,to,next)
   NProgress.done()
 })
 
