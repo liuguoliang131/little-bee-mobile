@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-15 10:18:21
+ * @LastEditTime: 2022-04-15 15:37:35
  * @FilePath: \vue_init\src\router\index.js
  * @Description: 
  */
@@ -30,6 +30,7 @@ const router = new VueRouter({ routes:[] })
   }).matcher
   router.addRoutes(params) // 添加路由
 }
+// onReady只在初始加载一次  比如刷新页面
 router.onReady(() => {
   const status = store.state.user.token // 判断用户已登录且已有权限
   if (status) {

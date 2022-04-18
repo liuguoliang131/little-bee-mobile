@@ -2,7 +2,7 @@ const utils = {
 
 }
 utils.getToken = function () {
-  window.localStorage.getItem('token')
+  return window.localStorage.getItem('token')||''
 }
 utils.setToken = function (param) {
   if ((typeof param) === 'string') {
