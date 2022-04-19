@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-14 18:06:21
- * @FilePath: \vue_init\src\router\routes.js
+ * @LastEditTime: 2022-04-18 11:10:40
+ * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 非动态路由
  */
 import login from '../views/login/index'
@@ -11,7 +11,7 @@ import layout from '../components/layout/index'
 const normalRoutes = [
   {
     path:'/',
-    redirect:'/layout'
+    redirect:'/index'
   },
   {
     path:'/login',
@@ -25,6 +25,7 @@ const normalRoutes = [
         path:'/index',
         component:()=>import('../views/first/index.vue')
       }
+      
     ]
   },
 ]

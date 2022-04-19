@@ -1,20 +1,146 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-14 18:02:19
- * @FilePath: \vue_init\src\views\login\index.vue
+ * @LastEditTime: 2022-04-19 09:38:10
+ * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
 <template>
-  <div>login</div>
+  <div class="login">
+    <header>小蜜蜂</header>
+    <div>
+      <van-form @submit="onSubmit">
+        <van-field
+          v-model="form.phone"
+          center
+          clearable
+          label="手机号"
+          name="phone"
+          placeholder="请输入手机号"
+          :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]"
+        >
+          <template #button>
+            <van-button size="small" type="primary" color="#CB9400" plain @click="handleSendCode">发送验证码</van-button>
+          </template>
+        </van-field>
+        <van-field
+          v-model="form.code"
+          type="number"
+          name="code"
+          label="验证码"
+          placeholder="请输入验证码"
+          :rules="[{ required: true, message: '请填写验证码' },{ pattern:/^[0-9]{1,10}$/, message: '验证码不符合规则' }]"
+        />
+        <div class="sub-btn">
+          <van-button color="#CB9400" block type="info" native-type="submit">提交</van-button>
+        </div>
+      </van-form>
+    </div>
+    <footer>
+      <span>登录代表您已同意</span>
+       <span>小蜜蜂用户协议、隐私协议</span>
+    </footer>
+  </div>
 </template>
 
 <script>
+import {
+  Toast,
+  Form,
+  Field,
+  Button
+} from 'vant'
+import { h5_login_login, sys_sms_send } from '@/http/api'
 export default {
-
+  name:'Login',
+  data() {
+    return {
+      form:{
+        phone:'',
+        code:''
+      }
+    }
+  },
+  components:{
+    VanForm:Form,
+    VanField:Field,
+    VanButton:Button
+  },
+  methods:{
+    async onSubmit(values) {
+      try {
+        const res = await this.$http({
+          method:'get',
+          url:h5_login_login,
+          params:values
+        })
+        if(!res.success) {
+          Toast(res.msg)
+        }
+      } catch (error) {
+        Toast('error')
+      }
+    },
+    //发送验证码
+    async handleSendCode() {
+        if(/^[1]{1}[0-9]{10}$/.test(this.form.phone)===false) {
+          return Toast('手机号不符合规则')
+        }
+        const res = await this.$http({
+          method: 'get',
+          url: sys_sms_send,
+          params:{
+            phone:this.form.phone
+          }
+        })
+        if(!res.success){
+          return Toast(res.msg)
+        }
+    }
+  },
+  created() {
+    Toast('提示内容')
+  }
 }
 </script>
 
-<style>
-
+<style scoped lang="less">
+.login {
+  height: 100vh;
+  overflow-y: scroll;
+  background-color: #fff;
+  header {
+    font-size: 33px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #333333;
+    margin-top: 95px;
+    margin-bottom: 80px;
+    text-align: center;
+  }
+  .sub-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 70px;
+    .van-button {
+      width: 200px;
+    }
+  }
+  footer {
+    font-size: 11px;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #999999;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 15px;
+    text-align: center;
+    span:nth-child(2) {
+      color: #CB9400;
+    }
+  }
+  
+}
 </style>

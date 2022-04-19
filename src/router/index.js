@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-15 15:37:35
- * @FilePath: \vue_init\src\router\index.js
+ * @LastEditTime: 2022-04-18 17:06:25
+ * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
 import Vue from 'vue'
@@ -10,13 +10,12 @@ import VueRouter from 'vue-router'
 import constantRouterMap from './constantRouterMap'
 import dynamicRouterMap from './dynamicRouterMap'
 import store from '@/store/index'
-import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
 
 
-const router = new VueRouter({ routes:[] })
+const router = new VueRouter({ mode:'history',routes:constantRouterMap })
 
 /**
  * 在router/index.js中定义$addRoutes,调用这个方法来添加路由，这个方法会先重置路由
@@ -24,8 +23,9 @@ const router = new VueRouter({ routes:[] })
  此方法亲测，完美解决，方法来自GitHub的issues,https://github.com/vuejs/vue-router/issues/2886
  */
 
- router.$addRoutes = (params) => {
+router.$addRoutes = (params) => {
   router.matcher = new VueRouter({ // 重置路由规则
+    mode:'history',
     routes: constantRouterMap
   }).matcher
   router.addRoutes(params) // 添加路由
@@ -55,14 +55,20 @@ router.onReady(() => {
 })
 
 
-router.beforeEach((from, to, next) => {
+router.beforeEach((to, from, next) => {
   NProgress.start()
-  Message.success(to.path)
-  // console.log(from,to)
-  next()
-  
+  if(Object.is(to.path,'/login')) {
+    next()
+    return
+  }
+  const token = store.state.user.token
+  if(token) {
+    return next()
+  }else {
+    return next('/login')
+  }
 })
-router.afterEach((from, to, next) => {
+router.afterEach((to, from, next) => {
   // console.log(from,to,next)
   NProgress.done()
 })

@@ -1,15 +1,20 @@
-import Vue from '@/plugins/index'
+/*
+ * @Date: 2022-04-18 09:40:39
+ * @LastEditors: 刘国亮
+ * @LastEditTime: 2022-04-18 18:01:05
+ * @FilePath: \little-bee-mobile\src\main.js
+ * @Description: 
+ */
+import Vue from 'vue'
 import App from './App.vue'
 import router from '@/router/index'
-// import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import store from '@/store/index'
-import GetApi  from '@/http/api'
 import Axios from '@/http/index'
+import api from '@/http/api'
+import 'vant/lib/index.css'
 import '@/style/index.css'
-// Vue.use(ElementUI)
-Vue.prototype.$getApi = GetApi
 Vue.prototype.$http = Axios
+Vue.prototype.$api = api
 Vue.config.productionTip = false
 new Vue({
   router,
