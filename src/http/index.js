@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-18 17:50:43
+ * @LastEditTime: 2022-04-22 15:54:50
  * @FilePath: \little-bee-mobile\src\http\index.js
  * @Description: 
  */
@@ -28,7 +28,7 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   console.log('响应拦截器')
-  return response;
+  return response.data;
 }, function (error) {
   // 对响应错误做点什么
   console.log(error)

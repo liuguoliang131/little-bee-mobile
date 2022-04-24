@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-19 09:38:10
+ * @LastEditTime: 2022-04-24 18:13:32
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -10,35 +10,41 @@
     <header>小蜜蜂</header>
     <div>
       <van-form @submit="onSubmit">
-        <van-field
-          v-model="form.phone"
-          center
-          clearable
-          label="手机号"
-          name="phone"
-          placeholder="请输入手机号"
-          :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]"
-        >
+        <van-field v-model="form.phone"
+                   center
+                   clearable
+                   label="手机号"
+                   name="phone"
+                   placeholder="请输入手机号"
+                   :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]">
           <template #button>
-            <van-button size="small" type="primary" color="#CB9400" plain @click="handleSendCode">发送验证码</van-button>
+            <van-button size="small"
+                        type="primary"
+                        color="#CB9400"
+                        plain
+                        @click="handleSendCode">发送验证码</van-button>
           </template>
         </van-field>
-        <van-field
-          v-model="form.code"
-          type="number"
-          name="code"
-          label="验证码"
-          placeholder="请输入验证码"
-          :rules="[{ required: true, message: '请填写验证码' },{ pattern:/^[0-9]{1,10}$/, message: '验证码不符合规则' }]"
-        />
+        <van-field v-model="form.code"
+                   type="number"
+                   name="code"
+                   label="验证码"
+                   placeholder="请输入验证码"
+                   :rules="[{ required: true, message: '请填写验证码' },{ pattern:/^[0-9]{1,10}$/, message: '验证码不符合规则' }]" />
+        <div class="toRegister">
+          <span @click="handleGoRegister">去注册</span>
+        </div>
         <div class="sub-btn">
-          <van-button color="#CB9400" block type="info" native-type="submit">提交</van-button>
+          <van-button color="#CB9400"
+                      block
+                      type="info"
+                      native-type="submit">提交</van-button>
         </div>
       </van-form>
     </div>
     <footer>
       <span>登录代表您已同意</span>
-       <span>小蜜蜂用户协议、隐私协议</span>
+      <span>小蜜蜂用户协议、隐私协议</span>
     </footer>
   </div>
 </template>
@@ -52,54 +58,66 @@ import {
 } from 'vant'
 import { h5_login_login, sys_sms_send } from '@/http/api'
 export default {
-  name:'Login',
+  name: 'Login',
   data() {
     return {
-      form:{
-        phone:'',
-        code:''
+      form: {
+        phone: '',
+        code: '',
+        type:1
       }
     }
   },
-  components:{
-    VanForm:Form,
-    VanField:Field,
-    VanButton:Button
+  components: {
+    VanForm: Form,
+    VanField: Field,
+    VanButton: Button
   },
-  methods:{
+  methods: {
     async onSubmit(values) {
       try {
         const res = await this.$http({
-          method:'get',
-          url:h5_login_login,
-          params:values
+          method: 'get',
+          url: h5_login_login,
+          params: this.form
         })
-        if(!res.success) {
+        console.log(res)
+        if (!res.success) {
           Toast(res.msg)
         }
+        this.$store.dispatch('user/login',res.model)
       } catch (error) {
         Toast('error')
       }
     },
     //发送验证码
     async handleSendCode() {
-        if(/^[1]{1}[0-9]{10}$/.test(this.form.phone)===false) {
-          return Toast('手机号不符合规则')
+      if( /^[1]{1}[0-9]{10}$/.test(this.form.phone) === false ) {
+        return Toast('手机号不符合规则')
+      }
+      const res = await this.$http({
+        method: 'get',
+        url: sys_sms_send,
+        params: {
+          phone: this.form.phone
         }
-        const res = await this.$http({
-          method: 'get',
-          url: sys_sms_send,
-          params:{
-            phone:this.form.phone
-          }
-        })
-        if(!res.success){
-          return Toast(res.msg)
+      })
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+    },
+    // 去注册
+    handleGoRegister() {
+      this.$router.push({
+        name:'Register',
+        params:{
+          phone:this.form.phone
         }
+      })
     }
   },
   created() {
-    Toast('提示内容')
+    this.form.phone = this.$route.params.phone||''
   }
 }
 </script>
@@ -127,6 +145,16 @@ export default {
       width: 200px;
     }
   }
+  .toRegister {
+    width: 100%;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: flex-end;
+    span {
+      font-size: 14px;
+      color: #cb9400;
+    }
+  }
   footer {
     font-size: 11px;
     font-family: PingFang SC;
@@ -138,9 +166,8 @@ export default {
     bottom: 15px;
     text-align: center;
     span:nth-child(2) {
-      color: #CB9400;
+      color: #cb9400;
     }
   }
-  
 }
 </style>
