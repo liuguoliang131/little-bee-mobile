@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-24 10:01:06
+ * @LastEditTime: 2022-04-25 10:27:31
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -54,7 +54,7 @@ router.onReady(() => {
   }
 })
 
-const whiteList = ['/login','/register']
+const whiteList = ['/login','/register','/','/index']
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if(Object.is(to.path,'/login')) {
@@ -62,6 +62,7 @@ router.beforeEach((to, from, next) => {
     return
   }
   if(whiteList.includes(to.path)) {
+    console.log('tp.path',to.path)
     next()
   }else {
     const token = store.state.user.token
@@ -77,11 +78,11 @@ router.afterEach((to, from, next) => {
   // console.log(from,to,next)
   NProgress.done()
 })
-// const originalPush = VueRouter.prototype.push
-// VueRouter.prototype.push = function push (location) {
-//   return originalPush.call(this, location).catch(err => err)
-// }
-// VueRouter.prototype.replace = function push (location) {
-//   return originalPush.call(this, location).catch(err => err)
-// }
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+VueRouter.prototype.replace = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default router

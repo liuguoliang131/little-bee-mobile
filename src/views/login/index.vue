@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-24 18:13:32
+ * @LastEditTime: 2022-04-25 10:28:24
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -22,7 +22,7 @@
                         type="primary"
                         color="#CB9400"
                         plain
-                        @click="handleSendCode">发送验证码</van-button>
+                        @click="handleSendCode" :disabled="ss!=='发送验证码'">{{ss}}</van-button>
           </template>
         </van-field>
         <van-field v-model="form.code"
@@ -65,7 +65,9 @@ export default {
         phone: '',
         code: '',
         type:1
-      }
+      },
+      timer:null,
+      ss:'发送验证码'
     }
   },
   components: {
@@ -75,23 +77,22 @@ export default {
   },
   methods: {
     async onSubmit(values) {
-      try {
-        const res = await this.$http({
-          method: 'get',
-          url: h5_login_login,
-          params: this.form
-        })
-        console.log(res)
-        if (!res.success) {
-          Toast(res.msg)
-        }
-        this.$store.dispatch('user/login',res.model)
-      } catch (error) {
-        Toast('error')
+      const res = await this.$http({
+        method: 'get',
+        url: h5_login_login,
+        params: this.form
+      })
+      console.log(res)
+      if (!res.success) {
+        return Toast(res.msg)
       }
+      this.$store.dispatch('user/login', res.model)
     },
     //发送验证码
     async handleSendCode() {
+      if(this.timer) {
+        return false
+      }
       if( /^[1]{1}[0-9]{10}$/.test(this.form.phone) === false ) {
         return Toast('手机号不符合规则')
       }
@@ -105,6 +106,16 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
+      this.ss = 300
+      // 启动定时器
+      this.timer = setInterval(()=>{
+        this.ss--
+        if(this.ss<=0) {
+          clearInterval(this.timer)
+          this.timer = null
+          this.ss = '发送验证码'
+        }
+      },1000)
     },
     // 去注册
     handleGoRegister() {

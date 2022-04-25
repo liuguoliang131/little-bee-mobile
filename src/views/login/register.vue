@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-24 18:15:49
+ * @LastEditTime: 2022-04-25 09:50:11
  * @FilePath: \little-bee-mobile\src\views\login\register.vue
  * @Description: 注册
 -->
@@ -35,7 +35,7 @@
       />
       <van-field required v-model.trim="form.address" label="详细地址" name="address" :rules="[{ required: true, message: '请输入详细地址' }]" placeholder="请输入详细地址" />
       <van-field v-model.trim="form.abbreviationName" :rules="[{ required: true, message: '请输入简称' }]" label="简称" placeholder="请输入简称" />
-      <van-field v-model.trim="form.contact" label="企业编号" placeholder="请输入企业编号" />
+      <van-field v-model.trim="form.num" label="企业编号" placeholder="请输入企业编号" />
       <van-field v-model.trim="form.contact" label="联系人姓名" placeholder="请输入联系人姓名" />
       <van-field v-model.trim="form.website" label="官网地址" placeholder="请输入官网地址" />
       <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" />
