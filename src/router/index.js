@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-25 10:27:31
+ * @LastEditTime: 2022-04-26 10:48:31
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -32,7 +32,7 @@ router.$addRoutes = (params) => {
 }
 // onReady只在初始加载一次  比如刷新页面
 router.onReady(() => {
-  const status = store.state.user.token // 判断用户已登录且已有权限
+  const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
     store.dispatch('jurisdiction/getDynamicRoutes',null) // 请求动态路由
       .then(list => {
@@ -65,8 +65,8 @@ router.beforeEach((to, from, next) => {
     console.log('tp.path',to.path)
     next()
   }else {
-    const token = store.state.user.token
-    if(token) {
+    const userInfo = store.state.user.userInfo
+    if(userInfo) {
       return next()
     }else {
       return next('/login')
@@ -77,6 +77,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from, next) => {
   // console.log(from,to,next)
   NProgress.done()
+  document.title = store.state.user.userInfo ? store.state.user.userInfo.companyName : ''
 })
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (location) {

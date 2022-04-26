@@ -12,7 +12,7 @@ import store from '@/store/index'
 import Axios from '@/http/index'
 import api from '@/http/api'
 import 'vant/lib/index.css'
-import '@/style/index.css'
+import '@/style/index.less'
 Vue.prototype.$http = Axios
 Vue.prototype.$api = api
 Vue.config.productionTip = false
