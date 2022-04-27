@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-22 15:54:50
+ * @LastEditTime: 2022-04-27 14:24:15
  * @FilePath: \little-bee-mobile\src\http\index.js
  * @Description: 
  */
@@ -16,8 +16,25 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
-  console.log('请求拦截器')
-  return config;
+  // console.log('请求拦截器')
+  if (config.headers['Content-Type'] === 'multipart/form-data'){
+    return config
+  }
+  if (config.method === 'get') {
+    config.params = {
+      companyId: store.state.user.userInfo.id,
+      companyName: store.state.user.userInfo.companyName,
+      ...config.params
+    }
+  } else if( config.method === 'post' ) {
+    config.data = {
+      companyId: store.state.user.userInfo.id,
+      companyName: store.state.user.userInfo.companyName,
+      ...config.data
+    }
+  }
+  return config
+  
 }, function (error) {
   // 对请求错误做些什么
   console.log(error)
@@ -27,7 +44,7 @@ instance.interceptors.request.use(function (config) {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
   // 对响应数据做点什么
-  console.log('响应拦截器')
+  // console.log('响应拦截器')
   return response.data;
 }, function (error) {
   // 对响应错误做点什么
