@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-25 10:28:24
+ * @LastEditTime: 2022-04-28 09:42:13
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -56,7 +56,8 @@ import {
   Field,
   Button
 } from 'vant'
-import { h5_login_login, sys_sms_send } from '@/http/api'
+import axios from 'axios'
+import { host, h5_login_login, sys_sms_send } from '@/http/api'
 export default {
   name: 'Login',
   data() {
@@ -77,9 +78,9 @@ export default {
   },
   methods: {
     async onSubmit(values) {
-      const res = await this.$http({
+      const res = await axios({
         method: 'get',
-        url: h5_login_login,
+        url: host + h5_login_login,
         params: this.form
       })
       console.log(res)
@@ -96,9 +97,9 @@ export default {
       if( /^[1]{1}[0-9]{10}$/.test(this.form.phone) === false ) {
         return Toast('手机号不符合规则')
       }
-      const res = await this.$http({
+      const res = await axios({
         method: 'get',
-        url: sys_sms_send,
+        url: host + sys_sms_send,
         params: {
           phone: this.form.phone
         }

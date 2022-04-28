@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-27 18:05:46
+ * @LastEditTime: 2022-04-27 18:50:24
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -61,7 +61,8 @@
         <span class="label">图片</span>
         <van-uploader v-model="photos"
                       :deletable="false"
-                      :readonly="true" />
+                      :readonly="true"
+                      :show-upload="false" />
       </div>
       <!-- <div class="sub-btn">
         <van-button color="#CB9400"
@@ -292,7 +293,16 @@ export default {
     },
     // 完成
     handleComplete() {
-
+      Dialog.confirm({
+        message: '确认完成?',
+        confirmButtonColor: '#cb9400'
+      })
+        .then(() => {
+          // on confirm
+        })
+        .catch(() => {
+          // on cancel
+        })
     },
     // 暂停
     handleSuspend() {
@@ -336,6 +346,7 @@ export default {
     border-bottom: 1px solid rgb(245, 246, 247);
     .label {
       width: 80px;
+      color: #d8cdcf;
     }
   }
   .title {

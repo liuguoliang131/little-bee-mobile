@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-25 09:50:11
+ * @LastEditTime: 2022-04-28 09:43:42
  * @FilePath: \little-bee-mobile\src\views\login\register.vue
  * @Description: 注册
 -->
@@ -78,7 +78,9 @@ import {
   Area,
   Uploader
 } from 'vant'
+import axios from 'axios'
 import {
+  host,
   h5_company_register,
   sys_version_file_upload
 } from '@/http/api.js'
@@ -124,9 +126,9 @@ export default {
       const businessPhotos = this.businessPhotos.length > 0 ? this.businessPhotos[0].url : ''
       const logoPath = this.logoPath.length > 0 ? this.logoPath[0].url : ''
       try {
-        const res = await this.$http({
+        const res = await axios({
           method: 'post',
-          url: h5_company_register,
+          url: host + h5_company_register,
           data: {
             ...this.form,
             businessPhotos,
