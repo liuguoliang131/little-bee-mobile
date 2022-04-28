@@ -1,12 +1,13 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-26 15:32:34
+ * @LastEditTime: 2022-04-28 14:55:27
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
 <template>
   <div class="Index">
+    <bread></bread>
     <div class="search">
       <van-search
         v-model="searchParams.keywords"
@@ -37,7 +38,7 @@
               <!-- <i class="fenxiang">分享</i>
               <i class="wai">外</i> -->
             </span>
-            <span>{{item.createTime}}</span>
+            <span>{{$utils.formatTime(item.createTime)}}</span>
             <span>{{item.count}}</span>
             <span class="caozuo">
               <van-icon name="delete-o" @click="handleShowDelDialog(item)" />
@@ -76,6 +77,7 @@ import {
   Tabbar,
   TabbarItem
 } from 'vant'
+import Bread from '@/components/bread/index.vue'
 import { h5_job_findPage, h5_job_updateStatus } from '@/http/api.js'
 export default {
   name:'Index',
@@ -85,7 +87,8 @@ export default {
     VanPullRefresh: PullRefresh,
     VanIcon: Icon,
     VanTabbar: Tabbar,
-    VanTabbarItem: TabbarItem
+    VanTabbarItem: TabbarItem,
+    Bread
   },
   data() {
     return {
@@ -130,7 +133,7 @@ export default {
     // 搜索
     handleSearch() {
       this.tableData = []
-      this.pageNo = 1
+      this.searchParams.pageNo = 1
       this.getList()
     },
     async getList() {
@@ -167,7 +170,7 @@ export default {
     },
     async onRefresh() {
       this.tableData = []
-      this.pageNo = 1
+      this.searchParams.pageNo = 1
       try {
         
         const res = await this.$http({
@@ -244,7 +247,7 @@ export default {
 
 <style scoped lang="less">
 .Index {
-  height: 100vh;
+  height: calc( 100vh - 36px );
   overflow-y: scroll;
   .thead {
     margin: 0 15px;
@@ -267,8 +270,9 @@ export default {
     span {
       flex: 1;
       font-size: 12px;
-      line-height: 49px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       min-height: 49px;
     }
     .caozuo {

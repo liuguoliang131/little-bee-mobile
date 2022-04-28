@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-22 16:12:29
+ * @LastEditTime: 2022-04-28 14:18:39
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -42,6 +42,26 @@ utils.getDynamicRoutes = function () {
 // 保存动态路由
 utils.setDynamicRoutes = function (data) {
   window.localStorage.setItem('dynamicRoutes',JSON.stringify(data))
+  
+}
+
+// 保存动态路由
+utils.formatTime = function (data) {
+  const date = new Date(data)
+  let y = date.getFullYear()
+  let mon = date.getMonth()+1
+  let d = date.getDate()
+  let h = date.getHours()
+  let m = date.getMinutes()
+  let s = date.getSeconds()
+  y = y < 10 ? '0' + y : y
+  mon = mon < 10 ? '0' + mon : mon
+  d = d < 10 ? '0' + d : d
+  h = h < 10 ? '0' + h : h
+  m = m < 10 ? '0' + m : m
+  s = s < 10 ? '0' + s : s
+
+  return `${y}-${mon}-${d} ${h}:${m}:${s}`
   
 }
 export default utils

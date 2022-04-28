@@ -1,151 +1,150 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-27 18:50:24
+ * @LastEditTime: 2022-04-28 14:57:17
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
 <template>
   <div class="detail">
-    <div class="share">
-      <span>分享
-        <van-icon name="share-o"
-                  @click="handleShowShareDialog" />
-      </span>
-    </div>
-    <van-form @submit="onSubmit">
-      <van-field v-model.trim="form.title"
-                 type="text"
-                 name="title"
-                 label="标题"
-                 placeholder="请输入标题"
-                 required
-                 :rules="[{ required: true, message: '请填写标题' }]"
-                 :disabled="true" />
-      <van-field v-model.trim="form.sortTitle"
-                 type="text"
-                 name="sortTitle"
-                 label="副标题"
-                 placeholder="请输入副标题"
-                 required
-                 :rules="[{ required: true, message: '请填写标题' }]"
-                 :disabled="true" />
-      <van-field v-model="form.count"
-                 type="digit"
-                 name="count"
-                 label="数量"
-                 placeholder="请输入数量"
-                 required
-                 :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]"
-                 :disabled="true" />
-      <van-field v-model="form.unitPrice"
-                 type="number"
-                 name="unitPrice"
-                 label="单价"
-                 placeholder="请输入单价"
-                 required
-                 :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]"
-                 :disabled="true" />
-      <van-field v-model.trim="form.remark"
-                 type="text"
-                 name="remark"
-                 label="备注"
-                 placeholder="请输入备注"
-                 :disabled="true" />
-      <van-field v-model="totalPrice"
-                 type="number"
-                 name="totalPrice"
-                 label="总价"
-                 :disabled="true" />
-      <div class="file">
-        <span class="label">图片</span>
-        <van-uploader v-model="photos"
-                      :deletable="false"
-                      :readonly="true"
-                      :show-upload="false" />
-      </div>
-      <!-- <div class="sub-btn">
-        <van-button color="#CB9400"
-          block
-          type="info"
-          native-type="submit">提交</van-button>
-      </div> -->
-      <div class="fixed-b">
-        <div class="b-1">
-          <div>工序合计: {{1}}元</div>
-          <div>利润: {{2}}元</div>
+    <bread @click="handleShowShareDialog">
+      <van-icon name="share-o" color="#cb9400" />
+    </bread>
+    <div class="views">
+      <van-form @submit="onSubmit">
+        <van-field v-model.trim="form.title"
+                  type="text"
+                  name="title"
+                  label="标题"
+                  placeholder="请输入标题"
+                  required
+                  :rules="[{ required: true, message: '请填写标题' }]"
+                  :disabled="true" />
+        <van-field v-model.trim="form.sortTitle"
+                  type="text"
+                  name="sortTitle"
+                  label="副标题"
+                  placeholder="请输入副标题"
+                  required
+                  :rules="[{ required: true, message: '请填写标题' }]"
+                  :disabled="true" />
+        <van-field v-model="form.count"
+                  type="digit"
+                  name="count"
+                  label="数量"
+                  placeholder="请输入数量"
+                  required
+                  :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]"
+                  :disabled="true" />
+        <van-field v-model="form.unitPrice"
+                  type="number"
+                  name="unitPrice"
+                  label="单价"
+                  placeholder="请输入单价"
+                  required
+                  :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]"
+                  :disabled="true" />
+        <van-field v-model.trim="form.remark"
+                  type="text"
+                  name="remark"
+                  label="备注"
+                  placeholder="请输入备注"
+                  :disabled="true" />
+        <van-field v-model="totalPrice"
+                  type="number"
+                  name="totalPrice"
+                  label="总价"
+                  :disabled="true" />
+        <div class="file">
+          <span class="label">图片</span>
+          <van-uploader v-model="photos"
+                        :deletable="false"
+                        :readonly="true"
+                        :show-upload="false" />
         </div>
-        <div class="b-2">
+        <!-- <div class="sub-btn">
           <van-button color="#CB9400"
-                      type="info"
-                      plain
-                      native-type="button"
-                      size="small" @click="handleStart">开始</van-button>
-          <van-button color="#CB9400"
-                      type="info"
-                      plain
-                      native-type="button"
-                      size="small" @click="handleComplete">完成</van-button>
-          <van-button color="#CB9400"
-                      type="info"
-                      plain
-                      native-type="button"
-                      size="small" @click="handleSuspend">暂停</van-button>
-          <van-button color="#CB9400"
-                      type="info"
-                      native-type="button"
-                      size="small" @click="handleCreate">再次创建</van-button>
+            block
+            type="info"
+            native-type="submit">提交</van-button>
+        </div> -->
+        <div class="fixed-b">
+          <div class="b-1">
+            <div>工序合计: {{1}}元</div>
+            <div>利润: {{2}}元</div>
+          </div>
+          <div class="b-2">
+            <van-button color="#CB9400"
+                        type="info"
+                        plain
+                        native-type="button"
+                        size="small" @click="handleStart">开始</van-button>
+            <van-button color="#CB9400"
+                        type="info"
+                        plain
+                        native-type="button"
+                        size="small" @click="handleComplete">完成</van-button>
+            <van-button color="#CB9400"
+                        type="info"
+                        plain
+                        native-type="button"
+                        size="small" @click="handleSuspend">暂停</van-button>
+            <van-button color="#CB9400"
+                        type="info"
+                        native-type="button"
+                        size="small" @click="handleCreate">再次创建</van-button>
+          </div>
+        </div>
+      </van-form>
+      <div class="title">
+        <div class="title-1">
+          工序
+        </div>
+        <div class="title-2">
+          <!-- <van-icon name="plus"
+                    @click="handleShowAddDialog" /> -->
         </div>
       </div>
-    </van-form>
-    <div class="title">
-      <div class="title-1">
-        工序
-      </div>
-      <div class="title-2">
-        <!-- <van-icon name="plus"
-                  @click="handleShowAddDialog" /> -->
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>单价(元)</th>
+            <th>图标</th>
+            <th>备注</th>
+            <th>技工信息</th>
+          </tr>
+        </thead>
+        <tbody v-if="form.createProcessRequestList.length">
+          <tr v-for="(item,index) in form.createProcessRequestList"
+              :key="index">
+            <td>{{index}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.unitPrice}}</td>
+            <td>
+              <div class="td-img"
+                  v-if="item.photos.length">
+                <img :src="item.photos[0].url"
+                    alt="图标">
+                <span>x{{item.photos.length||0}}</span>
+              </div>
+            </td>
+            <td>{{item.remark}}</td>
+            <td>
+              技工1 x5 技工2 x5
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else
+              class="empty">
+          <tr>
+            <td colspan="6">暂无数据</td>
+          </tr>
+        </tbody>
+      </table>
+      <footer></footer>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>序号</th>
-          <th>名称</th>
-          <th>单价(元)</th>
-          <th>图标</th>
-          <th>备注</th>
-          <th>技工信息</th>
-        </tr>
-      </thead>
-      <tbody v-if="form.createProcessRequestList.length">
-        <tr v-for="(item,index) in form.createProcessRequestList"
-            :key="index">
-          <td>{{index}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.unitPrice}}</td>
-          <td>
-            <div class="td-img"
-                 v-if="item.photos.length">
-              <img :src="item.photos[0].url"
-                   alt="图标">
-              <span>x{{item.photos.length||0}}</span>
-            </div>
-          </td>
-          <td>{{item.remark}}</td>
-          <td>
-            技工1 x5 技工2 x5
-          </td>
-        </tr>
-      </tbody>
-      <tbody v-else
-             class="empty">
-        <tr>
-          <td colspan="6">暂无数据</td>
-        </tr>
-      </tbody>
-    </table>
-    <footer></footer>
     <van-dialog v-model="dialogVisible"
                 title="任务分享"
                 :showConfirmButton="false"
@@ -218,6 +217,7 @@ import {
   Icon,
   Dialog
 } from 'vant'
+import Bread from '@/components/bread/index'
 // import { sys_version_file_upload, h5_job_create } from '@/http/api'
 export default {
   name: 'Detail',
@@ -227,7 +227,8 @@ export default {
     VanButton: Button,
     VanUploader: Uploader,
     VanIcon: Icon,
-    VanDialog: Dialog.Component
+    VanDialog: Dialog.Component,
+    Bread
   },
   data() {
     return {
@@ -318,9 +319,11 @@ export default {
 
 <style scoped lang="less">
 .detail {
-  width: 100%;
-  height: 100vh;
-  overflow-y: scroll;
+  .views {
+    width: 100%;
+    height: calc( 100vh - 36px );
+    overflow-y: scroll;
+  }
   .share {
     font-size: 12px;
     color: #cb9400;

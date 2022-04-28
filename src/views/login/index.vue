@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 09:42:13
+ * @LastEditTime: 2022-04-28 15:50:29
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -78,16 +78,16 @@ export default {
   },
   methods: {
     async onSubmit(values) {
+      
       const res = await axios({
         method: 'get',
         url: host + h5_login_login,
         params: this.form
       })
-      console.log(res)
-      if (!res.success) {
-        return Toast(res.msg)
+      if (!res.data.success) {
+        return Toast(res.data.msg)
       }
-      this.$store.dispatch('user/login', res.model)
+      this.$store.dispatch('user/login', res.data.model)
     },
     //发送验证码
     async handleSendCode() {
@@ -104,8 +104,8 @@ export default {
           phone: this.form.phone
         }
       })
-      if (!res.success) {
-        return Toast(res.msg)
+      if (!res.data.success) {
+        return Toast(res.data.msg)
       }
       this.ss = 300
       // 启动定时器
