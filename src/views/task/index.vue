@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 14:55:27
+ * @LastEditTime: 2022-04-28 17:41:15
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -9,59 +9,68 @@
   <div class="Index">
     <bread></bread>
     <div class="search">
-      <van-search
-        v-model="searchParams.keywords"
-        placeholder="请输入标题"
-        @search="handleSearch"
-      />
+      <van-search v-model="searchParams.keywords"
+                  placeholder="请输入标题"
+                  @search="handleSearch" />
     </div>
     <div>
       <div class="thead">
-        <!-- <span>序号</span> -->
+        <span>序号</span>
         <span>标题</span>
         <span>创建时间</span>
         <span>数量</span>
         <span>操作</span>
       </div>
-      <van-pull-refresh v-model="reloading" @refresh="onRefresh">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="getList"
-        >
-          <div class="item" v-for="(item) in tableData" :key="item.id">
-            <!-- <span>{{item.index}}</span> -->
-            <span class="title">
-              {{item.sortTitle||item.title}}
-              <i class="zijian">自建</i>
-              <!-- <i class="fenxiang">分享</i>
-              <i class="wai">外</i> -->
-            </span>
-            <span>{{$utils.formatTime(item.createTime)}}</span>
-            <span>{{item.count}}</span>
-            <span class="caozuo">
-              <van-icon name="delete-o" @click="handleShowDelDialog(item)" />
-              <van-icon name="more-o" @click="handleShowMore(item)" />
-            </span>
-          </div>
-        </van-list>
+      <van-pull-refresh v-model="reloading"
+                        @refresh="handleSearch">
+        <div class="item"
+             v-for="(item) in tableData.data"
+             :key="item.id">
+          <span>{{item.index}}</span>
+          <span class="title">
+            {{item.sortTitle||item.title}}
+            <i class="zijian">自建</i>
+            <!-- <i class="fenxiang">分享</i>
+            <i class="wai">外</i> -->
+          </span>
+          <span>{{$utils.formatTime(item.createTime)}}</span>
+          <span>{{item.count}}</span>
+          <span class="caozuo">
+            <van-icon name="delete-o"
+                      @click="handleShowDelDialog(item)" />
+            <van-icon name="more-o"
+                      @click="handleShowMore(item)" />
+          </span>
+        </div>
       </van-pull-refresh>
     </div>
+    <van-pagination v-model="searchParams.pageNo"
+                    :items-per-page="searchParams.pageSize"
+                    :total-items="tableData.sumRow"
+                    @change="getList"
+                    mode="simple" />
     <div class="fixed-r">
-      <div class="r-btn" @click="$router.push('/operation')">
+      <div class="r-btn"
+           @click="$router.push('/operation')">
         <div>工序</div>
         <div>记账</div>
       </div>
-      <div class="r-btn" @click="$router.push('/createTask')">
+      <div class="r-btn"
+           @click="$router.push('/createTask')">
         <div>创建</div>
         <div>任务</div>
       </div>
     </div>
     <van-tabbar v-model="active">
-      <van-tabbar-item name="1" icon="home-o" to="/">首页</van-tabbar-item>
-      <van-tabbar-item name="2" icon="friends-o" to="staff">员工管理</van-tabbar-item>
-      <van-tabbar-item name="3" icon="contact" to="/my">我的</van-tabbar-item>
+      <van-tabbar-item name="1"
+                       icon="home-o"
+                       to="/">首页</van-tabbar-item>
+      <van-tabbar-item name="2"
+                       icon="friends-o"
+                       to="staff">员工管理</van-tabbar-item>
+      <van-tabbar-item name="3"
+                       icon="contact"
+                       to="/my">我的</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -69,25 +78,25 @@
 <script>
 import {
   Search,
-  List,
   Toast,
   PullRefresh,
   Icon,
   Dialog,
   Tabbar,
-  TabbarItem
+  TabbarItem,
+  Pagination
 } from 'vant'
 import Bread from '@/components/bread/index.vue'
 import { h5_job_findPage, h5_job_updateStatus } from '@/http/api.js'
 export default {
-  name:'Index',
-  components:{
+  name: 'Index',
+  components: {
     VanSearch: Search,
-    VanList: List,
     VanPullRefresh: PullRefresh,
     VanIcon: Icon,
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
+    VanPagination: Pagination,
     Bread
   },
   data() {
@@ -97,35 +106,13 @@ export default {
         pageNo: 1,
         pageSize: 20
       },
-      tableData: [
-        {
-          index: 1,
-          id: 1,
-          title:'标题',
-          sortTitle:'短标题',
-          count:1,
-          createTime:'2022-4-25'
-        },
-        {
-          index: 2,
-          id: 3,
-          title:'标题',
-          sortTitle:'短标题',
-          count:1,
-          createTime:'2022-4-25'
-        },
-        {
-          index:3,
-          id: 2,
-          title:'标题',
-          sortTitle:'短标题',
-          count:1,
-          createTime:'2022-4-25'
-        }
-      ],
+      tableData: {
+        sumRow: 0,
+        data: []
+      },
       loading: false,
       finished: false, //是否为最后一页
-      reloading:false,
+      reloading: false,
       active: '1'
     }
   },
@@ -137,62 +124,30 @@ export default {
       this.getList()
     },
     async getList() {
-      // const toast = Toast.loading({
-      //   duration: 0, // 持续展示 toast
-      //   forbidClick: true,
-      //   message: '加载中'
-      // })
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
       try {
-        
+
         const res = await this.$http({
           method: 'post',
-          url: h5_job_findPage, 
+          url: h5_job_findPage,
           data: this.searchParams
         })
-        // toast.clear()
-        if(!res.success) {
-          return Toast( res.msg )
-        }
-        res.model.data&&res.model.data.forEach((item,idx)=>{
-          item.index = (this.searchParams.pageNo-1)*this.searchParams.pageSize+idx+1
-        })
-        Object.assign(this.tableData, res.model.data||[])
-        this.loading = false
-        if(res.model.sumPage===res.model.pageNo) {
-          this.finished = true
-        }
-        this.searchParams.pageNo++
-      } catch (error) {
-        // toast.clear()
-        console.log(error)
-        throw error
-      }
-    },
-    async onRefresh() {
-      this.tableData = []
-      this.searchParams.pageNo = 1
-      try {
-        
-        const res = await this.$http({
-          method: 'post',
-          url: h5_job_findPage, 
-          data: this.searchParams
-        })
-        // toast.clear()
+        toast.clear()
         this.reloading = false
-        if(!res.success) {
-          return Toast( res.msg )
+        if (!res.success) {
+          return Toast(res.msg)
         }
-        res.model.data&&res.model.data.forEach((item,idx)=>{
-          item.index = (this.searchParams.pageNo-1)*this.searchParams.pageSize+idx+1
+        res.model.data && res.model.data.forEach((item, idx) => {
+          item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
         })
-        Object.assign(this.tableData, res.model.data||[])
-        if(res.model.sumPage===res.model.pageNo) {
-          this.finished = true
-        }
-        this.searchParams.pageNo++
+        this.tableData = res.model
       } catch (error) {
-        // toast.clear()
+        toast.clear()
+        this.reloading = false
         console.log(error)
         throw error
       }
@@ -212,18 +167,18 @@ export default {
             jobStatus: 'Finish'
           }
         })
-        if(!res.success) {
+        if (!res.success) {
           return Toast(res.msg)
         }
-        this.tableData.splice((()=>{
+        this.tableData.splice((() => {
           let idx = null
-          this.tableData.forEach((item1,index1)=>{
-            if(item1.id===item.id) {
+          this.tableData.forEach((item1, index1) => {
+            if (item1.id === item.id) {
               idx = index1
             }
           })
           return idx
-        })(),1)
+        })(), 1)
         Toast('删除成功')
       }).catch(() => {
         // on cancel
@@ -247,13 +202,13 @@ export default {
 
 <style scoped lang="less">
 .Index {
-  height: calc( 100vh - 36px );
+  height: calc(100vh - 36px);
   overflow-y: scroll;
   .thead {
     margin: 0 15px;
     display: flex;
     align-items: center;
-    background-color: #F0F0F0;
+    background-color: #f0f0f0;
     span {
       flex: 1;
       height: 36px;
@@ -262,11 +217,14 @@ export default {
       text-align: center;
     }
   }
+  .van-pull-refresh {
+    height: calc( 100vh - 200px );
+  }
   .item {
     margin: 0 15px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #F0F0F0;
+    border-bottom: 1px solid #f0f0f0;
     span {
       flex: 1;
       font-size: 12px;
@@ -282,7 +240,7 @@ export default {
     }
     .title {
       .zijian {
-        background-color: #CB9400;
+        background-color: #cb9400;
         color: white;
         font-style: normal;
         font-size: 12px;
@@ -325,19 +283,22 @@ export default {
       }
     }
   }
-  .van-list {
-    min-height: 600px;
+  .van-pagination {
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
   }
 
   .fixed-r {
     position: fixed;
     right: 15px;
-    bottom: 68.5px;
+    bottom: 120px;
     width: 50px;
     .r-btn {
       width: 50px;
       height: 50px;
-      background: #CB9400;
+      background: #cb9400;
       opacity: 0.94;
       border-radius: 17.5px;
       color: white;
@@ -359,7 +320,7 @@ export default {
   .fixed-b {
     width: 100%;
     height: 50px;
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 0px 6.5px 0px rgba(0, 0, 0, 0.05);
     position: fixed;
     bottom: 0;

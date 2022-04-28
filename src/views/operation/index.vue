@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 15:15:36
+ * @LastEditTime: 2022-04-28 18:01:19
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -16,39 +16,46 @@
         <input type="date"
                name=""
                id=""
+               v-model="date"
                @change="handleSearch">
       </div>
       <div class="list">
-        <table>
-          <thead>
-            <tr>
-              <th>任务标题</th>
-              <th>成品</th>
-              <th>时间</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <van-pull-refresh v-model="reloading" @refresh="onRefresh">
-              <van-list
-                v-model="loading"
-                :finished="finished"
-                finished-text="没有更多了"
-                @load="getList"
-              >
-                <tr v-for="item in 12" :key="item">
-                  <td>1</td>
-                  <td>2</td>
-                  <td>3</td>
-                  <td>4</td>
-                </tr>
-              </van-list>
-            </van-pull-refresh>
-          </tbody>
-        </table>
+        <van-pull-refresh v-model="reloading"
+                        @refresh="handleRefresh">
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>任务标题</th>
+                <th>成品</th>
+                <th>时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item"
+                  v-for="(item,index) in tableData.data"
+                  :key="index">
+                <td>{{(searchParams.pageNo-1)*searchParams.pageSize+index+1}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.finishedProductCount}}</td>
+                <td>{{item.billData}}</td>
+                <td>
+                  <van-icon name="edit" @click="handleEdit(item)" />
+                  <van-icon name="ellipsis" @click="handleView(item)" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </van-pull-refresh>
       </div>
-
     </div>
+    <footer></footer>
+    <van-pagination v-model="searchParams.pageNo"
+                    :items-per-page="searchParams.pageSize"
+                    :total-items="tableData.sumRow"
+                    mode="simple"
+                    @change="getList" />
   </div>
 </template>
 
@@ -60,8 +67,7 @@ import {
   PullRefresh,
   Icon,
   Dialog,
-  Tabbar,
-  TabbarItem
+  Pagination
 } from 'vant'
 import Bread from '@/components/bread/index'
 import { h5_process_findPage } from '@/http/api'
@@ -69,35 +75,77 @@ export default {
   name: 'Operation',
   data() {
     return {
-
+      searchParams: {
+        pageNo: 1,
+        pageSize: 20,
+        startTime:'',
+        endTime:''
+      },
+      date: '',
+      tableData: {
+        sumRow: 0,
+        data: [
+          {
+            name:'asdasd'
+          }
+        ]
+      },
+      reloading:false
     }
   },
-  components:{
-    VanSearch: Search,
-    VanList: List,
+  components: {
     VanPullRefresh: PullRefresh,
     VanIcon: Icon,
-    VanTabbar: Tabbar,
-    VanTabbarItem: TabbarItem,
+    VanPagination: Pagination,
     Bread
   },
   methods: {
     // 新增记账
     handleAddBill() {
+      
+    },
+    // 编辑
+    handleEdit(item) {
+
+    },
+    // 详情
+    handleView(item) {
 
     },
     // 搜索
     handleSearch() {
+      if(this.date) {
+        this.searchParams.startTime = this.date + ' 00:00:00'
+        this.searchParams.endTime = this.date + ' 23:59:59'
+      }else {
+        this.searchParams.startTime = ''
+        this.searchParams.endTime = ''
+      }
+      this.searchParams.pageNo = 1
+      
+      this.getList()
+    },
+    handleRefresh() {
+      this.searchParams.pageNo = 1
       this.getList()
     },
     async getList() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
       const res = await this.$http({
         method: 'post',
         url: h5_process_findPage,
-        data: {
-
-        }
+        data: this.searchParams
       })
+      this.reloading = false
+      toast.clear()
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      this.tableData = res.model
     }
   }
 }
@@ -120,6 +168,25 @@ export default {
         color: #333333;
       }
     }
+    .list {
+      height: calc(100% - 136px);
+      overflow-y: scroll;
+    }
+    .van-pull-refresh {
+      height: calc(100% - 136px);
+    }
+  }
+  footer {
+    height: 40px;
+  }
+  .van-pagination {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+  .van-icon-edit {
+    margin-right: 15px;
   }
 }
 </style>
