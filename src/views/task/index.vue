@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 17:41:15
+ * @LastEditTime: 2022-04-29 16:16:44
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -67,7 +67,7 @@
                        to="/">首页</van-tabbar-item>
       <van-tabbar-item name="2"
                        icon="friends-o"
-                       to="staff">员工管理</van-tabbar-item>
+                       to="/staffList">员工管理</van-tabbar-item>
       <van-tabbar-item name="3"
                        icon="contact"
                        to="/my">我的</van-tabbar-item>

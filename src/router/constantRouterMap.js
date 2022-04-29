@@ -1,9 +1,9 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 10:41:47
+ * @LastEditTime: 2022-04-29 16:49:59
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
- * @Description: 非动态路由
+ * @Description: 静态路由
  */
 import login from '../views/login/index'
 import layout from '../components/layout/index'
@@ -17,12 +17,18 @@ const normalRoutes = [
   {
     name:'Login',
     path:'/login',
-    component:login
+    component:login,
+    meta: {
+      white: true
+    }
   },
   {
     name:'Register',
     path:'/register',
-    component:register
+    component:register,
+    meta: {
+      white: true
+    }
   },
   {
     name:'Layout',
@@ -34,7 +40,8 @@ const normalRoutes = [
         path:'/index',
         component:()=>import('../views/task/index.vue'),
         meta: {
-          bread: '首页'
+          bread: '首页',
+          white: false
         }
       },
       {
@@ -42,7 +49,8 @@ const normalRoutes = [
         path:'/detail',
         component:()=>import('../views/task/detail.vue'),
         meta: {
-          bread: '任务详情'
+          bread: '任务详情',
+          white: false
         }
       },
       {
@@ -50,7 +58,8 @@ const normalRoutes = [
         path:'/createTask',
         component:()=>import('../views/task/createTask.vue'),
         meta: {
-          bread: '创建任务'
+          bread: '创建任务',
+          white: false
         }
       },
       {
@@ -58,7 +67,44 @@ const normalRoutes = [
         path:'/operation',
         component:()=>import('../views/operation/index.vue'),
         meta: {
-          bread: '工序记账'
+          bread: '工序记账',
+          white: false
+        }
+      },
+      {
+        name:'OperationEdit',
+        path:'/operationEdit',
+        component:()=>import('../views/operation/edit.vue'),
+        meta: {
+          bread: '创建/修改记账',
+          white: false
+        }
+      },
+      {
+        name:'OperationDetail',
+        path:'/operationDetail',
+        component:()=>import('../views/operation/detail.vue'),
+        meta: {
+          bread: '账单详情',
+          white: false
+        }
+      },
+      {
+        name:'StaffList',
+        path:'/staffList',
+        component:()=>import('../views/staff/index.vue'),
+        meta: {
+          bread: '员工管理',
+          white: false
+        }
+      },
+      {
+        name:'StaffAdd',
+        path:'/staffAdd',
+        component:()=>import('../views/staff/add.vue'),
+        meta: {
+          bread: '创建员工',
+          white: false
         }
       },
     ]

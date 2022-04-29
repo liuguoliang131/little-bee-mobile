@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-27 10:04:50
+ * @LastEditTime: 2022-04-28 18:27:34
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -54,14 +54,13 @@ router.onReady(() => {
   }
 })
 
-const whiteList = ['/login','/register']
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if(Object.is(to.path,'/login')) {
     next()
     return
   }
-  if(whiteList.includes(to.path)) {
+  if(to.meta.white) {
     console.log('tp.path',to.path)
     next()
   }else {

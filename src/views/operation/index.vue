@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 18:01:19
+ * @LastEditTime: 2022-04-29 16:06:48
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -102,15 +102,30 @@ export default {
   methods: {
     // 新增记账
     handleAddBill() {
-      
+      this.$router.push({
+        path:'/operationEdit',
+        query: {
+          
+        }
+      })
     },
     // 编辑
     handleEdit(item) {
-
+      this.$router.push({
+        path:'/operationEdit',
+        query: {
+          
+        }
+      })
     },
     // 详情
     handleView(item) {
-
+      this.$router.push({
+        path:'/operationDetail',
+        query: {
+          
+        }
+      })
     },
     // 搜索
     handleSearch() {
