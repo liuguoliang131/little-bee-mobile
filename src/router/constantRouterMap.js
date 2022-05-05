@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-29 16:49:59
+ * @LastEditTime: 2022-05-05 14:39:11
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -104,6 +104,33 @@ const normalRoutes = [
         component:()=>import('../views/staff/add.vue'),
         meta: {
           bread: '创建员工',
+          white: false
+        }
+      },
+      {
+        name:'StaffDetail',
+        path:'/staffDetail',
+        component:()=>import('../views/staff/detail.vue'),
+        meta: {
+          bread: '员工详情',
+          white: false
+        }
+      },
+      {
+        name:'StaffStatistics',
+        path:'/staffStatistics',
+        component:()=>import('../views/staff/statistics.vue'),
+        meta: {
+          bread: '绩效统计',
+          white: false
+        }
+      },
+      {
+        name:'My',
+        path:'/my',
+        component:()=>import('../views/my/index.vue'),
+        meta: {
+          bread: '我的',
           white: false
         }
       },

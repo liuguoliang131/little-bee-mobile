@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-29 16:49:22
+ * @LastEditTime: 2022-05-05 12:47:52
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -16,7 +16,7 @@
                     size="small">筛选</van-button>
       </div>
       <div class="right">
-        <van-icon name="bar-chart-o" color="#CB9400" />
+        <van-icon name="bar-chart-o" color="#CB9400" @click="$router.push('/staffStatistics')" />
         <van-icon name="plus" color="#CB9400" @click="$router.push('/staffAdd')" />
       </div>
     </div>
@@ -37,7 +37,7 @@
             <td>2</td>
             <td>3</td>
             <td>5</td>
-            <td><van-icon name="ellipsis" /></td>
+            <td><van-icon name="ellipsis" @click="handleGoDetail(index)" /></td>
           </tr>
         </tbody>
       </table>
@@ -79,6 +79,16 @@ export default {
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
     VanPagination: Pagination
+  },
+  methods: {
+    handleGoDetail(item) {
+      this.$router.push({
+        path:'/staffDetail',
+        query: {
+          
+        }
+      })
+    }
   }
 }
 </script>
