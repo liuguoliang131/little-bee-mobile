@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 14:39:11
+ * @LastEditTime: 2022-05-05 19:14:41
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -131,6 +131,61 @@ const normalRoutes = [
         component:()=>import('../views/my/index.vue'),
         meta: {
           bread: '我的',
+          white: false
+        }
+      },
+
+      {
+        name:'EnterpriseInfo',
+        path:'/enterpriseInfo',
+        component:()=>import('../views/my/enterpriseInfo.vue'),
+        meta: {
+          bread: '企业信息',
+          white: false
+        }
+      },
+      {
+        name:'Summary',
+        path:'/summary',
+        component:()=>import('../views/my/summary.vue'),
+        meta: {
+          bread: '汇总统计',
+          white: false
+        }
+      },
+      {
+        name:'History',
+        path:'/history',
+        component:()=>import('../views/my/history.vue'),
+        meta: {
+          bread: '历史纪录',
+          white: false
+        }
+      },
+      {
+        name:'ShareList',
+        path:'/shareList',
+        component:()=>import('../views/my/shareList.vue'),
+        meta: {
+          bread: '分享列表',
+          white: false
+        }
+      },
+      {
+        name:'ShareDetail',
+        path:'/shareDetail',
+        component:()=>import('../views/my/shareDetail.vue'),
+        meta: {
+          bread: '分享详情',
+          white: false
+        }
+      },
+      {
+        name:'QuitForm',
+        path:'/quitForm',
+        component:()=>import('../views/my/quitForm.vue'),
+        meta: {
+          bread: '员工离职表',
           white: false
         }
       },

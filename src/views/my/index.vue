@@ -1,20 +1,22 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 16:32:39
+ * @LastEditTime: 2022-05-05 16:56:23
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
 <template>
   <div class="my">
-    <bread></bread>
+    <bread>
+      <img :src="require('../../assets/quit.png')" alt="" class="quit">
+    </bread>
     <div class="views">
       <div class="vip">
         <div class="vip-1">
           <div class="vip-icon"></div>
           <div class="vip-1-text">北京厚鸟科技</div>
         </div>
-        <div class="vip-2">2</div>
+        <div class="vip-2">剩余8天过期</div>
         <div class="vip-xufei">立即续费</div>
       </div>
       <div class="card">
@@ -44,17 +46,14 @@
 <script>
 import Bread from '@/components/bread/index'
 import {
-  Button,
   Icon,
   Tabbar,
-  TabbarItem,
-  Pagination
+  TabbarItem
 } from 'vant'
 export default {
   name: 'My',
   components: {
     Bread,
-    VanButton: Button,
     VanIcon: Icon,
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
@@ -97,6 +96,9 @@ export default {
 <style scoped lang="less">
 .my {
   background-color: #f7f7f7;
+  .quit {
+    width: 13.5px;
+  }
   .views {
     text-align: center;
     .vip {
