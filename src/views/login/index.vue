@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 15:50:29
+ * @LastEditTime: 2022-05-06 19:14:32
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -65,7 +65,9 @@ export default {
       form: {
         phone: '',
         code: '',
-        type:1
+        type:1,
+        openId:'',
+        appId:''
       },
       timer:null,
       ss:'发送验证码'

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 14:18:39
+ * @LastEditTime: 2022-05-06 16:19:42
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -45,7 +45,7 @@ utils.setDynamicRoutes = function (data) {
   
 }
 
-// 保存动态路由
+// 时间格式化 2022-05-22 05:22:00
 utils.formatTime = function (data) {
   const date = new Date(data)
   let y = date.getFullYear()

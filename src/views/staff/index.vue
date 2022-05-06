@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 12:47:52
+ * @LastEditTime: 2022-05-06 19:07:04
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -10,14 +10,20 @@
     <bread></bread>
     <div class="search">
       <div class="left">
-        <input type="text" placeholder="姓名">
+        <input type="text"
+               placeholder="姓名"
+               v-model="searchParams.keywords">
         <van-button color="#CB9400"
                     type="info"
-                    size="small">筛选</van-button>
+                    size="small" @click="handleSearch">筛选</van-button>
       </div>
       <div class="right">
-        <van-icon name="bar-chart-o" color="#CB9400" @click="$router.push('/staffStatistics')" />
-        <van-icon name="plus" color="#CB9400" @click="$router.push('/staffAdd')" />
+        <van-icon name="bar-chart-o"
+                  color="#CB9400"
+                  @click="$router.push('/staffStatistics')" />
+        <van-icon name="plus"
+                  color="#CB9400"
+                  @click="$router.push('/staffAdd')" />
       </div>
     </div>
     <div class="views">
@@ -32,15 +38,26 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="index in 12" :key="index">
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>5</td>
-            <td><van-icon name="ellipsis" @click="handleGoDetail(index)" /></td>
+          <tr v-for="(item,index) in tableData.data"
+              :key="index">
+            <td>{{index+1}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{$utils.formatTime(item.entryTime)}}</td>
+            <td>
+              <van-icon name="ellipsis"
+                        @click="handleGoDetail(item)" />
+            </td>
           </tr>
         </tbody>
       </table>
+      <van-pagination class="fixed-page"
+                      v-model="searchParams.pageNo"
+                      :items-per-page="searchParams.pageSize"
+                      :total-items="tableData.sumRow"
+                      mode="simple"
+                      @change="getList" />
+      <footer></footer>
     </div>
     <van-tabbar v-model="active">
       <van-tabbar-item name="1"
@@ -58,37 +75,77 @@
 
 <script>
 import Bread from '@/components/bread/index'
+import { h5_employee_findPage } from '@/http/api'
 import {
   Button,
   Icon,
   Tabbar,
   TabbarItem,
-  Pagination
+  Pagination,
+  Toast
 } from 'vant'
 export default {
-  name:'StaffList',
+  name: 'StaffList',
   data() {
     return {
-      active: '2'
+      active: '2',
+      searchParams: {
+        keywords: '',
+        pageNo: 1,
+        pageSize: 20
+      },
+      tableData: {
+        data: [],
+        sumRow: 0
+      }
     }
   },
   components: {
     Bread,
-    VanButton:Button,
-    VanIcon:Icon,
+    VanButton: Button,
+    VanIcon: Icon,
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
     VanPagination: Pagination
   },
   methods: {
     handleGoDetail(item) {
+      this.$store.commit('staff/set_item', {
+        disabledStatus: item.disabledStatus,
+        entryTime: item.entryTime,
+        name: item.name,
+        phone: item.phone,
+        salaryAmount: item.salaryAmount ? item.salaryAmount.value : 0,
+        salaryType: item.salaryType,
+        sex: item.sex,
+        remark: item.remark || '',
+        appId: item.appId || '',
+        openId: item.openId || '',
+        employeeId: item.employeeId,
+        companyId: item.companyId
+      })
       this.$router.push({
-        path:'/staffDetail',
+        path: '/staffDetail',
         query: {
-          
+          id: item.employeeId
         }
       })
+    },
+    handleSearch() {
+      this.searchParams.pageNo = 1
+      this.getList()
+    },
+    async getList() {
+      const params = { ...this.searchParams }
+      const res = await this.$http.post(h5_employee_findPage, params)
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      this.tableData = res.model || {}
     }
+  },
+  created() {
+    this.getList()
   }
 }
 </script>
@@ -102,11 +159,11 @@ export default {
     padding: 15px;
     .left {
       display: flex;
-      align-items:center;
+      align-items: center;
       input {
         height: 30px;
         width: 185px;
-        border: 1px solid #B4B4B4;
+        border: 1px solid #b4b4b4;
         border-radius: 3px;
         font-family: PingFang SC;
         font-weight: 500;
@@ -125,7 +182,17 @@ export default {
     }
   }
   .views {
-    height: calc( 100vh - 148px );
+    height: calc(100vh - 148px);
+    position: relative;
+    .fixed-page {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+    }
+    footer {
+      height: 200px;
+    }
   }
 }
 </style>

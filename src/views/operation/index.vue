@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-29 16:06:48
+ * @LastEditTime: 2022-05-06 19:15:12
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -85,9 +85,7 @@ export default {
       tableData: {
         sumRow: 0,
         data: [
-          {
-            name:'asdasd'
-          }
+
         ]
       },
       reloading:false
@@ -114,7 +112,7 @@ export default {
       this.$router.push({
         path:'/operationEdit',
         query: {
-          
+          employeeId: item.employeeId
         }
       })
     },
@@ -123,7 +121,7 @@ export default {
       this.$router.push({
         path:'/operationDetail',
         query: {
-          
+          employeeId: item.employeeId
         }
       })
     },
@@ -162,6 +160,9 @@ export default {
       }
       this.tableData = res.model
     }
+  },
+  created() {
+    this.getList()
   }
 }
 </script>

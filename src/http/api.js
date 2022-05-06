@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 15:09:20
+ * @LastEditTime: 2022-05-06 19:43:55
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -17,7 +17,16 @@ export const sys_version_file_upload = '/sys/version/file/upload' //上传文件
 export const h5_job_findPage = '/h5/job/findPage' // 任务列表
 export const h5_job_updateStatus = '/h5/job/updateStatus' // 任务状态修改
 export const h5_job_create = '/h5/job/create' // 创建任务
-
+export const h5_job_findById = '/h5/job/findById' //详情
 
 // 工序记账
 export const h5_process_findPage = '/h5/process/findPage' //列表
+export const h5_process_billingDetails = '/h5/process/billingDetails' //编辑
+export const h5_process_createBilling = '/h5/process/createBilling' //创建
+export const h5_process_userBillingPageDetails = '/h5/process/userBillingPageDetails' //详情
+
+// 员工管理
+export const h5_employee_create = '/h5/employee/create' //创建post
+export const h5_employee_findById = '/h5/employee/findById' //详情get
+export const h5_employee_findPage = '/h5/employee/findPage' //列表post
+export const h5_employee_update = '/h5/employee/update' //编辑post

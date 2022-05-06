@@ -1,60 +1,61 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 14:57:17
+ * @LastEditTime: 2022-05-06 19:59:15
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
 <template>
   <div class="detail">
     <bread @click="handleShowShareDialog">
-      <van-icon name="share-o" color="#cb9400" />
+      <van-icon name="share-o"
+                color="#cb9400" />
     </bread>
     <div class="views">
       <van-form @submit="onSubmit">
         <van-field v-model.trim="form.title"
-                  type="text"
-                  name="title"
-                  label="标题"
-                  placeholder="请输入标题"
-                  required
-                  :rules="[{ required: true, message: '请填写标题' }]"
-                  :disabled="true" />
+                   type="text"
+                   name="title"
+                   label="标题"
+                   placeholder="请输入标题"
+                   required
+                   :rules="[{ required: true, message: '请填写标题' }]"
+                   :disabled="true" />
         <van-field v-model.trim="form.sortTitle"
-                  type="text"
-                  name="sortTitle"
-                  label="副标题"
-                  placeholder="请输入副标题"
-                  required
-                  :rules="[{ required: true, message: '请填写标题' }]"
-                  :disabled="true" />
+                   type="text"
+                   name="sortTitle"
+                   label="副标题"
+                   placeholder="请输入副标题"
+                   required
+                   :rules="[{ required: true, message: '请填写标题' }]"
+                   :disabled="true" />
         <van-field v-model="form.count"
-                  type="digit"
-                  name="count"
-                  label="数量"
-                  placeholder="请输入数量"
-                  required
-                  :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]"
-                  :disabled="true" />
+                   type="digit"
+                   name="count"
+                   label="数量"
+                   placeholder="请输入数量"
+                   required
+                   :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]"
+                   :disabled="true" />
         <van-field v-model="form.unitPrice"
-                  type="number"
-                  name="unitPrice"
-                  label="单价"
-                  placeholder="请输入单价"
-                  required
-                  :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]"
-                  :disabled="true" />
+                   type="number"
+                   name="unitPrice"
+                   label="单价"
+                   placeholder="请输入单价"
+                   required
+                   :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]"
+                   :disabled="true" />
         <van-field v-model.trim="form.remark"
-                  type="text"
-                  name="remark"
-                  label="备注"
-                  placeholder="请输入备注"
-                  :disabled="true" />
-        <van-field v-model="totalPrice"
-                  type="number"
-                  name="totalPrice"
-                  label="总价"
-                  :disabled="true" />
+                   type="text"
+                   name="remark"
+                   label="备注"
+                   placeholder="请输入备注"
+                   :disabled="true" />
+        <van-field v-model="form.totalPrice.value"
+                   type="number"
+                   name="totalPrice"
+                   label="总价"
+                   :disabled="true" />
         <div class="file">
           <span class="label">图片</span>
           <van-uploader v-model="photos"
@@ -74,25 +75,30 @@
             <div>利润: {{2}}元</div>
           </div>
           <div class="b-2">
-            <van-button color="#CB9400"
+            <van-button
+            v-show="form.jobStatus==='PAUSE'||form.jobStatus==='INIT'" color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
-                        size="small" @click="handleStart">开始</van-button>
-            <van-button color="#CB9400"
+                        size="small"
+                        @click="handleStart">开始</van-button>
+            <van-button v-show="form.jobStatus!=='Finish'" color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
-                        size="small" @click="handleComplete">完成</van-button>
-            <van-button color="#CB9400"
+                        size="small"
+                        @click="handleComplete">完成</van-button>
+            <van-button v-show="form.jobStatus==='START'" color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
-                        size="small" @click="handleSuspend">暂停</van-button>
+                        size="small"
+                        @click="handleSuspend">暂停</van-button>
             <van-button color="#CB9400"
                         type="info"
                         native-type="button"
-                        size="small" @click="handleCreate">再次创建</van-button>
+                        size="small"
+                        @click="handleCreate">再次创建</van-button>
           </div>
         </div>
       </van-form>
@@ -116,18 +122,18 @@
             <th>技工信息</th>
           </tr>
         </thead>
-        <tbody v-if="form.createProcessRequestList.length">
-          <tr v-for="(item,index) in form.createProcessRequestList"
+        <tbody v-if="form.jobDetailProcessResponseList.length">
+          <tr v-for="(item,index) in form.jobDetailProcessResponseList"
               :key="index">
             <td>{{index}}</td>
             <td>{{item.name}}</td>
-            <td>{{item.unitPrice}}</td>
+            <td>{{item.unitPrice.value}}</td>
             <td>
               <div class="td-img"
-                  v-if="item.photos.length">
-                <img :src="item.photos[0].url"
-                    alt="图标">
-                <span>x{{item.photos.length||0}}</span>
+                   v-if="item.imagesIds">
+                <img :src="item.imagesIds"
+                     alt="图标">
+                <span>x{{item.imagesIds.split(',').length||0}}</span>
               </div>
             </td>
             <td>{{item.remark}}</td>
@@ -137,7 +143,7 @@
           </tr>
         </tbody>
         <tbody v-else
-              class="empty">
+               class="empty">
           <tr>
             <td colspan="6">暂无数据</td>
           </tr>
@@ -218,7 +224,7 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-// import { sys_version_file_upload, h5_job_create } from '@/http/api'
+import { h5_job_updateStatus,h5_job_findById } from '@/http/api'
 export default {
   name: 'Detail',
   components: {
@@ -239,26 +245,12 @@ export default {
         unitPrice: 1,//单价
         remark: '',
         imagesIds: '',
-        createProcessRequestList: [
-          {
-            name: '123',
-            unitPrice: 1,
-            imagesIds: 'asdasdasd',
-            remark: 'asdasd',
-            photos: []
-          },
-          {
-            name: '123',
-            unitPrice: 1,
-            imagesIds: 'asdasdasd',
-            remark: 'asdasd',
-            photos: []
-          }
-        ],
+        jobDetailProcessResponseList: [],
         ids: '0', //以下是写死的
         num: '0',
         pidId: '0',
-        share: false
+        share: false,
+        jobStatus:'INIT'
       },
       photos: [],
       dialogForm: {
@@ -275,7 +267,7 @@ export default {
     handleConfirmShare() {
       this.dialogVisible = false
     },
-    close () {
+    close() {
       this.dialogFormInit()
     },
     // 弹窗 数据初始化
@@ -289,7 +281,31 @@ export default {
       }
     },
     // 开始
-    handleStart() {
+    async handleStart() {
+      const res = await this.changeStatus('START')
+      if(res) {
+        Toast('开始')
+        this.form.jobStatus = 'START'
+      }
+    },
+    changeStatus(jobStatus) {
+      return new Promise((resolve) => {
+        const params = {
+          id: this.form.id,
+          jobStatus
+        }
+        this.$http.post(h5_job_updateStatus, params).then(res=>{
+          if (!res.success) {
+            resolve(false)
+          } else {
+            resolve(true)
+          }
+        }).catch(err=>{
+          console.log(err)
+          resolve(false)
+        })
+        
+      })
 
     },
     // 完成
@@ -298,21 +314,48 @@ export default {
         message: '确认完成?',
         confirmButtonColor: '#cb9400'
       })
-        .then(() => {
+        .then(async () => {
           // on confirm
+          const res = await this.changeStatus('Finish')
+          if(res) {
+            Toast('完成')
+            this.form.jobStatus = 'Finish'
+          }
         })
         .catch(() => {
           // on cancel
         })
     },
     // 暂停
-    handleSuspend() {
-
+    async handleSuspend() {
+      const res = await this.changeStatus('PAUSE')
+      if(res) {
+        Toast('开始')
+        this.form.jobStatus = 'PAUSE'
+      }
     },
     // 再次创建
     handleCreate() {
 
+    },
+    async echoData() {
+      const params = {
+        id:Number(this.$route.query.id)
+      }
+      const res = await this.$http({
+        method:'get',
+        url:h5_job_findById,
+        params
+      })
+      if(!res.success) {
+        return Toast(res.msg)
+      }
+      this.form = res.model
+      
     }
+  },
+  created() {
+    this.echoData()
   }
 }
 </script>
@@ -321,7 +364,7 @@ export default {
 .detail {
   .views {
     width: 100%;
-    height: calc( 100vh - 36px );
+    height: calc(100vh - 36px);
     overflow-y: scroll;
   }
   .share {

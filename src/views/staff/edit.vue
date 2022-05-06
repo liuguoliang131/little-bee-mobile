@@ -1,9 +1,9 @@
 <!--
- * @Date: 2022-04-29 16:50:15
+ * @Date: 2022-05-06 18:30:36
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 17:10:33
- * @FilePath: \little-bee-mobile\src\views\staff\add.vue
- * @Description: 添加员工
+ * @LastEditTime: 2022-05-06 19:00:52
+ * @FilePath: \little-bee-mobile\src\views\staff\edit.vue
+ * @Description: 编辑员工
 -->
 <template>
   <div class="staffAdd">
@@ -90,7 +90,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
-import { h5_employee_create } from '@/http/api'
+import { h5_employee_update } from '@/http/api'
 import {
   Button,
   Form,
@@ -124,15 +124,17 @@ export default {
         salaryType: 'BASIC_SALARY',
         sex: 1,
         remark: '',
-        appId:'',
-        openId:''
+        appId: '',
+        openId: '',
+        employeeId: null,
+        companyId: null
       },
       showCalendar: false
     }
   },
   methods: {
     minDate() {
-      return new Date(1980,1,1)
+      return new Date(1980, 1, 1)
     },
     maxDate() {
       const oneYearAfter = Date.now() + 31536000000 //最大可选从现在开始一年后
@@ -144,23 +146,46 @@ export default {
       this.showCalendar = false
     },
     async onSubmit() {
-      const toast = Toast.loading({
-        duration: 0, // 持续展示 toast
-        forbidClick: true,
-        message: '加载中'
-      })
-      const params = {
-        ...this.form,
-        phone: this.form.phone.toString()
+      try {
+        const toast = Toast.loading({
+          duration: 0, // 持续展示 toast
+          forbidClick: true,
+          message: '加载中'
+        })
+        const params = {
+          ...this.form,
+          phone: this.form.phone.toString()
+        }
+        const res = await this.$http.post(h5_employee_update, params)
+        toast.clear()
+        if (!res.success) {
+          return Toast(res.msg)
+        }
+        Toast('保存成功')
+        this.$store.commit('staff/set_item', this.form)
+        this.$router.go(-1)
+      } catch (error) {
+        console.log('error')
+        Toast('error')
       }
-      const res = await this.$http.post(h5_employee_create, params)
-      toast.clear()
-      if (!res.success) {
-        return Toast(res.msg)
+
+    },
+    echoData() {
+      if(this.$store.state.staff.item) {
+        const item = JSON.parse(JSON.stringify(this.$store.state.staff.item))
+        item.id = item.employeeId
+        this.form = Object.assign(this.form, item)
+      }else {
+        this.form.id = Number(this.$route.query.id)
       }
-      Toast('创建成功')
-      this.$router.go(-1)
+      
+      
+      
+
     }
+  },
+  created() {
+    this.echoData()
   }
 }
 </script>
