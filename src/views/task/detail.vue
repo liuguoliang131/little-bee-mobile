@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 19:59:15
+ * @LastEditTime: 2022-05-07 17:14:33
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -75,20 +75,22 @@
             <div>利润: {{2}}元</div>
           </div>
           <div class="b-2">
-            <van-button
-            v-show="form.jobStatus==='PAUSE'||form.jobStatus==='INIT'" color="#CB9400"
+            <van-button v-show="form.jobStatus==='PAUSE'||form.jobStatus==='INIT'"
+                        color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
                         size="small"
                         @click="handleStart">开始</van-button>
-            <van-button v-show="form.jobStatus!=='Finish'" color="#CB9400"
+            <van-button v-show="form.jobStatus!=='Finish'"
+                        color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
                         size="small"
                         @click="handleComplete">完成</van-button>
-            <van-button v-show="form.jobStatus==='START'" color="#CB9400"
+            <van-button v-show="form.jobStatus==='START'"
+                        color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
@@ -130,15 +132,15 @@
             <td>{{item.unitPrice.value}}</td>
             <td>
               <div class="td-img"
-                   v-if="item.imagesIds">
-                <img :src="item.imagesIds"
+                   v-if="item.imagesResponseList&&item.imagesResponseList.length">
+                <img :src="item.imagesResponseList[0].url"
                      alt="图标">
-                <span>x{{item.imagesIds.split(',').length||0}}</span>
+                <span>x{{item.imagesResponseList.length||0}}</span>
               </div>
             </td>
             <td>{{item.remark}}</td>
             <td>
-              技工1 x5 技工2 x5
+              <!-- 技工1 x5 技工2 x5 -->
             </td>
           </tr>
         </tbody>
@@ -224,7 +226,7 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-import { h5_job_updateStatus,h5_job_findById } from '@/http/api'
+import { h5_job_updateStatus, h5_job_findById } from '@/http/api'
 export default {
   name: 'Detail',
   components: {
@@ -250,7 +252,10 @@ export default {
         num: '0',
         pidId: '0',
         share: false,
-        jobStatus:'INIT'
+        jobStatus: 'INIT',
+        totalPrice:{
+          value:0
+        }
       },
       photos: [],
       dialogForm: {
@@ -283,7 +288,7 @@ export default {
     // 开始
     async handleStart() {
       const res = await this.changeStatus('START')
-      if(res) {
+      if (res) {
         Toast('开始')
         this.form.jobStatus = 'START'
       }
@@ -294,17 +299,17 @@ export default {
           id: this.form.id,
           jobStatus
         }
-        this.$http.post(h5_job_updateStatus, params).then(res=>{
+        this.$http.post(h5_job_updateStatus, params).then(res => {
           if (!res.success) {
             resolve(false)
           } else {
             resolve(true)
           }
-        }).catch(err=>{
+        }).catch(err => {
           console.log(err)
           resolve(false)
         })
-        
+
       })
 
     },
@@ -317,7 +322,7 @@ export default {
         .then(async () => {
           // on confirm
           const res = await this.changeStatus('Finish')
-          if(res) {
+          if (res) {
             Toast('完成')
             this.form.jobStatus = 'Finish'
           }
@@ -329,29 +334,44 @@ export default {
     // 暂停
     async handleSuspend() {
       const res = await this.changeStatus('PAUSE')
-      if(res) {
+      if (res) {
         Toast('开始')
         this.form.jobStatus = 'PAUSE'
       }
     },
     // 再次创建
     handleCreate() {
-
+      let data = {
+        ...this.form,
+        photos:this.photos
+      }
+      this.$store.commit('task/set_item',data)
+      this.$router.push({
+        path:'/createTask',
+        query:{
+          type:'again'
+        }
+      })
     },
     async echoData() {
       const params = {
-        id:Number(this.$route.query.id)
+        id: Number(this.$route.query.id)
       }
       const res = await this.$http({
-        method:'get',
-        url:h5_job_findById,
+        method: 'get',
+        url: h5_job_findById,
         params
       })
-      if(!res.success) {
+      if (!res.success) {
         return Toast(res.msg)
       }
-      this.form = res.model
+      const form = res.model
+      // 获取图片
+      if(form.imagesIds) {
+        this.photos = await this.$utils.getPhoto(form.imagesIds)
+      }
       
+      this.form = form
     }
   },
   created() {
@@ -427,6 +447,7 @@ export default {
     font-size: 12px;
     background-color: #fff;
     box-shadow: 0px 0px 9px 0px rgba(51, 51, 51, 0.05);
+    z-index: 9;
     .b-1 {
       flex: 1;
       color: #666666;

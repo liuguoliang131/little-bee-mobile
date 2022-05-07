@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-27 14:24:15
+ * @LastEditTime: 2022-05-07 13:11:15
  * @FilePath: \little-bee-mobile\src\http\index.js
  * @Description: 
  */
@@ -11,7 +11,9 @@ import store from '@/store/index'
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
   timeout: 10000,
-  headers: {'token':store.getters['user/get_token']||''}
+  headers: {
+    // 'token':store.getters['user/get_token']||''
+  }
 });
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {

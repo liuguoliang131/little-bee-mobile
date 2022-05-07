@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 19:43:55
+ * @LastEditTime: 2022-05-07 11:07:36
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -30,3 +30,5 @@ export const h5_employee_create = '/h5/employee/create' //创建post
 export const h5_employee_findById = '/h5/employee/findById' //详情get
 export const h5_employee_findPage = '/h5/employee/findPage' //列表post
 export const h5_employee_update = '/h5/employee/update' //编辑post
+
+export const sys_version_file_findByIds = '/sys/version/file/findByIds'  //获取图片

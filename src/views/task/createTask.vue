@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:32:55
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 14:06:24
+ * @LastEditTime: 2022-05-07 17:15:00
  * @FilePath: \little-bee-mobile\src\views\task\createTask.vue
  * @Description: 创建任务
 -->
@@ -11,43 +11,43 @@
     <div class="views">
       <van-form @submit="onSubmit">
         <van-field v-model.trim="form.title"
-                  type="text"
-                  name="title"
-                  label="标题"
-                  placeholder="请输入标题"
-                  required
-                  :rules="[{ required: true, message: '请填写标题' }]" />
+                   type="text"
+                   name="title"
+                   label="标题"
+                   placeholder="请输入标题"
+                   required
+                   :rules="[{ required: true, message: '请填写标题' }]" />
         <van-field v-model.trim="form.sortTitle"
-                  type="text"
-                  name="sortTitle"
-                  label="副标题"
-                  placeholder="请输入副标题"
-                  required
-                  :rules="[{ required: true, message: '请填写标题' }]" />
+                   type="text"
+                   name="sortTitle"
+                   label="副标题"
+                   placeholder="请输入副标题"
+                   required
+                   :rules="[{ required: true, message: '请填写标题' }]" />
         <van-field v-model="form.count"
-                  type="digit"
-                  name="count"
-                  label="数量"
-                  placeholder="请输入数量"
-                  required
-                  :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]" />
+                   type="digit"
+                   name="count"
+                   label="数量"
+                   placeholder="请输入数量"
+                   required
+                   :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]" />
         <van-field v-model="form.unitPrice"
-                  type="number"
-                  name="unitPrice"
-                  label="单价"
-                  placeholder="请输入单价"
-                  required
-                  :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]" />
+                   type="number"
+                   name="unitPrice"
+                   label="单价"
+                   placeholder="请输入单价"
+                   required
+                   :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]" />
         <van-field v-model.trim="form.remark"
-                  type="text"
-                  name="remark"
-                  label="备注"
-                  placeholder="请输入备注" />
+                   type="text"
+                   name="remark"
+                   label="备注"
+                   placeholder="请输入备注" />
         <van-field v-model="totalPrice"
-                  type="number"
-                  name="totalPrice"
-                  label="总价"
-                  :disabled="true" />
+                   type="number"
+                   name="totalPrice"
+                   label="总价"
+                   :disabled="true" />
         <div class="file">
           <span class="label">图片</span>
           <van-uploader v-model="photos"
@@ -102,9 +102,9 @@
             <td>{{item.unitPrice}}</td>
             <td>
               <div class="td-img"
-                  v-if="item.photos.length">
+                   v-if="item.photos.length">
                 <img :src="item.photos[0].url"
-                    alt="图标">
+                     alt="图标">
                 <span>x{{item.photos.length||0}}</span>
               </div>
             </td>
@@ -116,7 +116,7 @@
           </tr>
         </tbody>
         <tbody v-else
-              class="empty">
+               class="empty">
           <tr>
             <td colspan="6">暂无数据</td>
           </tr>
@@ -124,7 +124,7 @@
       </table>
       <footer></footer>
     </div>
-    
+
     <van-dialog v-model="dialogVisible"
                 title="创建工序"
                 :showConfirmButton="false"
@@ -382,7 +382,42 @@ export default {
     // 关闭弹窗
     close() {
       this.dialogFormInit()
+    },
+    // 如果是重新创建的话 回显
+    echoData() {
+      if(this.$route.query.type!=='again') return false
+      let data = this.$store.state.task.item
+      if (!data) {
+        return false
+      }
+      const jobDetailProcessResponseList = []
+      data.jobDetailProcessResponseList.forEach(item => {
+        jobDetailProcessResponseList.push({
+          name: item.name,
+          unitPrice: item.unitPrice.value,
+          imagesIds: '',
+          photos: item.imagesResponseList || [],
+          remark: item.remark || ''
+        })
+      })
+      this.form = {
+        title: data.title,
+        sortTitle: data.sortTitle,
+        count: data.count,
+        unitPrice: data.unitPrice,//单价
+        remark: data.remark || '',
+        imagesIds: data.imagesIds,
+        createProcessRequestList: jobDetailProcessResponseList,
+        ids: '0', //以下是写死的
+        num: '0',
+        pidId: '0',
+        share: false
+      }
+      this.photos = data.photos
     }
+  },
+  created() {
+    this.echoData()
   }
 }
 </script>
@@ -391,7 +426,7 @@ export default {
 .createTask {
   .views {
     width: 100%;
-    height: calc( 100vh - 36px );
+    height: calc(100vh - 36px);
     overflow-y: scroll;
   }
   .sub-btn {
@@ -436,6 +471,7 @@ export default {
     height: 100px;
   }
   .fixed-b {
+    z-index: 9;
     position: fixed;
     bottom: 0;
     left: 0;

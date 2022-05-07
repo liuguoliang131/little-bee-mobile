@@ -1,29 +1,31 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 16:19:42
+ * @LastEditTime: 2022-05-07 13:17:21
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
+import { sys_version_file_findByIds } from '@/http/api'
+import instance from '@/http/index'
 const utils = {
 
 }
 utils.getToken = function () {
-  return window.localStorage.getItem('token')||''
+  return window.localStorage.getItem('token') || ''
 }
 utils.setToken = function (param) {
   if ((typeof param) === 'string') {
-    window.localStorage.setItem('token',param)
+    window.localStorage.setItem('token', param)
   }
-  
+
 }
 utils.deleteToken = function () {
-    window.localStorage.removeItem('token')
+  window.localStorage.removeItem('token')
 }
 
 // 获取用户信息
 utils.getUserInfo = function () {
-  return window.localStorage.getItem('littleBeeUserInfo') ? JSON.parse( window.localStorage.getItem('littleBeeUserInfo')) : null
+  return window.localStorage.getItem('littleBeeUserInfo') ? JSON.parse(window.localStorage.getItem('littleBeeUserInfo')) : null
 }
 // 存储用户信息
 utils.setUserInfo = function (data) {
@@ -41,15 +43,15 @@ utils.getDynamicRoutes = function () {
 }
 // 保存动态路由
 utils.setDynamicRoutes = function (data) {
-  window.localStorage.setItem('dynamicRoutes',JSON.stringify(data))
-  
+  window.localStorage.setItem('dynamicRoutes', JSON.stringify(data))
+
 }
 
 // 时间格式化 2022-05-22 05:22:00
 utils.formatTime = function (data) {
   const date = new Date(data)
   let y = date.getFullYear()
-  let mon = date.getMonth()+1
+  let mon = date.getMonth() + 1
   let d = date.getDate()
   let h = date.getHours()
   let m = date.getMinutes()
@@ -62,6 +64,50 @@ utils.formatTime = function (data) {
   s = s < 10 ? '0' + s : s
 
   return `${y}-${mon}-${d} ${h}:${m}:${s}`
-  
+
+}
+
+// 根据图片ID获取图片地址
+utils.getPhoto = function (ids) {
+  return new Promise((resolve) => {
+    instance({
+      method: 'get',
+      url: sys_version_file_findByIds,
+      params: {
+        ids
+      }
+    }).then(res => {
+      console.log('p',res)
+      resolve(res.model||[])
+    }).catch(error => {
+      console.log(error)
+      resolve([])
+    })
+  })
+}
+// 批量获取图片  返回数组
+utils.getPhotos = function (list) {
+  const newList = []
+  let index = 0
+  const deepGet = async (id) => {
+    if (index + 1 === list.length) {
+      return false
+    }
+    const res = await instance({
+      method: 'get',
+      url: sys_version_file_findByIds,
+      params: {
+        id
+      }
+    })
+    if (res.success) {
+      newList.push({ url: res.model.url || '' })
+      deepGet(list[++index])
+    } else {
+      deepGet(list[++index])
+    }
+  }
+  deepGet(list[index])
+  return newList
 }
 export default utils
