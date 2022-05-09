@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-29 16:11:24
+ * @LastEditTime: 2022-05-09 17:27:24
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -12,6 +12,7 @@
       <span class="date">{{searchParams.date}}</span>
       <div class="input">
         <input v-model="searchParams.keywords"
+        placeholder="请输入员工姓名"
                type="text"
                name=""
                id="">
@@ -27,17 +28,23 @@
           员工
         </div>
         <div class="scroll-list">
-          <div class="staff-item"
-               v-for="item in 100"
-               :key="item">{{'员工'+item}}</div>
+          <div :class="['staff-item',item.employeeId===activeStaff.employeeId?'active':'']"
+               v-for="item in staffList"
+               :key="item.employeeId"
+               @click="handleActiveStaff(item)">{{item.name}}</div>
         </div>
       </div>
-      <div class="views-right">
-        <div v-for="index in 12"
-             :key="index">
-          防护服 前道 x30
+      <div class="views-right"
+           v-if="list.length">
+        <div v-for="(item,index) in list"
+             :key="index"
+             class="list-item">
+          {{item.sortTitle}}&nbsp;{{item.processName}}x{{item.processFinishCount}}
         </div>
-
+      </div>
+      <div class="views-right"
+           v-else>
+        暂无数据
       </div>
     </div>
   </div>
@@ -45,9 +52,11 @@
 
 <script>
 import {
-  Button
+  Button,
+  Toast
 } from 'vant'
 import Bread from '@/components/bread/index.vue'
+import { h5_employee_findPage, h5_process_userBillingPageDetails } from '@/http/api'
 export default {
   name: 'OperationDetail',
   components: {
@@ -57,67 +66,60 @@ export default {
   data() {
     return {
       searchParams: {
-        date: '2022-04-15',
+        date: this.$utils.getToday(),
         keywords: ''
       },
+      staffList: [],
+      activeStaff: {},
       active: null,
-      tabs: [
-        {
-          name: '男士西服',
-          id: 1,
-          list: [
-            {
-              name: '裁剪1',
-              count: ''
-            },
-            {
-              name: '裁剪2',
-              count: ''
-            },
-            {
-              name: '裁剪3',
-              count: ''
-            }
-          ]
-        },
-        {
-          name: '男士西服2',
-          id: 2,
-          list: [
-            {
-              name: '裁剪4',
-              count: ''
-            },
-            {
-              name: '裁剪5',
-              count: ''
-            },
-            {
-              name: '裁剪6',
-              count: ''
-            }
-          ]
-        },
-        {
-          name: '男士西服3',
-          id: 3,
-          list: [
-            {
-              name: '裁剪7',
-              count: ''
-            },
-            {
-              name: '裁剪8',
-              count: ''
-            },
-            {
-              name: '裁剪9',
-              count: ''
-            }
-          ]
-        }
-      ]
+      list: []
     }
+  },
+  methods: {
+    handleActiveStaff(item) {
+      this.activeStaff = item
+      this.getList()
+    },
+    // 获取左侧员工列表
+    async getStaffList() {
+      try {
+        let params = {
+          ...this.searchParams
+        }
+        const res = await this.$http.post(h5_employee_findPage, params)
+        if (!res.success) {
+          return Toast(res.msg)
+        }
+        this.staffList = res.model.data || []
+        this.activeStaff = {}
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getList() {
+      const data = {
+        employeeId: this.activeStaff.employeeId,
+        billData: this.searchParams.date,
+        pageSize: 999999,
+        pageNo: 1
+      }
+      const res = await this.$http({
+        method: 'post',
+        url: h5_process_userBillingPageDetails,
+        data
+      })
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      this.list = res.model || []
+
+    },
+    handleSearch() {
+      this.getStaffList()
+    },
+  },
+  created() {
+    this.getStaffList()
   }
 }
 </script>
@@ -125,6 +127,9 @@ export default {
 <style scoped lang="less">
 .operationEdit {
   background-color: #f7f7f7;
+  .active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
   .search {
     padding: 10px 15px;
     display: flex;
@@ -190,6 +195,9 @@ export default {
       padding: 15px;
       overflow-y: scroll;
       overflow-x: hidden;
+      .list-item {
+        line-height: 30px;
+      }
     }
   }
 }

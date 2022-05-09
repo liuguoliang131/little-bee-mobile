@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 16:56:23
+ * @LastEditTime: 2022-05-09 18:39:24
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
@@ -16,7 +16,8 @@
           <div class="vip-icon"></div>
           <div class="vip-1-text">北京厚鸟科技</div>
         </div>
-        <div class="vip-2">剩余8天过期</div>
+        <div class="vip-2" v-if="$store.state.user.userInfo.useDayCount">剩余{{$store.state.user.userInfo.useDayCount}}天过期</div>
+        <div class="vip-2" v-else>已过期</div>
         <div class="vip-xufei">立即续费</div>
       </div>
       <div class="card">

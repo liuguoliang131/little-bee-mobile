@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-07 11:07:36
+ * @LastEditTime: 2022-05-09 19:29:01
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -11,6 +11,7 @@ export const host = process.env.VUE_APP_BASE_URL //请求地址
 export const h5_login_login = '/h5/login/login'//登录
 export const sys_sms_send = '/sys/sms/send' // 短信验证码
 export const h5_company_register = '/h5/company/register' //注册企业
+export const h5_company_findById = '/h5/company/findById' //企业信息
 
 export const sys_version_file_upload = '/sys/version/file/upload' //上传文件
 
@@ -18,10 +19,10 @@ export const h5_job_findPage = '/h5/job/findPage' // 任务列表
 export const h5_job_updateStatus = '/h5/job/updateStatus' // 任务状态修改
 export const h5_job_create = '/h5/job/create' // 创建任务
 export const h5_job_findById = '/h5/job/findById' //详情
-
+export const job_deleteById = '/job/deleteById' //删除任务
 // 工序记账
 export const h5_process_findPage = '/h5/process/findPage' //列表
-export const h5_process_billingDetails = '/h5/process/billingDetails' //编辑
+export const h5_process_billingDetails = '/h5/process/billingDetails' //详情
 export const h5_process_createBilling = '/h5/process/createBilling' //创建
 export const h5_process_userBillingPageDetails = '/h5/process/userBillingPageDetails' //详情
 
@@ -32,3 +33,8 @@ export const h5_employee_findPage = '/h5/employee/findPage' //列表post
 export const h5_employee_update = '/h5/employee/update' //编辑post
 
 export const sys_version_file_findByIds = '/sys/version/file/findByIds'  //获取图片
+
+// 绩效统计
+
+export const h5_performanceStatistics_findPage = '/h5/performanceStatistics/findPage'  //工资列表
+export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatistics/companyStatistics' //企业统计 

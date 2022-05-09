@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 12:43:30
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 14:08:29
+ * @LastEditTime: 2022-05-09 19:52:37
  * @FilePath: \little-bee-mobile\src\views\staff\statistics.vue
  * @Description: 绩效统计
 -->
@@ -9,22 +9,19 @@
   <div class="Statistics">
     <bread></bread>
     <div class="views">
-      <van-field
-        v-model="month"
-        is-link
-        readonly
-        name="picker"
-        label="月份"
-        placeholder="点击选择月份"
-        @click="showPicker = true"
-      />
-      <van-popup v-model="showPicker" position="bottom">
-        <van-picker
-          show-toolbar
-          :columns="columns"
-          @confirm="handleMonthConfirm"
-          @cancel="showPicker = false"
-        />
+      <van-field v-model="month"
+                 is-link
+                 readonly
+                 name="picker"
+                 label="月份"
+                 placeholder="点击选择月份"
+                 @click="showPicker = true" />
+      <van-popup v-model="showPicker"
+                 position="bottom">
+        <van-picker show-toolbar
+                    :columns="columns"
+                    @confirm="handleMonthConfirm"
+                    @cancel="showPicker = false" />
       </van-popup>
       <table>
         <thead>
@@ -37,12 +34,19 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{{index}}</td>
-            <td>张</td>
-            <td>固定工资</td>
-            <td>11222</td>
-            <td><van-icon name="more-o" /></td>
+          <tr v-for="(item,idx) in tableData" :key="item.id">
+            <td>{{idx}}</td>
+            <td>{{item.employeeName}}</td>
+            <td>
+              <span v-if="item.salaryType==='BASIC_SALARY'">基本工资</span>
+              <span v-else-if="item.salaryType==='GUARANTEED_SALARY'">保底工资</span>
+              <span v-else-if="item.salaryType==='FIXED_SALARY'">固定工资</span>
+              <span v-else-if="item.salaryType==='INIT'">未设置</span>
+            </td>
+            <td>{{item.totalAmount.value}}</td>
+            <td>
+              <van-icon name="more-o" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -51,27 +55,30 @@
 </template>
 <script>
 import Bread from '@/components/bread/index'
+import { h5_performanceStatistics_findPage } from '@/http/api'
 import {
   Popup,
   Field,
   Picker,
   Button,
-  Icon
+  Icon,
+  Toast
 } from 'vant'
 export default {
-  name:'Statistics',
+  name: 'Statistics',
   components: {
     Bread,
-    VanPopup:Popup,
-    VanField:Field,
-    VanPicker:Picker,
-    VanButton:Button,
-    VanIcon:Icon
+    VanPopup: Popup,
+    VanField: Field,
+    VanPicker: Picker,
+    VanButton: Button,
+    VanIcon: Icon
   },
   data() {
     return {
-      showPicker:false,
-      columns:[
+      showPicker: false,
+      columns: [
+        '全部',
         '1月',
         '2月',
         '3月',
@@ -85,7 +92,8 @@ export default {
         '11月',
         '12月'
       ],
-      month:null
+      month: null,
+      tableData:[]
     }
   },
   methods: {
@@ -93,13 +101,72 @@ export default {
       console.log(e)
       this.month = e
       this.showPicker = false
+      this.getList()
+    },
+    async getList() {
+      let salaryData = ''
+      let year = new Date().getFullYear()
+      switch (this.month) {
+        case '全部':
+          salaryData = ''
+          break
+        case '1月':
+          salaryData = year + '-01'
+          break
+        case '2月':
+          salaryData = year + '-02'
+          break
+        case '3月':
+          salaryData = year + '-03'
+          break
+        case '4月':
+          salaryData = year + '-04'
+          break
+        case '5月':
+          salaryData = year + '-05'
+          break
+        case '6月':
+          salaryData = year + '-06'
+          break
+        case '7月':
+          salaryData = year + '-07'
+          break
+        case '8月':
+          salaryData = year + '-08'
+          break
+        case '9月':
+          salaryData = year + '-09'
+          break
+        case '10月':
+          salaryData = year + '-10'
+          break
+        case '11月':
+          salaryData = year + '-11'
+          break
+        case '12月':
+          salaryData = year + '-12'
+          break
+        default:
+          salaryData = ''
+          break
+      }
+      const params = {
+        salaryData
+      }
+      const res = await this.$http.post(h5_performanceStatistics_findPage,params)
+      if(!res.success) {
+        return Toast(res.msg)
+      }
+      this.tableData = res.model.data||[]
     }
+  },
+  created() {
+    this.getList()
   }
 }
 </script>
 
 <style scoped lang="less">
 .Statistics {
-
 }
 </style>

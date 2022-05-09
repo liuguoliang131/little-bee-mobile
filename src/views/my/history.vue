@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 19:06:04
+ * @LastEditTime: 2022-05-09 19:40:11
  * @FilePath: \little-bee-mobile\src\views\my\history.vue
  * @Description: 历史纪录
 -->
@@ -25,11 +25,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item,index) in tableData.items" :key="index">
+          <tr v-for="(item,index) in tableData.data" :key="index">
             <td>{{index}}</td>
-            <td>标题1</td>
-            <td>1231</td>
-            <td>11</td>
+            <td>{{item.sortTitle}}</td>
+            <td>{{$utils.formatTime(item.createTime)}}</td>
+            <td>{{item.count}}</td>
             <td>
               <van-icon class="del" name="delete-o"
                       @click="handleShowDelDialog(item)" />
@@ -50,6 +50,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
+import { h5_job_findPage,job_deleteById } from '@/http/api'
 import {
   Search,
   Toast,
@@ -64,13 +65,11 @@ export default {
       searchParams: {
         pageNo:1,
         pageSize:20,
-        keywords:''
+        keywords:'',
+        jobStatus:'Finish'
       },
       tableData:{
-        items:[
-          {},
-          {}
-        ],
+        data:[],
         sumRow:0
       }
     }
@@ -83,6 +82,10 @@ export default {
     Bread
   },
   methods: {
+    handleSearch() {
+      this.searchParams.pageNo = 1
+      this.getList()
+    },
     async getList() {
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast
@@ -97,7 +100,6 @@ export default {
           data: this.searchParams
         })
         toast.clear()
-        this.reloading = false
         if (!res.success) {
           return Toast(res.msg)
         }
@@ -107,7 +109,6 @@ export default {
         this.tableData = res.model
       } catch (error) {
         toast.clear()
-        this.reloading = false
         console.log(error)
         throw error
       }
@@ -120,17 +121,16 @@ export default {
       }).then(async () => {
         // on confirm
         const res = await this.$http({
-          method: 'post',
-          url: h5_job_updateStatus,
-          data: {
-            id: item.id,
-            jobStatus: 'Finish'
+          method: 'get',
+          url: job_deleteById,
+          params: {
+            id: item.id
           }
         })
         if (!res.success) {
           return Toast(res.msg)
         }
-        this.tableData.splice((() => {
+        this.tableData.data.splice((() => {
           let idx = null
           this.tableData.forEach((item1, index1) => {
             if (item1.id === item.id) {
@@ -143,7 +143,19 @@ export default {
       }).catch(() => {
         // on cancel
       })
+    },
+    // 进入详情页
+    handleShowMore(item) {
+      this.$router.push({
+        path: '/detail',
+        query: {
+          id: item.id
+        }
+      })
     }
+  },
+  created() {
+    this.getList()
   }
 }
 </script>

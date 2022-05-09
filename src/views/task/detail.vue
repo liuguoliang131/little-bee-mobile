@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-07 17:14:33
+ * @LastEditTime: 2022-05-09 09:47:23
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -71,8 +71,8 @@
         </div> -->
         <div class="fixed-b">
           <div class="b-1">
-            <div>工序合计: {{1}}元</div>
-            <div>利润: {{2}}元</div>
+            <div>工序合计: {{processTotal}}元</div>
+            <div>利润: {{profit}}元</div>
           </div>
           <div class="b-2">
             <van-button v-show="form.jobStatus==='PAUSE'||form.jobStatus==='INIT'"
@@ -262,6 +262,36 @@ export default {
 
       },
       dialogVisible: false
+    }
+  },
+  computed: {
+    // 总和
+    totalPrice() {
+      if (!this.form.count || !this.form.unitPrice) {
+        return 0
+      }
+      return Number((this.form.count * this.form.unitPrice).toFixed(2))
+    },
+    // 工序合计
+    processTotal() {
+      if (!this.form.count) {
+        return 0
+      }
+      let sum = 0
+      this.form.jobDetailProcessResponseList.forEach(item => {
+        console.log('process',item.unitPrice.value)
+        sum += Number(item.unitPrice.value)
+      })
+      console.log('sum',sum)
+      console.log('sum*count',sum * this.form.count)
+      return Number((sum * this.form.count).toFixed(2))
+    },
+    // 利润
+    profit() {
+      if (!this.totalPrice) {
+        return 0
+      }
+      return Number((this.totalPrice - this.processTotal).toFixed(2))
     }
   },
   methods: {

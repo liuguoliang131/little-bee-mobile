@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 17:10:33
+ * @LastEditTime: 2022-05-09 19:45:14
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -68,8 +68,8 @@
             <template #input>
               <van-radio-group v-model="form.disabledStatus"
                                direction="horizontal">
-                <van-radio :name="true">在职</van-radio>
-                <van-radio :name="false">离职</van-radio>
+                <van-radio :name="false">在职</van-radio>
+                <van-radio :name="true">离职</van-radio>
               </van-radio-group>
             </template>
           </van-field>

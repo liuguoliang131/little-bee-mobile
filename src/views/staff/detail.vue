@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 11:07:19
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 18:58:48
+ * @LastEditTime: 2022-05-09 19:45:22
  * @FilePath: \little-bee-mobile\src\views\staff\detail.vue
  * @Description: 员工详情
 -->
@@ -72,8 +72,8 @@
               <van-radio-group :disabled="true"
                                v-model="form.disabledStatus"
                                direction="horizontal">
-                <van-radio :name="true">在职</van-radio>
-                <van-radio :name="false">离职</van-radio>
+                <van-radio :name="false">在职</van-radio>
+                <van-radio :name="true">离职</van-radio>
               </van-radio-group>
             </template>
           </van-field>

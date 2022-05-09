@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 19:16:45
+ * @LastEditTime: 2022-05-09 19:50:07
  * @FilePath: \little-bee-mobile\src\views\my\quitForm.vue
  * @Description: 历史纪录
 -->
@@ -26,15 +26,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item,index) in tableData.items" :key="index">
+          <tr v-for="(item,index) in tableData.data"
+              :key="index">
             <td>{{index}}</td>
-            <td>标题1</td>
-            <td>1231</td>
-            <td>11</td>
-            <td>19点16分</td>
+            <td>{{item.name}}</td>
+            <td>{{item.phone}}</td>
+            <td>离职</td>
+            <td>{{$utils.formatTime(item.entryTime)}}</td>
             <td>
-            <van-icon name="more-o"
-                      @click="handleShowMore(item)" />
+              <van-icon name="more-o"
+                        @click="handleShowMore(item)" />
             </td>
           </tr>
         </tbody>
@@ -50,6 +51,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
+import { h5_employee_findPage } from '@/http/api'
 import {
   Search,
   Toast,
@@ -58,20 +60,21 @@ import {
   Dialog
 } from 'vant'
 export default {
-  name:'history',
+  name: 'history',
   data() {
     return {
       searchParams: {
-        pageNo:1,
-        pageSize:20,
-        keywords:''
+        pageNo: 1,
+        pageSize: 20,
+        keywords: '',
+        disabledStatus: true
       },
-      tableData:{
-        items:[
+      tableData: {
+        items: [
           {},
           {}
         ],
-        sumRow:0
+        sumRow: 0
       }
     }
   },
@@ -79,7 +82,7 @@ export default {
     VanSearch: Search,
     VanIcon: Icon,
     VanPagination: Pagination,
-    VanDialog:Dialog,
+    VanDialog: Dialog,
     Bread
   },
   methods: {
@@ -93,7 +96,7 @@ export default {
 
         const res = await this.$http({
           method: 'post',
-          url: h5_job_findPage,
+          url: h5_employee_findPage,
           data: this.searchParams
         })
         toast.clear()
@@ -112,39 +115,38 @@ export default {
         throw error
       }
     },
-    // 删除弹框打开
-    handleShowDelDialog(item) {
-      Dialog.confirm({
-        message: '确定删除此任务?',
-        confirmButtonColor: '#CB9400'
-      }).then(async () => {
-        // on confirm
-        const res = await this.$http({
-          method: 'post',
-          url: h5_job_updateStatus,
-          data: {
-            id: item.id,
-            jobStatus: 'Finish'
-          }
-        })
-        if (!res.success) {
-          return Toast(res.msg)
-        }
-        this.tableData.splice((() => {
-          let idx = null
-          this.tableData.forEach((item1, index1) => {
-            if (item1.id === item.id) {
-              idx = index1
-            }
-          })
-          return idx
-        })(), 1)
-        Toast('删除成功')
-      }).catch(() => {
-        // on cancel
+
+    handleShowMore(item) {
+      this.$store.commit('staff/set_item', {
+        disabledStatus: item.disabledStatus,
+        entryTime: item.entryTime,
+        name: item.name,
+        phone: item.phone,
+        salaryAmount: item.salaryAmount ? item.salaryAmount.value : 0,
+        salaryType: item.salaryType,
+        sex: item.sex,
+        remark: item.remark || '',
+        appId: item.appId || '',
+        openId: item.openId || '',
+        employeeId: item.employeeId,
+        companyId: item.companyId
       })
+      this.$router.push({
+        path: '/staffDetail',
+        query: {
+          id: item.employeeId
+        }
+      })
+    },
+    handleSearch() {
+      this.searchParams.pageNo = 1
+      this.getList()
     }
+  },
+  created() {
+    this.getList()
   }
+
 }
 </script>
 

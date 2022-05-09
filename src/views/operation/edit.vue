@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 19:26:04
+ * @LastEditTime: 2022-05-09 17:29:02
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="views-right"
-           v-if="JSON.stringify(activeStaff)!=='{}'">
+           v-if="tabs.length">
         <van-tabs v-model="active"
                   color="#CB9400">
           <van-tab v-for="tabItem in tabs"
@@ -43,7 +43,9 @@
             <div class="tab-pane">
               <div class="sum-count">
                 <input type="number"
-                       placeholder="当天成品数量">
+                       placeholder="当天成品数量"
+                       v-model="tabItem.count"
+                       oninput="value=Math.abs(value)">
               </div>
               <div class="scroll-table">
                 <table>
@@ -58,8 +60,9 @@
                     <tr v-for="(item,index) in tabItem.list"
                         :key="item.id">
                       <td>{{index+1}}</td>
-                      <td>{{item.name}}</td>
+                      <td>{{item.name}}&nbsp;{{item.finishCount}}/{{item.totalCount}}</td>
                       <td><input type="number"
+                               oninput="value=Math.abs(value)"
                                v-model="item.count" /></td>
                     </tr>
                   </tbody>
@@ -67,8 +70,10 @@
                 <footer></footer>
               </div>
               <div class="fixed-button">
-                <van-button color="#CB9400"
-                            type="info">保存</van-button>
+                <van-button v-show="JSON.stringify(activeStaff)!=='{}'"
+                            color="#CB9400"
+                            type="info"
+                            @click="handleSubmit">保存</van-button>
               </div>
             </div>
           </van-tab>
@@ -90,7 +95,7 @@ import {
   Toast
 } from 'vant'
 import Bread from '@/components/bread/index.vue'
-import { h5_process_createBilling, h5_employee_findPage, h5_job_findPage } from '@/http/api'
+import { h5_process_createBilling, h5_employee_findPage, h5_job_findPage, h5_job_findById,h5_process_billingDetails } from '@/http/api'
 export default {
   name: 'OperationEdit',
   components: {
@@ -102,78 +107,65 @@ export default {
   data() {
     return {
       searchParams: {
-        date: '2022-04-15',
+        date: this.$utils.getToday(),
         keywords: ''
       },
       active: null,
       staffList: [],
-      tabs: [
-        {
-          name: '男士西服',
-          id: 1,
-          list: [
-            {
-              name: '裁剪1',
-              count: ''
-            },
-            {
-              name: '裁剪2',
-              count: ''
-            },
-            {
-              name: '裁剪3',
-              count: ''
-            }
-          ]
-        },
-        {
-          name: '男士西服2',
-          id: 2,
-          list: [
-            {
-              name: '裁剪4',
-              count: ''
-            },
-            {
-              name: '裁剪5',
-              count: ''
-            },
-            {
-              name: '裁剪6',
-              count: ''
-            }
-          ]
-        },
-        {
-          name: '男士西服3',
-          id: 3,
-          list: [
-            {
-              name: '裁剪7',
-              count: ''
-            },
-            {
-              name: '裁剪8',
-              count: ''
-            },
-            {
-              name: '裁剪9',
-              count: ''
-            }
-          ]
-        }
-      ],
+      tabs: [],
       activeStaff: {}
     }
   },
   methods: {
     handleActiveStaff(item) {
       this.activeStaff = item
+      this.echoData()
     },
     async handleSubmit() {
       try {
-        let params = {}
+        if (JSON.stringify(this.activeStaff) === '{}') {
+          return Toast('请选择员工')
+        }
+        if (!this.active && this.active !== 0) {
+          return Toast('请选择任务,无任务不可提交保存')
+        }
+        const activeTaskItem = this.tabs[this.active]
+        if (!activeTaskItem.list.length) {
+          return Toast('该任务下没有工序,不可提交保存')
+        }
+        if (!activeTaskItem.count) {
+          return Toast('任务下数量不能为空')
+        }
+        for (let i = 0; i < activeTaskItem.list.length; i++) {
+          const item = activeTaskItem.list[i]
+          if (!item.count || item.count == 0) {
+            return Toast(`工序${item.name}数量不能为空`)
+          }
+        }
+        const employeeBillingList = []
+        activeTaskItem.list.forEach(item => {
+          employeeBillingList.push({
+            jobId: activeTaskItem.id,
+            processId: item.id,
+            count: item.count
+          })
+        })
+        let params = {
+          billData:'',
+          // companyId: this.activeStaff.companyId,
+          employeeId: this.activeStaff.employeeId,
+          employeeBillingList,
+          finishedProductCount: activeTaskItem.count,
+          name: this.searchParams.date
+        }
+
+        const toast = Toast.loading({
+          message: '加载中',
+          forbidClick: true,
+        })
+
         const res = await this.$http.post(h5_process_createBilling, params)
+        toast.clear()
         if (!res.success) {
           return Toast(res.msg)
         }
@@ -188,30 +180,96 @@ export default {
     async getStaffList() {
       try {
         let params = {
-
+          ...this.searchParams
         }
         const res = await this.$http.post(h5_employee_findPage, params)
         if (!res.success) {
           return Toast(res.msg)
         }
         this.staffList = res.model.data || []
+        this.activeStaff = {}
       } catch (error) {
         console.log(error)
       }
     },
+    // 获取右侧tabs
     async getTaskList() {
       try {
+        const toast = Toast.loading({
+          message: '加载中',
+          forbidClick: true,
+        })
         let params = {
-          // jobStatus: 'START'
+          jobStatus: 'START'
         }
         const res = await this.$http.post(h5_job_findPage, params)
         if (!res.success) {
           return Toast(res.msg)
         }
-        this.tabs = res.model.data || []
+        console.log('tab',res)
+        const tabs = res.model.data || []
+        const i = {
+          count: tabs.length
+        }
+        tabs.forEach((item, index) => {
+          item.list = []
+          this.getTaskDetail(item, i, toast)
+        })
+        this.tabs = tabs
       } catch (error) {
         console.log(error)
       }
+    },
+    // 获取任务详情
+    async getTaskDetail(item, i, toast) {
+      const params = {
+        id: item.id
+      }
+      const res = await this.$http({
+        method: 'get',
+        url: h5_job_findById,
+        params
+      })
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      const list = res.model.jobDetailProcessResponseList || []
+      list.forEach(item=>{
+        item.totalCount = item.count
+      })
+      item.list = list
+      i.count--
+      if (i.count === 0) {
+        toast.clear()
+      }
+    },
+    // 选择员工时调用 回显
+    async echoData() {
+      const params = {
+        employeeId:this.activeStaff.employeeId,
+        billData:this.searchParams.date
+      }
+      const res = await this.$http.post(h5_process_billingDetails,params)
+      console.log('billingJobs',res.model.billingJobs)
+      const activeTask = this.tabs[this.active]
+      const activeItem = res.model.billingJobs.find(item=>{
+        return item.id===activeTask.id
+      }) //筛选出当前选中任务
+      console.log('activeItem',activeItem)
+      activeTask.count = activeItem.count
+      activeItem.billingProcessList.forEach(item=>{
+        activeTask.list.forEach(item1=>{
+          if(item.id===item1.id) {
+            item1.finishCount = item.finishCount
+            item1.totalCount = item.count
+            item1.count = item.count
+          }
+        })
+      })
+      
+    },
+    handleSearch() {
+      this.getStaffList()
     }
   },
   created() {

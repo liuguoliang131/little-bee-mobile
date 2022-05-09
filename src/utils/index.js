@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-07 13:17:21
+ * @LastEditTime: 2022-05-09 12:55:50
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -109,5 +109,16 @@ utils.getPhotos = function (list) {
   }
   deepGet(list[index])
   return newList
+}
+// 获取今天日期 yyyy-MM-dd
+utils.getToday = function() {
+  const date = new Date()
+  let y = date.getFullYear()
+  let mon = date.getMonth() + 1
+  let d = date.getDate()
+  y = y < 10 ? '0' + y : y
+  mon = mon < 10 ? '0' + mon : mon
+  d = d < 10 ? '0' + d : d
+  return `${y}-${mon}-${d}`
 }
 export default utils

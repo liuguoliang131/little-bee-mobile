@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:34
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 18:49:32
+ * @LastEditTime: 2022-05-09 19:10:20
  * @FilePath: \little-bee-mobile\src\views\my\summary.vue
  * @Description: 汇总统计
 -->
@@ -34,11 +34,13 @@
 
 <script>
 import Bread from '@/components/bread/index'
+import { h5_performanceStatistics_companyStatistics } from '@/http/api'
 import * as echarts from 'echarts'
 import {
   Popup,
   Field,
-  Picker
+  Picker,
+  Toast
 } from 'vant'
 export default {
   name:'summary',
@@ -52,6 +54,7 @@ export default {
     return {
       showPicker:false,
       columns:[
+        '全部',
         '1月',
         '2月',
         '3月',
@@ -66,6 +69,7 @@ export default {
         '12月'
       ],
       month:null,
+      data:[],
       topInstance: null,
       bottomInstance: null
     }
@@ -75,20 +79,77 @@ export default {
       console.log(e)
       this.month = e
       this.showPicker = false
+      let statisticsData = ''
+      let year = new Date().getFullYear()
+      switch (this.month) {
+        case '全部':
+          statisticsData = ''
+          break
+        case '1月':
+          statisticsData = year + '-01'
+          break
+        case '2月':
+          statisticsData = year + '-02'
+          break
+        case '3月':
+          statisticsData = year + '-03'
+          break
+        case '4月':
+          statisticsData = year + '-04'
+          break
+        case '5月':
+          statisticsData = year + '-05'
+          break
+        case '6月':
+          statisticsData = year + '-06'
+          break
+        case '7月':
+          statisticsData = year + '-07'
+          break
+        case '8月':
+          statisticsData = year + '-08'
+          break
+        case '9月':
+          statisticsData = year + '-09'
+          break
+        case '10月':
+          statisticsData = year + '-10'
+          break
+        case '11月':
+          statisticsData = year + '-11'
+          break
+        case '12月':
+          statisticsData = year + '-12'
+          break
+        default:
+          statisticsData = ''
+          break
+      }
+      this.getStatistic(statisticsData)
+    },
+    async getStatistic(statisticsData) {
+      const params = {
+        statisticsData
+      }
+      const res = await this.$http.post(h5_performanceStatistics_companyStatistics,params)
+      if(!res.success) {
+        return Toast(res.msg)
+      }
+      this.data = res.model || []
+      this.initEcharts()
+      this.initBottomEcharts()
     },
     // 生成线型图
     initEcharts () {
       var chartDom = document.getElementById('top')
       this.topInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = ['啊啊啊','阿三','二','轻为','asd']
-      let yAxisDataList = [1,2,3,4,5]
-      let yAxisDataList2 = [3,5,76,1,2]
-      // this.tendencyChart.forEach(item => {
-      //   xAxisNameList.push(item.date)
-      //   yAxisDataList.push(item.amount)
-      // })
+      let xAxisNameList = this.data.map(item=>item.billData)
+      let yAxisDataList = this.data.map(item=>item.finishedProductCount)
       option = {
+        title: {
+          text: '任务'
+        },
         xAxis: {
           type: 'category',
           boundaryGap: false,
@@ -99,20 +160,14 @@ export default {
         },
         series: [
           {
-            name: 'Union Ads',
+            name: this.$store.state.user.userInfo.companyName,
             data: yAxisDataList,
-            type: 'line',
-            areaStyle: {}
-          },
-          {
-            name: 'Email',
-            data: yAxisDataList2,
             type: 'line',
             areaStyle: {}
           }
         ],
         legend: { //颜色标志
-          data: ['Email', 'Union Ads']
+          data: ['Email']
         },
       }
 
@@ -122,13 +177,12 @@ export default {
       var chartDom = document.getElementById('bottom')
       this.bottomInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = [1,2,3,4,5]
-      let yAxisDataList = [1,2,3,4,5]
-      // this.tendencyChart.forEach(item => {
-      //   xAxisNameList.push(item.date)
-      //   yAxisDataList.push(item.amount)
-      // })
+      let xAxisNameList = this.data.map(item=>item.billData)
+      let yAxisDataList = this.data.map(item=>item.totalPrice)
       option = {
+        title: {
+          text: '总收入(元)'
+        },
         xAxis: {
           type: 'category',
           boundaryGap: false,
@@ -148,8 +202,7 @@ export default {
     }
   },
   mounted() {
-    this.initEcharts()
-    this.initBottomEcharts()
+    this.getStatistic('')
   }
 }
 </script>
