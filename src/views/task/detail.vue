@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 09:47:23
+ * @LastEditTime: 2022-05-10 13:56:44
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -159,14 +159,14 @@
                 close-on-click-overlay
                 @close="close">
       <div class="dialog-content">
-        <van-form @submit="dialogFormSubmit"
+        <van-form @submit="handleConfirmShare"
                   ref="dialogForm">
-          <van-field v-model.trim="dialogForm.name"
+          <van-field v-model.trim="dialogForm.title"
                      name="name"
                      label="分享标题"
                      placeholder="分享标题"
                      :rules="[{ required: true, message: '请填写用户名' }]" />
-          <van-field v-model="dialogForm.unitPrice"
+          <van-field v-model="dialogForm.count"
                      type="dight"
                      name="count"
                      label="数量"
@@ -178,36 +178,36 @@
                      label="分享单价"
                      placeholder="分享单价"
                      :rules="[{ required: true, message: '请填写数量' },{ validator: unitPriceValidator, message: '分享单价必须大于0' }]" />
-          <van-field v-model.trim="dialogForm.total"
+          <!-- <van-field v-model.trim="dialogForm.total"
                      type="number"
                      name="total"
                      label="分享总价"
                      placeholder="分享总价"
-                     :disabled="true" />
-          <van-field v-model.trim="dialogForm.contracts"
+                     :disabled="true" /> -->
+          <!-- <van-field v-model.trim="dialogForm.contracts"
                      type="text"
                      name="contracts"
                      label="联系人"
                      placeholder="联系人"
-                     :disabled="true" />
-          <van-field v-model="dialogForm.phone"
+                     :disabled="true" /> -->
+          <!-- <van-field v-model="dialogForm.phone"
                      type="text"
                      name="phone"
                      label="联系方式"
                      placeholder="联系方式"
-                     :disabled="true" />
-          <van-field v-model.trim="dialogForm.address"
+                     :disabled="true" /> -->
+          <!-- <van-field v-model.trim="dialogForm.address"
                      type="text"
                      name="address"
                      label="联系地址"
                      placeholder="联系地址"
-                     :disabled="true" />
+                     :disabled="true" /> -->
           <div class="dialog-submit">
             <van-button color="#CB9400"
                         block
                         type="info"
                         native-type="submit"
-                        @click="handleConfirmShare">分享到微信</van-button>
+                        >分享到微信</van-button>
           </div>
         </van-form>
       </div>
@@ -226,7 +226,8 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-import { h5_job_updateStatus, h5_job_findById } from '@/http/api'
+import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare } from '@/http/api'
+import wx from 'weixin-js-sdk'
 export default {
   name: 'Detail',
   components: {
@@ -253,13 +254,19 @@ export default {
         pidId: '0',
         share: false,
         jobStatus: 'INIT',
-        totalPrice:{
-          value:0
+        totalPrice: {
+          value: 0
         }
       },
       photos: [],
       dialogForm: {
-
+        count: 1,
+        imagesIds: '',
+        jobNum: '',
+        remark: '',
+        sortTitle: '',
+        title: '',
+        unitPrice: 1
       },
       dialogVisible: false
     }
@@ -279,11 +286,11 @@ export default {
       }
       let sum = 0
       this.form.jobDetailProcessResponseList.forEach(item => {
-        console.log('process',item.unitPrice.value)
+        console.log('process', item.unitPrice.value)
         sum += Number(item.unitPrice.value)
       })
-      console.log('sum',sum)
-      console.log('sum*count',sum * this.form.count)
+      console.log('sum', sum)
+      console.log('sum*count', sum * this.form.count)
       return Number((sum * this.form.count).toFixed(2))
     },
     // 利润
@@ -296,23 +303,106 @@ export default {
   },
   methods: {
     handleShowShareDialog() {
+      this.dialogForm.title = this.form.title
+      this.dialogForm.count = this.form.count
+      // this.dialogForm.unitPrice = this.form.unitPrice
+      this.dialogForm.imagesIds = this.form.imagesIds
+      this.dialogForm.jobNum = this.form.num
+      this.dialogForm.sortTitle = this.form.sortTitle
+      this.dialogForm.remark = this.form.remark
       this.dialogVisible = true
     },
     // 确认分享
-    handleConfirmShare() {
+    async handleConfirmShare() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      const params = {
+        ...this.dialogForm
+      }
+      const res = await this.$http.post(h5_jobShare_jobShare, params)
+      toast.clear()
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      this.setWx()
       this.dialogVisible = false
     },
+    async setWx () {
+      const res = await this.$http.get(`${process.env.WX_HOST}/wx/getWxConfigWeb?appid=wxdcc277beb5c6a25d&secret=574c4f9e0d322902ae33c07ca916f14c&url=${window.location.origin + window.location.pathname}`, {})
+      let {timestamp, nonceStr, appId, signature} = res.model
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: appId, // 必填，公众号的唯一标识
+        timestamp: timestamp, // 必填，生成签名的时间戳
+        nonceStr: nonceStr, // 必填，生成签名的随机串
+        signature: signature, // 必填，签名
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+      })
+      wx.ready(() => {
+        const that = this
+        // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/shareCustomPerson/' + that.$route.params.titleId + '/' + that.$route.params.name)}`
+        const link = ''
+        wx.onMenuShareTimeline({
+          title: that.$route.params.name, // 分享标题
+          desc: that.$route.params.name, // 分享描述
+          link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          success: function () {
+            // 用户点击了分享后执行的回调函数
+          }
+        })
+        wx.onMenuShareAppMessage({
+          title: that.$route.params.name, // 分享标题
+          desc: that.$route.params.name, // 分享描述
+          link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+          success: function () {
+            // 用户点击了分享后执行的回调函数
+          }
+        })
+        wx.updateTimelineShareData({
+          title: that.$route.params.name, // 分享标题
+          desc: that.$route.params.name, // 分享描述
+          link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+          success: function () {
+            // 用户点击了分享后执行的回调函数
+          }
+        })
+        wx.updateAppMessageShareData({
+          title: that.$route.params.name, // 分享标题
+          desc: that.$route.params.name, // 分享描述
+          link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          type: '', // 分享类型,music、video或link，不填默认为link
+          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+          success: function () {
+            // 用户点击了分享后执行的回调函数
+          }
+        })
+      })
+    },
+
     close() {
       this.dialogFormInit()
     },
     // 弹窗 数据初始化
     dialogFormInit() {
       this.dialogForm = {
-        name: '',
-        unitPrice: 1,
+        count: 1,
         imagesIds: '',
+        jobNum: '',
         remark: '',
-        photos: []
+        sortTitle: '',
+        title: '',
+        unitPrice: 1
       }
     },
     // 开始
@@ -373,13 +463,13 @@ export default {
     handleCreate() {
       let data = {
         ...this.form,
-        photos:this.photos
+        photos: this.photos
       }
-      this.$store.commit('task/set_item',data)
+      this.$store.commit('task/set_item', data)
       this.$router.push({
-        path:'/createTask',
-        query:{
-          type:'again'
+        path: '/createTask',
+        query: {
+          type: 'again'
         }
       })
     },
@@ -397,10 +487,10 @@ export default {
       }
       const form = res.model
       // 获取图片
-      if(form.imagesIds) {
+      if (form.imagesIds) {
         this.photos = await this.$utils.getPhoto(form.imagesIds)
       }
-      
+
       this.form = form
     }
   },

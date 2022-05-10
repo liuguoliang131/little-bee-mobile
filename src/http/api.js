@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 19:29:01
+ * @LastEditTime: 2022-05-10 10:29:28
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -38,3 +38,9 @@ export const sys_version_file_findByIds = '/sys/version/file/findByIds'  //获�
 
 export const h5_performanceStatistics_findPage = '/h5/performanceStatistics/findPage'  //工资列表
 export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatistics/companyStatistics' //企业统计 
+
+// 分享
+export const h5_jobShare_jobShare = '/h5/jobShare/jobShare' //任务分享
+export const h5_jobShare_jobReception = '/h5/jobShare/jobReception' //任务接收
+export const h5_jobShare_findPage = '/h5/jobShare/findPage' //任务列表
+export const h5_jobShare_findById = '/h5/jobShare/findById' //分享详情
