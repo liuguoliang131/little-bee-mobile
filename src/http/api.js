@@ -1,12 +1,12 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 10:29:28
+ * @LastEditTime: 2022-05-11 17:51:00
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
 
-
+export const appId = 'wxdcc277beb5c6a25d' //厚鸟科技公众号appId
 export const host = process.env.VUE_APP_BASE_URL //请求地址
 export const h5_login_login = '/h5/login/login'//登录
 export const sys_sms_send = '/sys/sms/send' // 短信验证码
@@ -44,3 +44,13 @@ export const h5_jobShare_jobShare = '/h5/jobShare/jobShare' //任务分享
 export const h5_jobShare_jobReception = '/h5/jobShare/jobReception' //任务接收
 export const h5_jobShare_findPage = '/h5/jobShare/findPage' //任务列表
 export const h5_jobShare_findById = '/h5/jobShare/findById' //分享详情
+
+// 获取分享需要的参数
+export const h5_wx_getWxConfig = '/h5/wx/getWxConfig'
+export const wx_getWxConfigWeb = '/wx/getWxConfigWeb' //下单H5的
+
+// 会员
+export const h5_membership_selectAll = '/h5/membership/selectAll' //会员列表
+export const h5_membership_getAmountsPayable = '/h5/membership/getAmountsPayable' //id查询会员多少钱 返回流水号 get
+export const h5_membership_createOrder = '/h5/membership/createOrder' //下单 post
+export const h5_membership_pay = '/h5/membership/pay' //支付 get

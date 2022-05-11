@@ -1,13 +1,13 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 09:43:42
+ * @LastEditTime: 2022-05-11 17:52:28
  * @FilePath: \little-bee-mobile\src\views\login\register.vue
  * @Description: 注册
 -->
 <template>
   <div class="register">
-    <header>注册企业</header>
+    <bread></bread>
     <van-form @submit="onSubmit">
       <van-field v-model="form.companyPhone"
       center
@@ -38,7 +38,7 @@
       <van-field v-model.trim="form.num" label="企业编号" placeholder="请输入企业编号" />
       <van-field v-model.trim="form.contact" label="联系人姓名" placeholder="请输入联系人姓名" />
       <van-field v-model.trim="form.website" label="官网地址" placeholder="请输入官网地址" />
-      <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" />
+      <!-- <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" /> -->
       <van-field v-model.trim="form.remark" label="备注" placeholder="请输入备注" />
       <div class="file">
         <span class="label">公司logo</span>
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import Bread from '@/components/bread'
 import {
   Toast,
   Form,
@@ -93,14 +94,15 @@ export default {
     VanButton: Button,
     VanPopup: Popup,
     VanArea: Area,
-    VanUploader: Uploader
+    VanUploader: Uploader,
+    Bread
   },
   data() {
     return {
       form:{
         abbreviationName: '', //企业缩写
         address: '', //详细地址
-        appId: '',//小程序appid
+        openId: '',//用户openId
         area: '',//区县
         businessPhotos: '',//营业执照
         city: '',//城市
@@ -136,18 +138,18 @@ export default {
           }
         })
         console.log(res)
-        if (!res.success) {
+        if (!res.data.success) {
           return Toast(res.msg)
         }
         Toast('注册成功')
         this.$router.push({
           name:'Login',
           params:{
-            phone: res.model.companyPhone||''
+            phone: res.data.model.companyPhone||''
           }
         })
       } catch (error) {
-        Toast('error')
+        console.log(error)
       }
     },
    

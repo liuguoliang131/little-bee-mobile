@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:32:55
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-07 17:15:00
+ * @LastEditTime: 2022-05-10 16:58:14
  * @FilePath: \little-bee-mobile\src\views\task\createTask.vue
  * @Description: 创建任务
 -->
@@ -320,7 +320,7 @@ export default {
         return Toast('工序不能为空')
       }
       if (this.profit < 0) {
-        return Toast('请不要做慈善')
+        return Toast('利润不能小于0')
       }
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast

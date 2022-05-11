@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 13:56:44
+ * @LastEditTime: 2022-05-10 19:02:48
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -226,7 +226,7 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare } from '@/http/api'
+import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare,h5_wx_getWxConfig,wx_getWxConfigWeb } from '@/http/api'
 import wx from 'weixin-js-sdk'
 export default {
   name: 'Detail',
@@ -331,25 +331,33 @@ export default {
       this.dialogVisible = false
     },
     async setWx () {
-      const res = await this.$http.get(`${process.env.WX_HOST}/wx/getWxConfigWeb?appid=wxdcc277beb5c6a25d&secret=574c4f9e0d322902ae33c07ca916f14c&url=${window.location.origin + window.location.pathname}`, {})
-      let {timestamp, nonceStr, appId, signature} = res.model
+      const res = await this.$http({
+        method:'get',
+        url:h5_wx_getWxConfig,
+        params: {
+          appid:'wxdcc277beb5c6a25d',
+          secret:'574c4f9e0d322902ae33c07ca916f14c',
+        }
+      })
+      // .get(`/wx/getWxConfigWeb?appid=wxdcc277beb5c6a25d&secret=574c4f9e0d322902ae33c07ca916f14c&url=${window.location.origin + window.location.pathname}`, {})
+      let {timestamp, nonceStr, appId, signature,jsApiList} = res.model
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: appId, // 必填，公众号的唯一标识
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
         signature: signature, // 必填，签名
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+        jsApiList  // 必填，需要使用的JS接口列表
       })
       wx.ready(() => {
         const that = this
         // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/shareCustomPerson/' + that.$route.params.titleId + '/' + that.$route.params.name)}`
         const link = ''
         wx.onMenuShareTimeline({
-          title: that.$route.params.name, // 分享标题
-          desc: that.$route.params.name, // 分享描述
+          title: this.dialogForm.title, // 分享标题
+          desc: '任务分享', // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           success: function () {
             // 用户点击了分享后执行的回调函数
           }
@@ -358,7 +366,7 @@ export default {
           title: that.$route.params.name, // 分享标题
           desc: that.$route.params.name, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
@@ -369,7 +377,7 @@ export default {
           title: that.$route.params.name, // 分享标题
           desc: that.$route.params.name, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
@@ -380,7 +388,7 @@ export default {
           title: that.$route.params.name, // 分享标题
           desc: that.$route.params.name, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: window.location.origin + '/static/shareAVA.png', // 分享图标
+          imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
@@ -391,7 +399,7 @@ export default {
     },
 
     close() {
-      this.dialogFormInit()
+      // this.dialogFormInit()
     },
     // 弹窗 数据初始化
     dialogFormInit() {
@@ -495,6 +503,7 @@ export default {
     }
   },
   created() {
+    console.log('process全局',process.env.NODE_ENV)
     this.echoData()
   }
 }

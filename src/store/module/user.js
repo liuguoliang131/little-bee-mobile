@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-25 10:26:32
+ * @LastEditTime: 2022-05-10 17:02:13
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -29,6 +29,11 @@ const user = {
     set_userInfo(state, data) {
       utils.setUserInfo(data)
       state.userInfo = data
+    },
+    delete_userInfo(state) {
+      utils.deleteUserInfo()
+      state.userInfo = null
+      router.replace('/login')
     }
   },
   getters: {

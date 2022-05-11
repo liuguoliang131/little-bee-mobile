@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-05 19:09:12
+ * @LastEditTime: 2022-05-10 19:12:17
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -25,11 +25,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item,index) in tableData.items" :key="index">
+          <tr v-for="(item,index) in tableData.data" :key="index">
             <td>{{index}}</td>
-            <td>标题1</td>
-            <td>1231</td>
-            <td>11</td>
+            <td>{{item.sortTitle}}</td>
+            <td>{{item.createTime}}</td>
+            <td>{{item.count}}</td>
             <td>
             <van-icon name="more-o"
                       @click="handleShowMore(item)" />
@@ -37,6 +37,7 @@
           </tr>
         </tbody>
       </table>
+      <footer></footer>
     </div>
     <van-pagination v-model="searchParams.pageNo"
                     :items-per-page="searchParams.pageSize"
@@ -48,6 +49,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
+import { h5_jobShare_findPage } from '@/http/api'
 import {
   Search,
   Toast,
@@ -65,10 +67,7 @@ export default {
         keywords:''
       },
       tableData:{
-        items:[
-          {},
-          {}
-        ],
+        items:[],
         sumRow:0
       }
     }
@@ -80,6 +79,10 @@ export default {
     Bread
   },
   methods: {
+    handleSearch() {
+      this.searchParams.pageNo = 1
+      this.getList()
+    },
     async getList() {
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast
@@ -90,21 +93,16 @@ export default {
 
         const res = await this.$http({
           method: 'post',
-          url: h5_job_findPage,
+          url: h5_jobShare_findPage,
           data: this.searchParams
         })
         toast.clear()
-        this.reloading = false
         if (!res.success) {
           return Toast(res.msg)
         }
-        res.model.data && res.model.data.forEach((item, idx) => {
-          item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
-        })
         this.tableData = res.model
       } catch (error) {
         toast.clear()
-        this.reloading = false
         console.log(error)
         throw error
       }
@@ -113,10 +111,13 @@ export default {
       this.$router.push({
         path:'/shareDetail',
         query: {
-          item
+          id:item.id
         }
       })
     }
+  },
+  created() {
+    this.getList()
   }
 }
 </script>
@@ -128,6 +129,15 @@ export default {
     .del {
       margin-right: 10px;
     }
+  }
+  .van-pagination {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+  footer {
+    height: 100px;
   }
 }
 </style>

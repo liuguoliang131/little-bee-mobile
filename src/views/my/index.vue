@@ -1,14 +1,16 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 18:39:24
+ * @LastEditTime: 2022-05-11 13:57:31
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
 <template>
   <div class="my">
-    <bread>
-      <img :src="require('../../assets/quit.png')" alt="" class="quit">
+    <bread @click="handleShowQuit">
+      <img :src="require('../../assets/quit.png')"
+           alt=""
+           class="quit">
     </bread>
     <div class="views">
       <div class="vip">
@@ -16,13 +18,19 @@
           <div class="vip-icon"></div>
           <div class="vip-1-text">北京厚鸟科技</div>
         </div>
-        <div class="vip-2" v-if="$store.state.user.userInfo.useDayCount">剩余{{$store.state.user.userInfo.useDayCount}}天过期</div>
-        <div class="vip-2" v-else>已过期</div>
-        <div class="vip-xufei">立即续费</div>
+        <div class="vip-2"
+             v-if="$store.state.user.userInfo.useDayCount">剩余{{$store.state.user.userInfo.useDayCount}}天过期</div>
+        <div class="vip-2"
+             v-else>已过期</div>
+        <div class="vip-xufei" @click="handleGoRenew">立即续费</div>
       </div>
       <div class="card">
-        <div class="card-item" @click="$router.push(item.path)" v-for="item in list" :key="item.name">
-          <img class="left" :src="item.icon" />
+        <div class="card-item"
+             @click="$router.push(item.path)"
+             v-for="item in list"
+             :key="item.name">
+          <img class="left"
+               :src="item.icon" />
           <div class="center">{{item.name}}</div>
           <div class="right">
             <van-icon name="arrow" />
@@ -49,7 +57,9 @@ import Bread from '@/components/bread/index'
 import {
   Icon,
   Tabbar,
-  TabbarItem
+  TabbarItem,
+  Dialog,
+  Toast
 } from 'vant'
 export default {
   name: 'My',
@@ -89,6 +99,24 @@ export default {
           path: '/quitForm'
         },
       ]
+    }
+  },
+  methods: {
+    handleShowQuit() {
+      Dialog.confirm({
+        message: '确认要退出吗?',
+        confirmButtonColor: '#cb9400'
+      })
+        .then(async () => {
+          // on confirm
+          this.$store.commit('user/delete_userInfo')
+        })
+        .catch(() => {
+          // on cancel
+        })
+    },
+    handleGoRenew() {
+      this.$router.push('/renewalMember')
     }
   }
 }
@@ -178,7 +206,6 @@ export default {
           text-align: left;
         }
         .right {
-          
         }
       }
     }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 12:55:50
+ * @LastEditTime: 2022-05-10 17:01:28
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -30,6 +30,9 @@ utils.getUserInfo = function () {
 // 存储用户信息
 utils.setUserInfo = function (data) {
   window.localStorage.setItem('littleBeeUserInfo', JSON.stringify(data))
+}
+utils.deleteUserInfo = function () {
+  window.localStorage.removeItem('littleBeeUserInfo')
 }
 // 获取动态路由+初始化路由  只在登录和刷新页面时调用
 utils.getDynamicRoutes = function () {

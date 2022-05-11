@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 18:35:49
+ * @LastEditTime: 2022-05-11 14:44:36
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -27,6 +27,7 @@ const normalRoutes = [
     path:'/register',
     component:register,
     meta: {
+      bread: '注册企业',
       white: true
     }
   },
@@ -196,6 +197,24 @@ const normalRoutes = [
         meta: {
           bread: '员工离职表',
           white: false
+        }
+      },
+      {
+        name:'ReceiveTask',
+        path:'/receiveTask',
+        component:()=>import('../views/receiveTask/receiveTask.vue'),
+        meta: {
+          bread: '分享详情',
+          white: true
+        }
+      },
+      {
+        name:'RenewalMember',
+        path:'/renewalMember',
+        component:()=>import('../views/renewalMember/renewalMember.vue'),
+        meta: {
+          bread: '会员信息',
+          white: true
         }
       },
     ]
