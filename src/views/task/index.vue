@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-29 16:16:44
+ * @LastEditTime: 2022-05-11 19:29:44
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -196,6 +196,7 @@ export default {
   },
   created() {
     this.getList()
+    
   }
 }
 </script>

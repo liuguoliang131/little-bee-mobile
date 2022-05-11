@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 17:02:13
+ * @LastEditTime: 2022-05-11 20:01:29
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -15,7 +15,8 @@ const user = {
   namespaced: true,
   state: {
     token:utils.getToken() || '',
-    userInfo:utils.getUserInfo() || null
+    userInfo:utils.getUserInfo() || null,
+    code:null
   },
   mutations: {
     set_token(state, data) {
@@ -34,6 +35,9 @@ const user = {
       utils.deleteUserInfo()
       state.userInfo = null
       router.replace('/login')
+    },
+    set_code(state,data) {
+      state.code = data
     }
   },
   getters: {

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 18:27:34
+ * @LastEditTime: 2022-05-11 20:55:22
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -13,6 +13,18 @@ import store from '@/store/index'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
+// 获取授权页面重定向回当前页面的时候保存它返回来的参数 
+console.log('router文件中获取url',window.location.href)
+const url = window.location.href
+if(url.includes('code=')) {
+  let code = url.split('?')[1].split('&')[0].split('=')[1]
+  console.log('code',code)
+  store.commit('user/set_code',code)
+}
+if(!store.state.user.code) {
+  window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect'
+}
+
 
 
 const router = new VueRouter({ mode:'history',routes:constantRouterMap })
@@ -68,6 +80,7 @@ router.beforeEach((to, from, next) => {
     if(userInfo) {
       return next()
     }else {
+      // this.$store.commit('user/set_code',)
       return next('/login')
     }
   }

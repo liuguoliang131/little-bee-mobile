@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 14:44:36
+ * @LastEditTime: 2022-05-11 20:03:30
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -28,6 +28,15 @@ const normalRoutes = [
     component:register,
     meta: {
       bread: '注册企业',
+      white: true
+    }
+  },
+  {
+    name:'Empty',
+    path:'/empty',
+    component:register,
+    meta: {
+      bread: 'empty',
       white: true
     }
   },
@@ -216,7 +225,7 @@ const normalRoutes = [
           bread: '会员信息',
           white: true
         }
-      },
+      }
     ]
   },
 ]

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 14:24:25
+ * @LastEditTime: 2022-05-11 20:57:47
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -22,7 +22,8 @@
                         type="primary"
                         color="#CB9400"
                         plain
-                        @click="handleSendCode" :disabled="ss!=='发送验证码'">{{ss}}</van-button>
+                        @click="handleSendCode"
+                        :disabled="ss!=='发送验证码'">{{ss}}</van-button>
           </template>
         </van-field>
         <van-field v-model="form.code"
@@ -65,12 +66,12 @@ export default {
       form: {
         phone: '',
         code: '',
-        type:1,
-        openId:'1',
-        appId:'1'
+        type: 1,
+        openId: this.$store.state.user.code,
+        appId: '1'
       },
-      timer:null,
-      ss:'发送验证码'
+      timer: null,
+      ss: '发送验证码'
     }
   },
   components: {
@@ -80,7 +81,7 @@ export default {
   },
   methods: {
     async onSubmit(values) {
-      
+
       const res = await axios({
         method: 'get',
         url: host + h5_login_login,
@@ -93,10 +94,10 @@ export default {
     },
     //发送验证码
     async handleSendCode() {
-      if(this.timer) {
+      if (this.timer) {
         return false
       }
-      if( /^[1]{1}[0-9]{10}$/.test(this.form.phone) === false ) {
+      if (/^[1]{1}[0-9]{10}$/.test(this.form.phone) === false) {
         return Toast('手机号不符合规则')
       }
       const res = await axios({
@@ -111,27 +112,27 @@ export default {
       }
       this.ss = 300
       // 启动定时器
-      this.timer = setInterval(()=>{
+      this.timer = setInterval(() => {
         this.ss--
-        if(this.ss<=0) {
+        if (this.ss <= 0) {
           clearInterval(this.timer)
           this.timer = null
           this.ss = '发送验证码'
         }
-      },1000)
+      }, 1000)
     },
     // 去注册
     handleGoRegister() {
       this.$router.push({
-        name:'Register',
-        params:{
-          phone:this.form.phone
+        name: 'Register',
+        params: {
+          phone: this.form.phone
         }
       })
     }
   },
   created() {
-    this.form.phone = this.$route.params.phone||''
+    this.form.phone = this.$route.params.phone || ''
   }
 }
 </script>
