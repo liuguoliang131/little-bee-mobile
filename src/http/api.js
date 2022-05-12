@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 17:51:00
+ * @LastEditTime: 2022-05-12 13:49:53
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -12,6 +12,7 @@ export const h5_login_login = '/h5/login/login'//登录
 export const sys_sms_send = '/sys/sms/send' // 短信验证码
 export const h5_company_register = '/h5/company/register' //注册企业
 export const h5_company_findById = '/h5/company/findById' //企业信息
+export const company_update = '/company/update'  //修改企业
 
 export const sys_version_file_upload = '/sys/version/file/upload' //上传文件
 
@@ -48,7 +49,7 @@ export const h5_jobShare_findById = '/h5/jobShare/findById' //分享详情
 // 获取分享需要的参数
 export const h5_wx_getWxConfig = '/h5/wx/getWxConfig'
 export const wx_getWxConfigWeb = '/wx/getWxConfigWeb' //下单H5的
-
+export const h5_wx_getOpenid = '/h5/wx/getOpenid'  //根据code获取openid
 // 会员
 export const h5_membership_selectAll = '/h5/membership/selectAll' //会员列表
 export const h5_membership_getAmountsPayable = '/h5/membership/getAmountsPayable' //id查询会员多少钱 返回流水号 get

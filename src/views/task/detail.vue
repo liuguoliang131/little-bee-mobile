@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 19:02:48
+ * @LastEditTime: 2022-05-12 13:24:49
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -352,7 +352,7 @@ export default {
       wx.ready(() => {
         const that = this
         // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/shareCustomPerson/' + that.$route.params.titleId + '/' + that.$route.params.name)}`
-        const link = ''
+        const link = `http://littlebee.ouryou.cn/receiveTask/`
         wx.onMenuShareTimeline({
           title: this.dialogForm.title, // 分享标题
           desc: '任务分享', // 分享描述

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 20:03:30
+ * @LastEditTime: 2022-05-12 14:07:03
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -225,7 +225,17 @@ const normalRoutes = [
           bread: '会员信息',
           white: true
         }
-      }
+      },
+      
+      {
+        name:'EnterpriseEdit',
+        path:'/enterpriseEdit',
+        component:()=>import('../views/my/enterpriseEdit.vue'),
+        meta: {
+          bread: '编辑企业',
+          white: false
+        }
+      },
     ]
   },
 ]

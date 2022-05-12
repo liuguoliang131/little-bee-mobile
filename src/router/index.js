@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 20:55:22
+ * @LastEditTime: 2022-05-12 13:16:22
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -10,24 +10,37 @@ import VueRouter from 'vue-router'
 import constantRouterMap from './constantRouterMap'
 import dynamicRouterMap from './dynamicRouterMap'
 import store from '@/store/index'
+import { host, h5_wx_getOpenid } from '../http/api'
+// import axios from '../http/index'
+import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
 // 获取授权页面重定向回当前页面的时候保存它返回来的参数 
-console.log('router文件中获取url',window.location.href)
+console.log('router文件中获取url', window.location.href)
 const url = window.location.href
-if(url.includes('code=')) {
+if (url.includes('code=')) {
   let code = url.split('?')[1].split('&')[0].split('=')[1]
-  console.log('code',code)
-  store.commit('user/set_code',code)
+  console.log('code', code)
+  store.commit('user/set_code', code)
+  axios({
+    method: 'get',
+    url: host + h5_wx_getOpenid,
+    params: {
+      code
+    }
+  }).then(res => {
+    console.log('获取openid then:', res)
+    store.commit('user/set_openId',res.data.model)
+  })
 }
-if(!store.state.user.code) {
+if (!store.state.user.code) {
   window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect'
 }
 
 
 
-const router = new VueRouter({ mode:'history',routes:constantRouterMap })
+const router = new VueRouter({ mode: 'history', routes: constantRouterMap })
 
 /**
  * 在router/index.js中定义$addRoutes,调用这个方法来添加路由，这个方法会先重置路由
@@ -37,7 +50,7 @@ const router = new VueRouter({ mode:'history',routes:constantRouterMap })
 
 router.$addRoutes = (params) => {
   router.matcher = new VueRouter({ // 重置路由规则
-    mode:'history',
+    mode: 'history',
     routes: constantRouterMap
   }).matcher
   router.addRoutes(params) // 添加路由
@@ -46,45 +59,45 @@ router.$addRoutes = (params) => {
 router.onReady(() => {
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
-    store.dispatch('jurisdiction/getDynamicRoutes',null) // 请求动态路由
+    store.dispatch('jurisdiction/getDynamicRoutes', null) // 请求动态路由
       .then(list => {
-        console.log('动态路由',list)
+        console.log('动态路由', list)
         // 根据获取回来的信息判断是否要添加到路由表里
         const addList = []
-        list.forEach(item=>{
-          dynamicRouterMap.forEach(routeItem=>{
-            if(item.path===routeItem.path) {
-              console.log('routeItem',routeItem)
+        list.forEach(item => {
+          dynamicRouterMap.forEach(routeItem => {
+            if (item.path === routeItem.path) {
+              console.log('routeItem', routeItem)
               addList.push(routeItem)
             }
           })
         })
         router.addRoutes(addList) // 添加动态路由,这里不必用$addRoutes，因为刷新后就没有上一次的动态路由，故不必清除
       })
-  }else {
+  } else {
     console.log('没有token')
   }
 })
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if(Object.is(to.path,'/login')) {
+  if (Object.is(to.path, '/login')) {
     next()
     return
   }
-  if(to.meta.white) {
-    console.log('tp.path',to.path)
+  if (to.meta.white) {
+    console.log('tp.path', to.path)
     next()
-  }else {
+  } else {
     const userInfo = store.state.user.userInfo
-    if(userInfo) {
+    if (userInfo) {
       return next()
-    }else {
+    } else {
       // this.$store.commit('user/set_code',)
       return next('/login')
     }
   }
-  
+
 })
 router.afterEach((to, from, next) => {
   // console.log(from,to,next)
@@ -92,10 +105,10 @@ router.afterEach((to, from, next) => {
   document.title = store.state.user.userInfo ? store.state.user.userInfo.companyName : ''
 })
 const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push (location) {
+VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
-VueRouter.prototype.replace = function push (location) {
+VueRouter.prototype.replace = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 export default router

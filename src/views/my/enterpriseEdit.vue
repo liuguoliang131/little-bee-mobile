@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 13:36:16
- * @FilePath: \little-bee-mobile\src\views\login\register.vue
+ * @LastEditTime: 2022-05-12 14:02:35
+ * @FilePath: \little-bee-mobile\src\views\my\enterpriseEdit.vue
  * @Description: 注册
 -->
 <template>
@@ -82,13 +82,12 @@ import {
 import axios from 'axios'
 import {
   appId,
-  host,
-  h5_company_register,
+  company_update,
   sys_version_file_upload
 } from '@/http/api.js'
 import { areaList } from '@vant/area-data'
 export default {
-  name:'register',
+  name:'EnterpriseEdit',
   components:{
     VanForm: Form,
     VanField: Field,
@@ -130,9 +129,9 @@ export default {
       const businessPhotos = this.businessPhotos.length > 0 ? this.businessPhotos[0].url : ''
       const logoPath = this.logoPath.length > 0 ? this.logoPath[0].url : ''
       try {
-        const res = await axios({
+        const res = await this.$http({
           method: 'post',
-          url: host + h5_company_register,
+          url: company_update,
           data: {
             ...this.form,
             businessPhotos,
@@ -144,13 +143,8 @@ export default {
         if (!res.data.success) {
           return Toast(res.msg)
         }
-        Toast('注册成功')
-        this.$router.push({
-          name:'Login',
-          params:{
-            phone: res.data.model.companyPhone||''
-          }
-        })
+        Toast('修改成功')
+        this.$router.go(-1)
       } catch (error) {
         console.log(error)
       }
@@ -210,10 +204,19 @@ export default {
         })
       })
       
+    },
+    async echoData() {
+      const res = await this.$http({
+        method: 'post',
+        url: company_update,
+        data: {
+          id:this.$route.query.id
+        }
+      })
     }
   },
   created() {
-    this.form.companyPhone = this.$route.params.phone||''
+    this.echoData()
   }
 }
 </script>

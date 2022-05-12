@@ -1,13 +1,15 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 18:32:53
+ * @LastEditTime: 2022-05-12 14:05:36
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
 <template>
   <div class="enterpriseInfo">
-    <bread></bread>
+    <bread @click="handleGoEdit">
+      <van-icon name="edit" color="#cb9400" />
+    </bread>
     <div class="views">
       <van-form @submit="handleGoAdd">
         <van-cell-group inset>
@@ -148,6 +150,14 @@ export default {
         })
       })
       this.$store.commit('user/set_userInfo',this.form)
+    },
+    handleGoEdit() {
+      this.$router.push({
+        path:'/enterpriseEdit',
+        query: {
+          id: this.$store.state.user.userInfo.id
+        }
+      })
     }
 
 

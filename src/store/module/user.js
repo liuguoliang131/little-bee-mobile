@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 20:01:29
+ * @LastEditTime: 2022-05-12 13:17:10
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -16,7 +16,8 @@ const user = {
   state: {
     token:utils.getToken() || '',
     userInfo:utils.getUserInfo() || null,
-    code:null
+    code:null,
+    openId:null
   },
   mutations: {
     set_token(state, data) {
@@ -38,6 +39,9 @@ const user = {
     },
     set_code(state,data) {
       state.code = data
+    },
+    set_openId(state,data) {
+      state.openId = data
     }
   },
   getters: {

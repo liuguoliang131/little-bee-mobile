@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 17:51:27
+ * @LastEditTime: 2022-05-12 13:28:13
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -144,7 +144,7 @@ export default {
             data: {
               requestNum,
               membershipId: that.checked.id,
-              userOpenId: that.$store.state.user.userInfo.openId
+              userOpenId: that.$store.state.user.openId
             }
           }).then(res1 => {
             if (!res1.success) {
