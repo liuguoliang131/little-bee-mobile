@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:02:35
+ * @LastEditTime: 2022-05-12 15:41:33
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseEdit.vue
  * @Description: 注册
 -->
@@ -83,7 +83,8 @@ import axios from 'axios'
 import {
   appId,
   company_update,
-  sys_version_file_upload
+  sys_version_file_upload,
+  h5_company_findById
 } from '@/http/api.js'
 import { areaList } from '@vant/area-data'
 export default {
@@ -114,7 +115,7 @@ export default {
         province: '',//省
         remark: '',//备注
         website:'',//官网
-        appId:appId
+        appId:this.$store.state.user.openId
       },
       showArea: false, 
       areaList: areaList,
@@ -136,7 +137,7 @@ export default {
             ...this.form,
             businessPhotos,
             logoPath,
-            openId:this.$store.state.user.openId
+            appId:this.$store.state.user.openId
           }
         })
         console.log(res)
@@ -207,11 +208,43 @@ export default {
     },
     async echoData() {
       const res = await this.$http({
-        method: 'post',
-        url: company_update,
-        data: {
+        method: 'get',
+        url: h5_company_findById,
+        params: {
           id:this.$route.query.id
         }
+      })
+      if(!res.success) {
+        return Toast(res.msg)
+      }
+      this.form = {
+        abbreviationName: res.model.abbreviationName, //企业缩写
+        address: res.model.address, //详细地址
+        openId: '',//用户openId
+        area: res.model.area,//区县
+        businessPhotos: res.model.businessPhotos,//营业执照
+        city: res.model.city,//城市
+        companyName: res.model.companyName,//企业名称
+        companyPhone: res.model.companyPhone, //企业电话
+        contact: res.model.contact, //联系人
+        logoPath: res.model.logoPath, //企业logo
+        num: res.model.num,
+        province: res.model.province,//省
+        remark: res.model.remark,//备注
+        website:res.model.website,//官网
+        appId:this.$store.state.user.openId
+      }
+      this.businessPhotos = []
+      this.logoPath = []
+      res.model.businessPhotos&&res.model.businessPhotos.split(',').forEach(item=>{
+        this.businessPhotos.push({
+          url:item
+        })
+      })
+      res.model.logoPath&&res.model.logoPath.split(',').forEach(item=>{
+        this.logoPath.push({
+          url:item
+        })
       })
     }
   },

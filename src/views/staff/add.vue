@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 19:45:14
+ * @LastEditTime: 2022-05-12 14:54:01
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -116,7 +116,7 @@ export default {
   data() {
     return {
       form: {
-        disabledStatus: true,
+        disabledStatus: false,
         entryTime: '',
         name: '',
         phone: '',

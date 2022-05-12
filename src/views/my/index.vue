@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 13:57:31
+ * @LastEditTime: 2022-05-12 20:04:18
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
@@ -110,6 +110,9 @@ export default {
         .then(async () => {
           // on confirm
           this.$store.commit('user/delete_userInfo')
+          // 以下测试完要删掉
+          localStorage.removeItem('littleBeeOpenId')
+          localStorage.removeItem('littleBeeCode')
         })
         .catch(() => {
           // on cancel

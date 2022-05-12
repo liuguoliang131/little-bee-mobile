@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:07:03
+ * @LastEditTime: 2022-05-12 20:00:57
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -214,7 +214,7 @@ const normalRoutes = [
         component:()=>import('../views/receiveTask/receiveTask.vue'),
         meta: {
           bread: '分享详情',
-          white: true
+          white: false
         }
       },
       {
@@ -223,7 +223,7 @@ const normalRoutes = [
         component:()=>import('../views/renewalMember/renewalMember.vue'),
         meta: {
           bread: '会员信息',
-          white: true
+          white: false
         }
       },
       

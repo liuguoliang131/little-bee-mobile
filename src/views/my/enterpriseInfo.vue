@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:05:36
+ * @LastEditTime: 2022-05-12 15:14:31
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -98,7 +98,8 @@ import {
   CellGroup,
   Form,
   Uploader,
-  Toast
+  Toast,
+  Icon
 } from 'vant'
 export default {
   name: 'EnterpriseInfo',
@@ -108,7 +109,8 @@ export default {
     VanField: Field,
     VanCellGroup: CellGroup,
     VanForm: Form,
-    VanUploader: Uploader
+    VanUploader: Uploader,
+    VanIcon: Icon
   },
   data() {
     return {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 13:40:28
+ * @LastEditTime: 2022-05-12 15:44:35
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -67,8 +67,8 @@ export default {
         phone: '',
         code: '',
         type: 1,
-        openId: this.$store.state.user.openId,
-        appId: appId
+        openId: '',
+        appId: this.$store.state.user.openId
       },
       timer: null,
       ss: '发送验证码'
@@ -87,7 +87,7 @@ export default {
         url: host + h5_login_login,
         params: {
           ...this.form,
-          openId: this.$store.state.user.openId
+          appId: this.$store.state.user.openId
         }
       })
       if (!res.data.success) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-06 19:15:12
+ * @LastEditTime: 2022-05-12 14:57:17
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -78,8 +78,9 @@ export default {
       searchParams: {
         pageNo: 1,
         pageSize: 20,
-        startTime:'',
-        endTime:''
+        billData: this.$utils.getToday()
+        // startTime:'',
+        // endTime:''
       },
       date: '',
       tableData: {
@@ -128,11 +129,13 @@ export default {
     // 搜索
     handleSearch() {
       if(this.date) {
-        this.searchParams.startTime = this.date + ' 00:00:00'
-        this.searchParams.endTime = this.date + ' 23:59:59'
+        // this.searchParams.startTime = this.date + ' 00:00:00'
+        // this.searchParams.endTime = this.date + ' 23:59:59'
+        this.billData = this.date
       }else {
-        this.searchParams.startTime = ''
-        this.searchParams.endTime = ''
+        // this.searchParams.startTime = ''
+        // this.searchParams.endTime = ''
+        this.billData = ''
       }
       this.searchParams.pageNo = 1
       

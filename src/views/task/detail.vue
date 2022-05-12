@@ -1,15 +1,15 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 13:24:49
+ * @LastEditTime: 2022-05-12 17:34:21
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
 <template>
   <div class="detail">
-    <bread @click="handleShowShareDialog">
-      <van-icon name="share-o"
-                color="#cb9400" />
+    <bread>
+      <!-- <van-icon name="share-o"
+                color="#cb9400" /> -->
     </bread>
     <div class="views">
       <van-form @submit="onSubmit">
@@ -327,7 +327,6 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      this.setWx()
       this.dialogVisible = false
     },
     async setWx () {
@@ -347,15 +346,15 @@ export default {
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
         signature: signature, // 必填，签名
-        jsApiList  // 必填，需要使用的JS接口列表
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
       })
       wx.ready(() => {
         const that = this
         // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/shareCustomPerson/' + that.$route.params.titleId + '/' + that.$route.params.name)}`
-        const link = `http://littlebee.ouryou.cn/receiveTask/`
+        const link = `https://littlebee.ouryou.cn/receiveTask/`+this.form.id
         wx.onMenuShareTimeline({
-          title: this.dialogForm.title, // 分享标题
-          desc: '任务分享', // 分享描述
+          title: that.form.title, // 分享标题
+          desc: that.form.sortTitle, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           success: function () {
@@ -363,8 +362,8 @@ export default {
           }
         })
         wx.onMenuShareAppMessage({
-          title: that.$route.params.name, // 分享标题
-          desc: that.$route.params.name, // 分享描述
+          title: that.form.title, // 分享标题
+          desc: that.form.sortTitle, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           type: '', // 分享类型,music、video或link，不填默认为link
@@ -374,8 +373,8 @@ export default {
           }
         })
         wx.updateTimelineShareData({
-          title: that.$route.params.name, // 分享标题
-          desc: that.$route.params.name, // 分享描述
+          title: that.form.title, // 分享标题
+          desc: that.form.sortTitle, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           type: '', // 分享类型,music、video或link，不填默认为link
@@ -385,8 +384,8 @@ export default {
           }
         })
         wx.updateAppMessageShareData({
-          title: that.$route.params.name, // 分享标题
-          desc: that.$route.params.name, // 分享描述
+          title: that.form.title, // 分享标题
+          desc: that.form.sortTitle, // 分享描述
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           type: '', // 分享类型,music、video或link，不填默认为link
@@ -500,10 +499,10 @@ export default {
       }
 
       this.form = form
+      this.setWx()
     }
   },
   created() {
-    console.log('process全局',process.env.NODE_ENV)
     this.echoData()
   }
 }

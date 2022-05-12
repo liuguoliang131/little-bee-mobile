@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 13:16:22
+ * @LastEditTime: 2022-05-12 20:08:11
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -12,12 +12,14 @@ import dynamicRouterMap from './dynamicRouterMap'
 import store from '@/store/index'
 import { host, h5_wx_getOpenid } from '../http/api'
 // import axios from '../http/index'
+import utils from '@/utils/index'
 import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
 // 获取授权页面重定向回当前页面的时候保存它返回来的参数 
 console.log('router文件中获取url', window.location.href)
+console.log('utils.getCode()',utils.getCode())
 const url = window.location.href
 if (url.includes('code=')) {
   let code = url.split('?')[1].split('&')[0].split('=')[1]
@@ -32,15 +34,23 @@ if (url.includes('code=')) {
   }).then(res => {
     console.log('获取openid then:', res)
     store.commit('user/set_openId',res.data.model)
+    console.log('history',history)
+    window.history.go(-2)
+    console.log('跳转回后的history',history)
   })
 }
-if (!store.state.user.code) {
-  window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect'
+if (!utils.getCode()) {
+  let nowRoute = '#/'
+  if(window.location.href.includes('#/')) {
+    nowRoute = `#/${window.location.href.split('#/')[1]}`
+  }
+  history.pushState({ nowRoute }, 'firstPage', nowRoute)
+  window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
 }
 
 
 
-const router = new VueRouter({ mode: 'history', routes: constantRouterMap })
+const router = new VueRouter({ mode: 'hash', routes: constantRouterMap })
 
 /**
  * 在router/index.js中定义$addRoutes,调用这个方法来添加路由，这个方法会先重置路由
@@ -50,7 +60,7 @@ const router = new VueRouter({ mode: 'history', routes: constantRouterMap })
 
 router.$addRoutes = (params) => {
   router.matcher = new VueRouter({ // 重置路由规则
-    mode: 'history',
+    mode: 'hash',
     routes: constantRouterMap
   }).matcher
   router.addRoutes(params) // 添加路由

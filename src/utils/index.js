@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 17:01:28
+ * @LastEditTime: 2022-05-12 19:47:30
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -33,6 +33,23 @@ utils.setUserInfo = function (data) {
 }
 utils.deleteUserInfo = function () {
   window.localStorage.removeItem('littleBeeUserInfo')
+}
+
+// 存储openid
+utils.setOpenId = function (data){
+  window.localStorage.setItem('littleBeeOpenId',data)
+}
+// 获取openid
+utils.getOpenId = function (){
+  return window.localStorage.getItem('littleBeeOpenId')
+}
+// 存储code
+utils.setCode = function (data){
+  window.localStorage.setItem('littleBeeCode',data)
+}
+// 获取code
+utils.getCode = function (){
+  return window.localStorage.getItem('littleBeeCode')
 }
 // 获取动态路由+初始化路由  只在登录和刷新页面时调用
 utils.getDynamicRoutes = function () {

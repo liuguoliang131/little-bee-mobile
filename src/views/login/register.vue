@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 13:36:16
+ * @LastEditTime: 2022-05-12 15:40:21
  * @FilePath: \little-bee-mobile\src\views\login\register.vue
  * @Description: 注册
 -->
@@ -115,7 +115,7 @@ export default {
         province: '',//省
         remark: '',//备注
         website:'',//官网
-        appId:appId
+        appId:''
       },
       showArea: false, 
       areaList: areaList,
@@ -137,7 +137,7 @@ export default {
             ...this.form,
             businessPhotos,
             logoPath,
-            openId:this.$store.state.user.openId
+            appId:this.$store.state.user.openId
           }
         })
         console.log(res)
