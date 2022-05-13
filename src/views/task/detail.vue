@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-13 16:14:04
+ * @LastEditTime: 2022-05-13 17:33:46
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -245,7 +245,7 @@ export default {
         sortTitle: '',
         count: 1,
         unitPrice: {
-          value:0
+          value: 0
         },//单价
         remark: '',
         imagesIds: '',
@@ -340,14 +340,12 @@ export default {
           url: window.location.href
         }
       })
-      // .get(`/wx/getWxConfigWeb?appid=wxdcc277beb5c6a25d&secret=574c4f9e0d322902ae33c07ca916f14c&url=${window.location.origin + window.location.pathname}`, {})
       let { timestamp, nonceStr, appId, signature, jsApiList: jsApiLists } = res.model
 
-      // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/receiveTask/' + this.$route.query.id)}`
       const link = `${window.location.href.split('#')[0]}#/receiveTask/${this.$route.query.id}`
 
       wx.config({
-        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: appId, // 必填，公众号的唯一标识
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
@@ -357,7 +355,6 @@ export default {
       })
       wx.ready(() => {
         const that = this
-        // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/shareCustomPerson/' + that.$route.params.titleId + '/' + that.$route.params.name)}`
         console.log('link', link)
         wx.onMenuShareTimeline({
           title: that.form.title, // 分享标题
@@ -365,7 +362,14 @@ export default {
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           success: function () {
+            Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
+          },
+          trigger: function (e) {
+            Toast('触发trigger')
+            console.log('trigger',e)
+            alert('触发trigger')
+            // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
         })
@@ -377,7 +381,14 @@ export default {
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
+            Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
+          },
+          trigger: function (e) {
+            Toast('触发trigger')
+            console.log('trigger',e)
+            alert('触发trigger')
+            // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
         })
@@ -389,7 +400,14 @@ export default {
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
+            Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
+          },
+          trigger: function (e) {
+            Toast('触发trigger')
+            console.log('trigger',e)
+            alert('触发trigger')
+            // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
         })
@@ -401,10 +419,19 @@ export default {
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
+            Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
+          },
+          trigger: function (e) {
+            Toast('触发trigger')
+            console.log('trigger',e)
+            alert('触发trigger')
+            // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
         })
+
+
       })
     },
 
