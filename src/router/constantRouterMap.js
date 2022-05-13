@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 20:00:57
+ * @LastEditTime: 2022-05-13 10:33:16
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -210,7 +210,7 @@ const normalRoutes = [
       },
       {
         name:'ReceiveTask',
-        path:'/receiveTask',
+        path:'/receiveTask/:id',
         component:()=>import('../views/receiveTask/receiveTask.vue'),
         meta: {
           bread: '分享详情',

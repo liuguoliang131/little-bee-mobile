@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 17:34:21
+ * @LastEditTime: 2022-05-13 16:14:04
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -172,7 +172,7 @@
                      label="数量"
                      placeholder="数量"
                      :rules="[{ required: true, message: '请填写数量' },{ validator: unitPriceValidator, message: '数量必须大于0' }]" />
-          <van-field v-model="dialogForm.unitPrice"
+          <van-field v-model="dialogForm.unitPrice.value"
                      type="number"
                      name="unitPrice"
                      label="分享单价"
@@ -206,8 +206,7 @@
             <van-button color="#CB9400"
                         block
                         type="info"
-                        native-type="submit"
-                        >分享到微信</van-button>
+                        native-type="submit">分享到微信</van-button>
           </div>
         </van-form>
       </div>
@@ -226,7 +225,7 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare,h5_wx_getWxConfig,wx_getWxConfigWeb } from '@/http/api'
+import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare, h5_wx_getWxConfig, wx_getWxConfigWeb } from '@/http/api'
 import wx from 'weixin-js-sdk'
 export default {
   name: 'Detail',
@@ -245,7 +244,9 @@ export default {
         title: '',
         sortTitle: '',
         count: 1,
-        unitPrice: 1,//单价
+        unitPrice: {
+          value:0
+        },//单价
         remark: '',
         imagesIds: '',
         jobDetailProcessResponseList: [],
@@ -329,29 +330,35 @@ export default {
       }
       this.dialogVisible = false
     },
-    async setWx () {
+    async setWx() {
       const res = await this.$http({
-        method:'get',
-        url:h5_wx_getWxConfig,
+        method: 'get',
+        url: h5_wx_getWxConfig,
         params: {
-          appid:'wxdcc277beb5c6a25d',
-          secret:'574c4f9e0d322902ae33c07ca916f14c',
+          appid: 'wxdcc277beb5c6a25d',
+          secret: '574c4f9e0d322902ae33c07ca916f14c',
+          url: window.location.href
         }
       })
       // .get(`/wx/getWxConfigWeb?appid=wxdcc277beb5c6a25d&secret=574c4f9e0d322902ae33c07ca916f14c&url=${window.location.origin + window.location.pathname}`, {})
-      let {timestamp, nonceStr, appId, signature,jsApiList} = res.model
+      let { timestamp, nonceStr, appId, signature, jsApiList: jsApiLists } = res.model
+
+      // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/receiveTask/' + this.$route.query.id)}`
+      const link = `${window.location.href.split('#')[0]}#/receiveTask/${this.$route.query.id}`
+
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: appId, // 必填，公众号的唯一标识
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
         signature: signature, // 必填，签名
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
+        // jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
+        jsApiList: jsApiLists
       })
       wx.ready(() => {
         const that = this
         // const link = `${window.location.href.split('#')[0]}?initial=wechat&hash=${encodeURIComponent('#/shareCustomPerson/' + that.$route.params.titleId + '/' + that.$route.params.name)}`
-        const link = `https://littlebee.ouryou.cn/receiveTask/`+this.form.id
+        console.log('link', link)
         wx.onMenuShareTimeline({
           title: that.form.title, // 分享标题
           desc: that.form.sortTitle, // 分享描述
@@ -359,6 +366,7 @@ export default {
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           success: function () {
             // 用户点击了分享后执行的回调函数
+            that.handleShareCallBack()
           }
         })
         wx.onMenuShareAppMessage({
@@ -370,6 +378,7 @@ export default {
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
             // 用户点击了分享后执行的回调函数
+            that.handleShareCallBack()
           }
         })
         wx.updateTimelineShareData({
@@ -381,6 +390,7 @@ export default {
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
             // 用户点击了分享后执行的回调函数
+            that.handleShareCallBack()
           }
         })
         wx.updateAppMessageShareData({
@@ -392,25 +402,39 @@ export default {
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
             // 用户点击了分享后执行的回调函数
+            that.handleShareCallBack()
           }
         })
       })
     },
 
+    // 分享成功 回调
+    async handleShareCallBack() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      const params = {
+        count: this.form.count,
+        imagesIds: this.form.imagesIds,
+        jobNum: this.form.num,
+        remark: this.form.remark,
+        sortTitle: this.form.sortTitle,
+        title: this.form.title,
+        unitPrice: this.form.unitPrice.value
+      }
+      const res = await this.$http.post(h5_jobShare_jobShare, params)
+      toast.clear()
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      Toast('分享成功')
+
+    },
+
     close() {
       // this.dialogFormInit()
-    },
-    // 弹窗 数据初始化
-    dialogFormInit() {
-      this.dialogForm = {
-        count: 1,
-        imagesIds: '',
-        jobNum: '',
-        remark: '',
-        sortTitle: '',
-        title: '',
-        unitPrice: 1
-      }
     },
     // 开始
     async handleStart() {
