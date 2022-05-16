@@ -1,15 +1,15 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-13 17:33:46
+ * @LastEditTime: 2022-05-16 10:41:23
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
 <template>
   <div class="detail">
-    <bread>
-      <!-- <van-icon name="share-o"
-                color="#cb9400" /> -->
+    <bread @click="handleShowShareDialog">
+      <van-icon name="share-o"
+                color="#cb9400" />
     </bread>
     <div class="views">
       <van-form @submit="onSubmit">
@@ -172,7 +172,7 @@
                      label="数量"
                      placeholder="数量"
                      :rules="[{ required: true, message: '请填写数量' },{ validator: unitPriceValidator, message: '数量必须大于0' }]" />
-          <van-field v-model="dialogForm.unitPrice.value"
+          <van-field v-model="dialogForm.unitPrice"
                      type="number"
                      name="unitPrice"
                      label="分享单价"
@@ -202,6 +202,7 @@
                      label="联系地址"
                      placeholder="联系地址"
                      :disabled="true" /> -->
+          <div class="tips">分享成功后请手动点击右上角按钮分享给朋友</div>
           <div class="dialog-submit">
             <van-button color="#CB9400"
                         block
@@ -328,6 +329,8 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
+      Toast('分享成功,请手动点击右上角按钮分享给朋友')
+      this.weixinShare(res.model.id)
       this.dialogVisible = false
     },
     async setWx() {
@@ -342,7 +345,6 @@ export default {
       })
       let { timestamp, nonceStr, appId, signature, jsApiList: jsApiLists } = res.model
 
-      const link = `${window.location.href.split('#')[0]}#/receiveTask/${this.$route.query.id}`
 
       wx.config({
         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -353,6 +355,11 @@ export default {
         // jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
         jsApiList: jsApiLists
       })
+
+    },
+    // 分享成功 调用wx分享
+    async weixinShare(shareId) {
+      const link = `${window.location.href.split('#')[0]}#/receiveTask/${shareId}`
       wx.ready(() => {
         const that = this
         console.log('link', link)
@@ -367,7 +374,7 @@ export default {
           },
           trigger: function (e) {
             Toast('触发trigger')
-            console.log('trigger',e)
+            console.log('trigger', e)
             alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
@@ -386,7 +393,7 @@ export default {
           },
           trigger: function (e) {
             Toast('触发trigger')
-            console.log('trigger',e)
+            console.log('trigger', e)
             alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
@@ -405,7 +412,7 @@ export default {
           },
           trigger: function (e) {
             Toast('触发trigger')
-            console.log('trigger',e)
+            console.log('trigger', e)
             alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
@@ -424,7 +431,7 @@ export default {
           },
           trigger: function (e) {
             Toast('触发trigger')
-            console.log('trigger',e)
+            console.log('trigger', e)
             alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
@@ -660,6 +667,14 @@ export default {
       color: white;
       background-color: rgba(0, 0, 0, 0.3);
     }
+  }
+  .tips {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    font-size: 12px;
   }
 }
 </style>

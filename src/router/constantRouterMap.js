@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-13 10:33:16
+ * @LastEditTime: 2022-05-16 11:08:04
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -10,10 +10,10 @@ import layout from '../components/layout/index'
 import register from '../views/login/register'
 
 const normalRoutes = [
-  {
-    path:'/',
-    redirect:'/index'
-  },
+  // {
+  //   path:'/',
+  //   redirect:'/index'
+  // },
   {
     name:'Login',
     path:'/login',

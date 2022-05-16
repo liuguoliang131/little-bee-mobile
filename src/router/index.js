@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 20:08:11
+ * @LastEditTime: 2022-05-16 11:11:06
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -10,7 +10,7 @@ import VueRouter from 'vue-router'
 import constantRouterMap from './constantRouterMap'
 import dynamicRouterMap from './dynamicRouterMap'
 import store from '@/store/index'
-import { host, h5_wx_getOpenid } from '../http/api'
+import { host, h5_wx_getOpenid, h5_login_wxLogin } from '../http/api'
 // import axios from '../http/index'
 import utils from '@/utils/index'
 import axios from 'axios'
@@ -21,7 +21,7 @@ Vue.use(VueRouter)
 console.log('router文件中获取url', window.location.href)
 console.log('utils.getCode()',utils.getCode())
 const url = window.location.href
-if (url.includes('code=')) {
+if (url.includes('code=') && !utils.getOpenId()) {
   let code = url.split('?')[1].split('&')[0].split('=')[1]
   console.log('code', code)
   store.commit('user/set_code', code)
@@ -35,8 +35,20 @@ if (url.includes('code=')) {
     console.log('获取openid then:', res)
     store.commit('user/set_openId',res.data.model)
     console.log('history',history)
-    window.history.go(-2)
-    console.log('跳转回后的history',history)
+    axios({
+      method:'get',
+      url:h5_login_wxLogin,
+      params: {
+        appId:utils.getOpenId(),
+        type:'2'
+      }
+    }).then(res1=>{
+      store.commit('user/set_userInfo',res1.model)
+      // console.log('跳转回后的history',history)
+      window.history.go(-2)
+    })
+
+    
   })
 }
 if (!utils.getCode()) {

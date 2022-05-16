@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 13:49:53
+ * @LastEditTime: 2022-05-16 11:04:18
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -10,6 +10,7 @@ export const appId = 'wxdcc277beb5c6a25d' //厚鸟科技公众号appId
 export const host = process.env.VUE_APP_BASE_URL //请求地址
 export const h5_login_login = '/h5/login/login'//登录
 export const sys_sms_send = '/sys/sms/send' // 短信验证码
+export const h5_login_wxLogin = '/h5/login/wxLogin' //微信openId登录
 export const h5_company_register = '/h5/company/register' //注册企业
 export const h5_company_findById = '/h5/company/findById' //企业信息
 export const company_update = '/company/update'  //修改企业

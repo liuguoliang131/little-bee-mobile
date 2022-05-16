@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 10:43:10
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-13 16:02:03
+ * @LastEditTime: 2022-05-16 10:54:31
  * @FilePath: \little-bee-mobile\src\views\receiveTask\receiveTask.vue
  * @Description: 领取任务页面
 -->
@@ -14,13 +14,17 @@
                     @click="$router.push('/index')" />
         </span>
         <span class="center">{{$route.meta.bread || ''}}</span>
-        <span class="right"
-              @click="clickRight"></span>
+        <span class="right"></span>
       </div>
     </div>
     <div class="views">
       <van-form>
         <van-cell-group inset>
+          <van-field v-model="form.jobNum"
+                     name="任务编号"
+                     label="任务编号"
+                     placeholder=""
+                     :disabled="true" />
           <van-field v-model="form.title"
                      name="标题"
                      label="标题"
@@ -76,6 +80,12 @@
                      label="任务接收方"
                      placeholder=""
                      :disabled="true" />
+          <div class="sub-btn">
+            <van-button color="#CB9400"
+                        block
+                        type="info"
+                        @click="onSubmit">领取任务</van-button>
+          </div>
         </van-cell-group>
       </van-form>
       <footer></footer>
@@ -85,33 +95,77 @@
 
 <script>
 import {
+  Button,
   Icon,
   Field,
   CellGroup,
   Form,
-  Uploader
+  Uploader,
+  Toast
 } from 'vant'
+import { h5_jobShare_findById, h5_jobShare_jobReception } from '@/http/api'
 export default {
   name: 'ReceiveTask',
   components: {
+    VanButton: Button,
     VanIcon: Icon,
     VanField: Field,
     VanCellGroup: CellGroup,
     VanForm: Form,
-    VanUploader: Uploader
+    // VanUploader: Uploader
   },
   data() {
     return {
       form: {
-
+        unitPrice: {
+          value: 1
+        },
+        totalPrice: {
+          value: 1
+        },
+        shareCompany: {
+          companyName: '',
+          companyPhone: '',
+          contact: '',
+          takeOverCompany: ''
+        }
       }
     }
   },
   methods: {
     async echoData() {
       const res = await this.$http({
-        method:'post'
+        method: 'get',
+        url: h5_jobShare_findById,
+        params: {
+          id: this.$route.params.id
+        }
       })
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      this.form = res.model
+    },
+    async onSubmit() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      const res = await this.$http({
+        method: 'get',
+        url: h5_jobShare_jobReception,
+        params: {
+          shareId: this.$route.params.id
+        }
+      })
+      toast.clear()
+
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      Toast('领取成功')
+      this.$router.push('/index')
     }
   },
   created() {
@@ -165,6 +219,19 @@ export default {
           background-color: rgba(0, 0, 0, 0.2);
         }
       }
+    }
+  }
+  .van-form {
+    margin-top: 15px;
+  }
+  .sub-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 70px;
+    margin-bottom: 15px;
+    .van-button {
+      width: 200px;
     }
   }
 }
