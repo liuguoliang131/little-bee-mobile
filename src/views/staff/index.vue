@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 19:45:51
+ * @LastEditTime: 2022-05-17 15:01:41
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -59,7 +59,7 @@
                       @change="getList" />
       <footer></footer>
     </div>
-    <van-tabbar v-model="active">
+    <!-- <van-tabbar v-model="active">
       <van-tabbar-item name="1"
                        icon="home-o"
                        to="/">首页</van-tabbar-item>
@@ -69,7 +69,7 @@
       <van-tabbar-item name="3"
                        icon="contact"
                        to="/my">我的</van-tabbar-item>
-    </van-tabbar>
+    </van-tabbar> -->
   </div>
 </template>
 
@@ -79,8 +79,8 @@ import { h5_employee_findPage } from '@/http/api'
 import {
   Button,
   Icon,
-  Tabbar,
-  TabbarItem,
+  // Tabbar,
+  // TabbarItem,
   Pagination,
   Toast
 } from 'vant'
@@ -105,8 +105,6 @@ export default {
     Bread,
     VanButton: Button,
     VanIcon: Icon,
-    VanTabbar: Tabbar,
-    VanTabbarItem: TabbarItem,
     VanPagination: Pagination
   },
   methods: {
@@ -183,10 +181,10 @@ export default {
     }
   }
   .views {
-    height: calc(100vh - 148px);
+    height: calc(100vh - 140px);
     position: relative;
     .fixed-page {
-      position: absolute;
+      position: fixed;
       left: 0;
       bottom: 0;
       width: 100%;

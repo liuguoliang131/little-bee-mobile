@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 11:08:04
+ * @LastEditTime: 2022-05-16 16:56:12
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -10,10 +10,10 @@ import layout from '../components/layout/index'
 import register from '../views/login/register'
 
 const normalRoutes = [
-  // {
-  //   path:'/',
-  //   redirect:'/index'
-  // },
+  {
+    path:'/',
+    redirect:'/index'
+  },
   {
     name:'Login',
     path:'/login',
@@ -69,6 +69,15 @@ const normalRoutes = [
         component:()=>import('../views/task/createTask.vue'),
         meta: {
           bread: '创建任务',
+          white: false
+        }
+      },
+      {
+        name:'EditTask',
+        path:'/editTask',
+        component:()=>import('../views/task/editTask.vue'),
+        meta: {
+          bread: '编辑任务',
           white: false
         }
       },
@@ -214,7 +223,7 @@ const normalRoutes = [
         component:()=>import('../views/receiveTask/receiveTask.vue'),
         meta: {
           bread: '分享详情',
-          white: false
+          white: true
         }
       },
       {

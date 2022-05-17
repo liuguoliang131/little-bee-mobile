@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 20:04:18
+ * @LastEditTime: 2022-05-17 15:00:07
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
@@ -22,7 +22,8 @@
              v-if="$store.state.user.userInfo.useDayCount">剩余{{$store.state.user.userInfo.useDayCount}}天过期</div>
         <div class="vip-2"
              v-else>已过期</div>
-        <div class="vip-xufei" @click="handleGoRenew">立即续费</div>
+        <div class="vip-xufei"
+             @click="handleGoRenew">立即续费</div>
       </div>
       <div class="card">
         <div class="card-item"
@@ -38,13 +39,13 @@
         </div>
       </div>
     </div>
-    <van-tabbar v-model="active">
+    <van-tabbar v-model="active" active-color="#CB9400">
       <van-tabbar-item name="1"
                        icon="home-o"
                        to="/">首页</van-tabbar-item>
       <van-tabbar-item name="2"
-                       icon="friends-o"
-                       to="/staffList">员工管理</van-tabbar-item>
+                       icon="records"
+                       to="/operation">工序记账</van-tabbar-item>
       <van-tabbar-item name="3"
                        icon="contact"
                        to="/my">我的</van-tabbar-item>
@@ -54,6 +55,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
+import { h5_company_findById } from '@/http/api'
 import {
   Icon,
   Tabbar,
@@ -94,10 +96,15 @@ export default {
           path: '/shareList'
         },
         {
-          name: '员工离职表',
-          icon: require('../../assets/lizhi.png'),
-          path: '/quitForm'
+          name: '员工管理',
+          icon: require('../../assets/staff.png'),
+          path: '/staffList'
         },
+        // {
+        //   name: '员工离职表',
+        //   icon: require('../../assets/lizhi.png'),
+        //   path: '/quitForm'
+        // },
       ]
     }
   },
@@ -120,7 +127,25 @@ export default {
     },
     handleGoRenew() {
       this.$router.push('/renewalMember')
+    },
+    async getUserInfo() {
+      const params = {
+        id: this.$store.state.user.userInfo.companyId||this.$store.state.user.userInfo.id
+      }
+      const res = await this.$http({
+        method: 'get',
+        url: h5_company_findById,
+        params
+      })
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      let info = res.model || this.$store.state.user.userInfo
+      this.$store.commit('user/set_userInfo', info)
     }
+  },
+  created() {
+    this.getUserInfo()
   }
 }
 </script>

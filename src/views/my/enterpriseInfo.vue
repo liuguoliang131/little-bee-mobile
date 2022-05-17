@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 15:14:31
+ * @LastEditTime: 2022-05-17 10:54:51
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -18,7 +18,7 @@
                      label="企业号"
                      placeholder=""
                      :disabled="true" />
-          <van-field v-model="form.companyName"
+          <van-field v-model="form.name"
                      name="企业名称"
                      label="企业名称"
                      placeholder=""
@@ -75,7 +75,7 @@
             <template #button>
               <van-button color="#CB9400"
                           size="small"
-                          type="primary">购买</van-button>
+                          type="primary" @click="$router.push('/renewalMember')">购买</van-button>
             </template>
           </van-field>
         </van-cell-group>
@@ -128,7 +128,7 @@ export default {
       //   }
       // })
       const params = {
-        id: this.$store.state.user.userInfo.id
+        id: this.$store.state.user.userInfo.companyId
       }
       const res = await this.$http({
         method: 'get',
@@ -157,7 +157,7 @@ export default {
       this.$router.push({
         path:'/enterpriseEdit',
         query: {
-          id: this.$store.state.user.userInfo.id
+          id: this.$store.state.user.userInfo.companyId
         }
       })
     }

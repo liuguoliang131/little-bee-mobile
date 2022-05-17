@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-07 13:11:15
+ * @LastEditTime: 2022-05-17 10:52:55
  * @FilePath: \little-bee-mobile\src\http\index.js
  * @Description: 
  */
@@ -24,14 +24,14 @@ instance.interceptors.request.use(function (config) {
   }
   if (config.method === 'get') {
     config.params = {
-      companyId: store.state.user.userInfo.id,
-      companyName: store.state.user.userInfo.companyName,
+      companyId: store.state.user.userInfo.companyId,
+      companyName: store.state.user.userInfo.name,
       ...config.params
     }
   } else if( config.method === 'post' ) {
     config.data = {
-      companyId: store.state.user.userInfo.id,
-      companyName: store.state.user.userInfo.companyName,
+      companyId: store.state.user.userInfo.companyId,
+      companyName: store.state.user.userInfo.name,
       ...config.data
     }
   }

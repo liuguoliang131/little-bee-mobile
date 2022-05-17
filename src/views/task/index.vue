@@ -1,13 +1,13 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-11 19:29:44
+ * @LastEditTime: 2022-05-17 15:20:32
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
 <template>
   <div class="Index">
-    <bread></bread>
+    <!-- <bread></bread> -->
     <div class="search">
       <van-search v-model="searchParams.keywords"
                   placeholder="请输入标题"
@@ -24,6 +24,7 @@
       <van-pull-refresh v-model="reloading"
                         @refresh="handleSearch">
         <div class="item"
+             @click="handleShowMore(item)"
              v-for="(item) in tableData.data"
              :key="item.id">
           <span>{{item.index}}</span>
@@ -37,9 +38,11 @@
           <span>{{item.count}}</span>
           <span class="caozuo">
             <van-icon name="delete-o"
-                      @click="handleShowDelDialog(item)" />
-            <van-icon name="more-o"
+                      @click.stop="handleShowDelDialog(item)" />
+            <!-- <van-icon name="more-o"
                       @click="handleShowMore(item)" />
+            <van-icon name="edit"
+                      @click="handleGoDetail(item)" /> -->
           </span>
         </div>
       </van-pull-refresh>
@@ -50,24 +53,25 @@
                     @change="getList"
                     mode="simple" />
     <div class="fixed-r">
-      <div class="r-btn"
+      <!-- <div class="r-btn"
            @click="$router.push('/operation')">
         <div>工序</div>
         <div>记账</div>
-      </div>
+      </div> -->
       <div class="r-btn"
-           @click="$router.push('/createTask')">
+           @click="handleCheckJobCount">
         <div>创建</div>
         <div>任务</div>
       </div>
     </div>
-    <van-tabbar v-model="active">
+    <van-tabbar v-model="active"
+                active-color="#CB9400">
       <van-tabbar-item name="1"
                        icon="home-o"
                        to="/">首页</van-tabbar-item>
       <van-tabbar-item name="2"
-                       icon="friends-o"
-                       to="/staffList">员工管理</van-tabbar-item>
+                       icon="records"
+                       to="/operation">工序记账</van-tabbar-item>
       <van-tabbar-item name="3"
                        icon="contact"
                        to="/my">我的</van-tabbar-item>
@@ -86,8 +90,8 @@ import {
   TabbarItem,
   Pagination
 } from 'vant'
-import Bread from '@/components/bread/index.vue'
-import { h5_job_findPage, h5_job_updateStatus } from '@/http/api.js'
+// import Bread from '@/components/bread/index.vue'
+import { h5_job_findPage, h5_job_updateStatus, h5_job_jobCheck } from '@/http/api.js'
 export default {
   name: 'Index',
   components: {
@@ -97,7 +101,7 @@ export default {
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
     VanPagination: Pagination,
-    Bread
+    // Bread
   },
   data() {
     return {
@@ -192,11 +196,49 @@ export default {
           id: item.id
         }
       })
+    },
+    // 编辑
+    handleGoDetail(item) {
+      this.$router.push({
+        path: '/editTask',
+        query: {
+          id: item.id
+        }
+      })
+    },
+    async handleCheckJobCount() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      const res = await this.$http({
+        method: 'get',
+        url: h5_job_jobCheck,
+        params: {
+          companyId: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id
+        }
+      })
+      toast.clear()
+      if (res.success) {
+        this.$router.push('/createTask')
+      } else {
+        Dialog.confirm({
+          message: '任务数量为0 请尽快购买任务数量!',
+          confirmButtonColor: '#CB9400',
+          confirmButtonText:'立即购买'
+        }).then(async () => {
+          this.$router.push('/renewalMember')
+        }).catch(() => {
+          // on cancel
+        })
+      }
+
     }
   },
   created() {
     this.getList()
-    
+
   }
 }
 </script>
@@ -219,7 +261,7 @@ export default {
     }
   }
   .van-pull-refresh {
-    height: calc( 100vh - 200px );
+    height: calc(100vh - 200px);
   }
   .item {
     margin: 0 15px;
@@ -240,6 +282,7 @@ export default {
       }
     }
     .title {
+      color: #cb9400;
       .zijian {
         background-color: #cb9400;
         color: white;

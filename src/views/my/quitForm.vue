@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 19:50:07
+ * @LastEditTime: 2022-05-16 13:38:24
  * @FilePath: \little-bee-mobile\src\views\my\quitForm.vue
  * @Description: 历史纪录
 -->
@@ -28,7 +28,7 @@
         <tbody>
           <tr v-for="(item,index) in tableData.data"
               :key="index">
-            <td>{{index}}</td>
+            <td>{{(searchParams.pageNo-1)*searchParams.pageSize+index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.phone}}</td>
             <td>离职</td>

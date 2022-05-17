@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:57:17
+ * @LastEditTime: 2022-05-17 17:55:13
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -13,15 +13,11 @@
     </bread>
     <div class="views">
       <div class="search">
-        <input type="date"
-               name=""
-               id=""
-               v-model="date"
-               @change="handleSearch">
+        <date-screen v-model="searchParams.billData" @change="dateChange"></date-screen>
       </div>
       <div class="list">
         <van-pull-refresh v-model="reloading"
-                        @refresh="handleRefresh">
+                          @refresh="handleRefresh">
           <table>
             <thead>
               <tr>
@@ -41,8 +37,10 @@
                 <td>{{item.finishedProductCount}}</td>
                 <td>{{item.billData}}</td>
                 <td>
-                  <van-icon name="edit" @click="handleEdit(item)" />
-                  <van-icon name="ellipsis" @click="handleView(item)" />
+                  <van-icon name="edit"
+                            @click="handleEdit(item)" />
+                  <van-icon name="ellipsis"
+                            @click="handleView(item)" />
                 </td>
               </tr>
             </tbody>
@@ -56,6 +54,17 @@
                     :total-items="tableData.sumRow"
                     mode="simple"
                     @change="getList" />
+    <van-tabbar v-model="active" active-color="#CB9400">
+      <van-tabbar-item name="1"
+                       icon="home-o"
+                       to="/">首页</van-tabbar-item>
+      <van-tabbar-item name="2"
+                       icon="records"
+                       to="/operation">工序记账</van-tabbar-item>
+      <van-tabbar-item name="3"
+                       icon="contact"
+                       to="/my">我的</van-tabbar-item>
+    </van-tabbar>
   </div>
 </template>
 
@@ -67,51 +76,55 @@ import {
   PullRefresh,
   Icon,
   Dialog,
-  Pagination
+  Pagination,
+  Tabbar,
+  TabbarItem,
 } from 'vant'
 import Bread from '@/components/bread/index'
+import DateScreen from '@/components/dateScreen/index'
 import { h5_process_findPage } from '@/http/api'
 export default {
   name: 'Operation',
   data() {
     return {
+      active:'2',
       searchParams: {
         pageNo: 1,
         pageSize: 20,
         billData: this.$utils.getToday()
-        // startTime:'',
-        // endTime:''
       },
-      date: '',
       tableData: {
         sumRow: 0,
         data: [
 
         ]
       },
-      reloading:false
+      reloading: false
     }
   },
   components: {
     VanPullRefresh: PullRefresh,
     VanIcon: Icon,
     VanPagination: Pagination,
-    Bread
+    VanTabbar: Tabbar,
+    VanTabbarItem: TabbarItem,
+    Bread,
+    DateScreen
   },
   methods: {
     // 新增记账
     handleAddBill() {
       this.$router.push({
-        path:'/operationEdit',
+        path: '/operationEdit',
         query: {
-          
+
         }
       })
     },
     // 编辑
     handleEdit(item) {
       this.$router.push({
-        path:'/operationEdit',
+        path: '/operationEdit',
         query: {
           employeeId: item.employeeId
         }
@@ -120,25 +133,20 @@ export default {
     // 详情
     handleView(item) {
       this.$router.push({
-        path:'/operationDetail',
+        path: '/operationDetail',
         query: {
           employeeId: item.employeeId
         }
       })
     },
+    // 时间筛选
+    dateChange() {
+      this.searchParams.pageNo = 1
+      this.getList()
+    },
     // 搜索
     handleSearch() {
-      if(this.date) {
-        // this.searchParams.startTime = this.date + ' 00:00:00'
-        // this.searchParams.endTime = this.date + ' 23:59:59'
-        this.billData = this.date
-      }else {
-        // this.searchParams.startTime = ''
-        // this.searchParams.endTime = ''
-        this.billData = ''
-      }
       this.searchParams.pageNo = 1
-      
       this.getList()
     },
     handleRefresh() {
@@ -175,7 +183,7 @@ export default {
   width: 100%;
   .views {
     width: 100%;
-    height: calc(100vh - 36px);
+    height: calc( 100vh - 36px - 50px );
     overflow-y: scroll;
     .search {
       padding: 15px;

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 11:11:06
+ * @LastEditTime: 2022-05-17 18:01:29
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -19,48 +19,25 @@ import 'nprogress/nprogress.css'
 Vue.use(VueRouter)
 // 获取授权页面重定向回当前页面的时候保存它返回来的参数 
 console.log('router文件中获取url', window.location.href)
-console.log('utils.getCode()',utils.getCode())
+console.log('utils.getCode()', utils.getCode())
 const url = window.location.href
-if (url.includes('code=') && !utils.getOpenId()) {
-  let code = url.split('?')[1].split('&')[0].split('=')[1]
-  console.log('code', code)
-  store.commit('user/set_code', code)
-  axios({
-    method: 'get',
-    url: host + h5_wx_getOpenid,
-    params: {
-      code
-    }
-  }).then(res => {
-    console.log('获取openid then:', res)
-    store.commit('user/set_openId',res.data.model)
-    console.log('history',history)
-    axios({
-      method:'get',
-      url:h5_login_wxLogin,
-      params: {
-        appId:utils.getOpenId(),
-        type:'2'
-      }
-    }).then(res1=>{
-      store.commit('user/set_userInfo',res1.model)
-      // console.log('跳转回后的history',history)
-      window.history.go(-2)
-    })
-
-    
-  })
-}
-if (!utils.getCode()) {
-  let nowRoute = '#/'
-  if(window.location.href.includes('#/')) {
-    nowRoute = `#/${window.location.href.split('#/')[1]}`
-  }
-  history.pushState({ nowRoute }, 'firstPage', nowRoute)
-  window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
-}
 
 
+
+// 暂时不需要自动登录 以下代码注释------------
+// if(!store.state.user.userInfo && utils.getOpenId()) {
+//   axios({
+//     method: 'get',
+//     url: host + h5_login_wxLogin,
+//     params: {
+//       appId: utils.getOpenId(),
+//       type: '2'
+//     }
+//   }).then(res1 => {
+//     store.commit('user/set_userInfo', res1.model)
+//   })
+// }
+// ---------------
 
 const router = new VueRouter({ mode: 'hash', routes: constantRouterMap })
 
@@ -79,10 +56,39 @@ router.$addRoutes = (params) => {
 }
 // onReady只在初始加载一次  比如刷新页面
 router.onReady(() => {
+  if (url.includes('code=') && !utils.getOpenId()) {
+    let code = url.split('?')[1].split('&')[0].split('=')[1]
+    console.log('code', code)
+    store.commit('user/set_code', code)
+    axios({
+      method: 'get',
+      url: host + h5_wx_getOpenid,
+      params: {
+        code
+      }
+    }).then(res => {
+      console.log('获取openid then:', res)
+      store.commit('user/set_openId', res.data.model)
+      console.log('history', history)
+      // window.history.go(-2)
+      window.location.href = window.localStorage.getItem('littleBeeLink')
+    })
+  }else if(url.includes('code=') && utils.getOpenId()) {
+    // window.history.go(-1)
+  }
+  if (!utils.getCode()) {
+    let nowRoute = '#/'
+    if(window.location.href.includes('#/')) {
+      nowRoute = `#/${window.location.href.split('#/')[1]}`
+    }
+    // history.pushState({ nowRoute }, 'firstPage', nowRoute)
+    window.localStorage.setItem('littleBeeLink','http://littlebee.ouryou.cn/'+nowRoute)
+    // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+  }
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
-    store.dispatch('jurisdiction/getDynamicRoutes', null) // 请求动态路由
-      .then(list => {
+    // 请求动态路由
+    store.dispatch('jurisdiction/getDynamicRoutes', null).then(list => {
         console.log('动态路由', list)
         // 根据获取回来的信息判断是否要添加到路由表里
         const addList = []
@@ -124,7 +130,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from, next) => {
   // console.log(from,to,next)
   NProgress.done()
-  document.title = store.state.user.userInfo ? store.state.user.userInfo.companyName : ''
+  document.title = store.state.user.userInfo ? store.state.user.userInfo.name : '小蜜蜂'
 })
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {

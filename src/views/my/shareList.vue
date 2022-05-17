@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 19:12:17
+ * @LastEditTime: 2022-05-16 13:37:56
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           <tr v-for="(item,index) in tableData.data" :key="index">
-            <td>{{index}}</td>
+            <td>{{(searchParams.pageNo-1)*searchParams.pageSize+index+1}}</td>
             <td>{{item.sortTitle}}</td>
             <td>{{item.createTime}}</td>
             <td>{{item.count}}</td>

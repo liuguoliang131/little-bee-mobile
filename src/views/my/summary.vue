@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:34
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 19:10:20
+ * @LastEditTime: 2022-05-17 10:56:05
  * @FilePath: \little-bee-mobile\src\views\my\summary.vue
  * @Description: 汇总统计
 -->
@@ -160,7 +160,7 @@ export default {
         },
         series: [
           {
-            name: this.$store.state.user.userInfo.companyName,
+            name: this.$store.state.user.userInfo.name,
             data: yAxisDataList,
             type: 'line',
             areaStyle: {}

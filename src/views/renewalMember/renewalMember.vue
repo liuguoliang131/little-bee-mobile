@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-13 09:42:38
+ * @LastEditTime: 2022-05-17 15:21:42
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -62,7 +62,7 @@ import {
   Button,
   Toast
 } from 'vant'
-import wx from 'weixin-js-sdk'
+// import wx from 'weixin-js-sdk'
 export default {
   name: 'RenewalMember',
   components: {
@@ -86,7 +86,7 @@ export default {
         method: 'get',
         url: h5_company_findById,
         params: {
-          id: this.$store.state.user.userInfo.id
+          id: this.$store.state.user.userInfo.companyId
         }
       })
       if (!res.success) {
@@ -130,7 +130,7 @@ export default {
           url: h5_membership_getAmountsPayable,
           params: {
             id: that.checked.id,
-            companyId: that.$store.state.user.userInfo.id
+            companyId: that.$store.state.user.userInfo.companyId
           }
         }).then(res => {
           if (!res.success) {
@@ -163,7 +163,7 @@ export default {
                 resolve(false)
                 return Toast(res2.msg)
               }
-              Toast('SUCCESS')
+              // Toast('SUCCESS')
               const { timeStamp, nonceStr, signature, package: packages, signType, paySign } = res2.model
               // 验证微信环境
               // wx.config({

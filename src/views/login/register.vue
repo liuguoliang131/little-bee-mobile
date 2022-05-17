@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 15:40:21
+ * @LastEditTime: 2022-05-16 13:18:19
  * @FilePath: \little-bee-mobile\src\views\login\register.vue
  * @Description: 注册
 -->
@@ -14,12 +14,10 @@
       clearable
       label="企业电话"
       name="companyPhone"
-      placeholder="请输入手机号"
       required
       :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]" />
       <van-field v-model.trim="form.companyName" 
       label="企业名称"
-      placeholder="请输入企业名称"
       required
       :rules="[{ required: true, message: '请填写企业名称' }]" />
       <van-field
@@ -33,13 +31,13 @@
         placeholder="点击选择省市区"
         @click="showArea = true"
       />
-      <van-field required v-model.trim="form.address" label="详细地址" name="address" :rules="[{ required: true, message: '请输入详细地址' }]" placeholder="请输入详细地址" />
-      <van-field v-model.trim="form.abbreviationName" :rules="[{ required: true, message: '请输入简称' }]" label="简称" placeholder="请输入简称" />
+      <van-field required v-model.trim="form.address" label="详细地址" name="address" :rules="[{ required: true, message: '请输入详细地址' }]" />
+      <van-field v-model.trim="form.abbreviationName" :rules="[{ required: true, message: '请输入简称' }]" label="简称" />
       <!-- <van-field v-model.trim="form.num" label="企业编号" placeholder="请输入企业编号" /> -->
-      <van-field v-model.trim="form.contact" label="联系人姓名" placeholder="请输入联系人姓名" />
-      <van-field v-model.trim="form.website" label="官网地址" placeholder="请输入官网地址" />
+      <van-field v-model.trim="form.contact" label="联系人姓名" />
+      <van-field v-model.trim="form.website" label="官网地址" />
       <!-- <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" /> -->
-      <van-field v-model.trim="form.remark" label="备注" placeholder="请输入备注" />
+      <van-field v-model.trim="form.remark" label="备注" />
       <div class="file">
         <span class="label">公司logo</span>
         <van-uploader v-model="logoPath" :before-read="logoPhotosBeforeRead" :deletable="false" />

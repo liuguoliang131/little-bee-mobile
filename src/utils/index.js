@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 19:47:30
+ * @LastEditTime: 2022-05-17 17:45:09
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -86,7 +86,20 @@ utils.formatTime = function (data) {
   return `${y}-${mon}-${d} ${h}:${m}:${s}`
 
 }
+// 时间格式化 return 2022-05-22
+// data: Date对象或string或毫秒
+utils.formatTimeDate = function (data) {
+  const date = new Date(data)
+  let y = date.getFullYear()
+  let mon = date.getMonth() + 1
+  let d = date.getDate()
+  y = y < 10 ? '0' + y : y
+  mon = mon < 10 ? '0' + mon : mon
+  d = d < 10 ? '0' + d : d
 
+  return `${y}-${mon}-${d}`
+
+}
 // 根据图片ID获取图片地址
 utils.getPhoto = function (ids) {
   return new Promise((resolve) => {

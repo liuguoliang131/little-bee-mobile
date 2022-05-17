@@ -1,21 +1,20 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 15:44:35
+ * @LastEditTime: 2022-05-16 14:48:16
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
 <template>
   <div class="login">
     <header>小蜜蜂</header>
-    <div>
+    <div class="form-box">
       <van-form @submit="onSubmit">
         <van-field v-model="form.phone"
                    center
                    clearable
                    label="手机号"
                    name="phone"
-                   placeholder="请输入手机号"
                    :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]">
           <template #button>
             <van-button size="small"
@@ -30,9 +29,9 @@
                    type="number"
                    name="code"
                    label="验证码"
-                   placeholder="请输入验证码"
                    :rules="[{ required: true, message: '请填写验证码' },{ pattern:/^[0-9]{1,10}$/, message: '验证码不符合规则' }]" />
         <div class="toRegister">
+          <span @click="handleWXLogin">免密登录</span>
           <span @click="handleGoRegister">去注册</span>
         </div>
         <div class="sub-btn">
@@ -42,11 +41,11 @@
                       native-type="submit">提交</van-button>
         </div>
       </van-form>
+      <footer>
+        <span>登录代表您已同意</span>
+        <span>小蜜蜂用户协议、隐私协议</span>
+      </footer>
     </div>
-    <footer>
-      <span>登录代表您已同意</span>
-      <span>小蜜蜂用户协议、隐私协议</span>
-    </footer>
   </div>
 </template>
 
@@ -58,7 +57,7 @@ import {
   Button
 } from 'vant'
 import axios from 'axios'
-import { appId,host, h5_login_login, sys_sms_send } from '@/http/api'
+import { appId, host, h5_login_login, sys_sms_send, h5_login_wxLogin } from '@/http/api'
 export default {
   name: 'Login',
   data() {
@@ -132,7 +131,25 @@ export default {
           phone: this.form.phone
         }
       })
-    }
+    },
+    // 直接用微信openid登录
+    async handleWXLogin() {
+      const res = await axios({
+        method: 'get',
+        url: host + h5_login_wxLogin,
+        params: {
+          appId: this.$utils.getOpenId(),
+          type: '2'
+        }
+      })
+      console.log('wxlogin',res)
+      if (!res.data.success) {
+        return Toast(res.data.msg)
+      }
+      
+      this.$store.dispatch('user/login', res.data.model)
+
+    },
   },
   created() {
     this.form.phone = this.$route.params.phone || ''
@@ -167,21 +184,25 @@ export default {
     width: 100%;
     padding: 10px 30px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     span {
       font-size: 14px;
       color: #cb9400;
     }
+  }
+  .form-box {
+    position: relative;
   }
   footer {
     font-size: 11px;
     font-family: PingFang SC;
     font-weight: bold;
     color: #999999;
-    position: fixed;
+    // position: absolute;
+    // left: 0;
+    // bottom: 15px;
+    padding-top: 100px;
     width: 100%;
-    left: 0;
-    bottom: 15px;
     text-align: center;
     span:nth-child(2) {
       color: #cb9400;
