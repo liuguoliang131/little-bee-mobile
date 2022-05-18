@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 15:20:32
+ * @LastEditTime: 2022-05-18 17:59:45
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -17,7 +17,7 @@
       <div class="thead">
         <span>序号</span>
         <span>标题</span>
-        <span>创建时间</span>
+        <span>日期</span>
         <span>数量</span>
         <span>操作</span>
       </div>
@@ -34,7 +34,7 @@
             <!-- <i class="fenxiang">分享</i>
             <i class="wai">外</i> -->
           </span>
-          <span>{{$utils.formatTime(item.createTime)}}</span>
+          <span>{{$utils.formatTimeMMdd(item.createTime)}}</span>
           <span>{{item.count}}</span>
           <span class="caozuo">
             <van-icon name="delete-o"
