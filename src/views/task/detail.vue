@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 13:31:47
+ * @LastEditTime: 2022-05-18 17:41:06
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -37,7 +37,7 @@
                    required
                    :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]"
                    :disabled="true" />
-        <van-field v-model="form.unitPrice"
+        <van-field v-model="form.unitPrice.value"
                    type="number"
                    name="unitPrice"
                    label="单价"
@@ -75,6 +75,12 @@
             <div>利润: {{profit}}元</div>
           </div>
           <div class="b-2">
+            <van-button color="#CB9400"
+                        type="info"
+                        plain
+                        native-type="button"
+                        size="small"
+                        @click="handleGoDetail">编辑</van-button>
             <van-button v-show="form.jobStatus==='PAUSE'||form.jobStatus==='INIT'"
                         color="#CB9400"
                         type="info"
@@ -226,7 +232,7 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare, h5_wx_getWxConfig, wx_getWxConfigWeb } from '@/http/api'
+import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare, h5_wx_getWxConfig, h5_jobShare_getShareCount } from '@/http/api'
 import wx from 'weixin-js-sdk'
 export default {
   name: 'Detail',
@@ -270,16 +276,17 @@ export default {
         title: '',
         unitPrice: 1
       },
-      dialogVisible: false
+      dialogVisible: false,
+      sureShare: false //  = count - shareCount - 已完成数量 >0  为true才可以分享
     }
   },
   computed: {
     // 总和
     totalPrice() {
-      if (!this.form.count || !this.form.unitPrice) {
+      if (!this.form.count || !this.form.unitPrice.value) {
         return 0
       }
-      return Number((this.form.count * this.form.unitPrice).toFixed(2))
+      return Number((this.form.count * this.form.unitPrice.value).toFixed(2))
     },
     // 工序合计
     processTotal() {
@@ -305,6 +312,9 @@ export default {
   },
   methods: {
     handleShowShareDialog() {
+      if (this.sureShare <= 0) {
+        return Toast('可分享数量为0, 不能分享')
+      }
       this.dialogForm.title = this.form.title
       this.dialogForm.count = this.form.count
       // this.dialogForm.unitPrice = this.form.unitPrice
@@ -316,6 +326,9 @@ export default {
     },
     // 确认分享
     async handleConfirmShare() {
+      if (this.dialogForm.count > this.sureShare) {
+        return Toast(`可分享的剩余数量为${this.sureShare}`)
+      }
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
@@ -538,6 +551,15 @@ export default {
         }
       })
     },
+    // 编辑
+    handleGoDetail() {
+      this.$router.push({
+        path: '/editTask',
+        query: {
+          id: this.$route.query.id
+        }
+      })
+    },
     async echoData() {
       const params = {
         id: Number(this.$route.query.id)
@@ -557,7 +579,19 @@ export default {
       }
 
       this.form = form
-      this.setWx()
+      const res1 = await this.$http({
+        method: 'get',
+        url: h5_jobShare_getShareCount,
+        params: {
+          jobId: Number(this.$route.query.id)
+        }
+      })
+      let completeCount = res1.model || 0
+      this.sureShare = (Number(this.form.count) - Number(this.form.shareCount) - Number(completeCount))
+      if (this.sureShare) {
+        this.setWx()
+      }
+
     }
   },
   created() {

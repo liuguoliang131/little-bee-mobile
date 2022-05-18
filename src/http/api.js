@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 15:10:47
+ * @LastEditTime: 2022-05-18 17:18:40
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -44,6 +44,7 @@ export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatis
 // 分享
 export const h5_jobShare_jobShare = '/h5/jobShare/jobShare' //任务分享
 export const h5_jobShare_jobReception = '/h5/jobShare/jobReception' //任务接收
+export const h5_jobShare_getShareCount = '/h5/jobShare/getShareCount' //获取当前任务已完成数量
 export const h5_jobShare_findPage = '/h5/jobShare/findPage' //任务列表
 export const h5_jobShare_findById = '/h5/jobShare/findById' //分享详情
 export const h5_job_update = '/h5/job/update'  //编辑任务
