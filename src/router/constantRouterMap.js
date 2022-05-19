@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 16:56:12
+ * @LastEditTime: 2022-05-19 17:11:01
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -19,7 +19,8 @@ const normalRoutes = [
     path:'/login',
     component:login,
     meta: {
-      white: true
+      white: true,
+      bread:'登录'
     }
   },
   {

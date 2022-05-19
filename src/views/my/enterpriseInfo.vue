@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 16:55:04
+ * @LastEditTime: 2022-05-19 17:06:20
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -130,7 +130,7 @@ export default {
       //   }
       // })
       const params = {
-        id: this.$store.state.user.userInfo.companyId
+        id: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id
       }
       const res = await this.$http({
         method: 'get',

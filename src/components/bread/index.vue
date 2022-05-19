@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-28 10:33:07
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-04-28 13:55:24
+ * @LastEditTime: 2022-05-19 17:03:53
  * @FilePath: \little-bee-mobile\src\components\bread\index.vue
  * @Description: 页头
 -->
@@ -68,6 +68,7 @@ export default {
       height: 36px;
       text-align: center;
       line-height: 36px;
+      visibility: hidden;
     }
     .right {
       width: 36px;
