@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-18 17:45:05
+ * @LastEditTime: 2022-05-19 15:16:19
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -56,6 +56,15 @@ router.$addRoutes = (params) => {
 }
 // onReady只在初始加载一次  比如刷新页面
 router.onReady(() => {
+  console.log('router.onready 环境',process.env.NODE_ENV)
+  let appURL = ''
+  if (process.env.NODE_ENV==='test') {
+    appURL = 'http://littlebee.ouryou.cn/'
+  }else if(process.env.NODE_ENV==='production') {
+    appURL = 'http://littlebee.forniao.cn/'
+  }else if(process.env.NODE_ENV==='development') {
+    appURL = 'http://littlebee.ouryou.cn/'
+  }
   if (url.includes('code=') && !utils.getOpenId()) {
     let code = url.split('?')[1].split('&')[0].split('=')[1]
     console.log('code', code)
@@ -82,8 +91,8 @@ router.onReady(() => {
       nowRoute = `#/${window.location.href.split('#/')[1]}`
     }
     // history.pushState({ nowRoute }, 'firstPage', nowRoute)
-    window.localStorage.setItem('littleBeeLink','http://littlebee.ouryou.cn/'+nowRoute)
-    // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=http://littlebee.ouryou.cn/&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+    window.localStorage.setItem('littleBeeLink',appURL+nowRoute)
+    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
   }
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
