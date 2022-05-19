@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 15:01:41
+ * @LastEditTime: 2022-05-19 14:40:26
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -15,7 +15,8 @@
                v-model="searchParams.keywords">
         <van-button color="#CB9400"
                     type="info"
-                    size="small" @click="handleSearch">筛选</van-button>
+                    size="small"
+                    @click="handleSearch">筛选</van-button>
       </div>
       <div class="right">
         <van-icon name="bar-chart-o"
@@ -27,37 +28,47 @@
       </div>
     </div>
     <div class="views">
-      <table>
-        <thead>
-          <tr>
-            <th>序号</th>
-            <th>姓名</th>
-            <th>手机号</th>
-            <th>入职时间</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item,index) in tableData.data"
-              :key="index">
-            <td>{{index+1}}</td>
-            <td>{{item.name}}</td>
-            <td>{{item.phone}}</td>
-            <td>{{$utils.formatTime(item.entryTime)}}</td>
-            <td>
-              <van-icon name="ellipsis"
-                        @click="handleGoDetail(item)" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <van-pagination class="fixed-page"
+      <van-pull-refresh v-model="reloading"
+                        @refresh="handleSearch">
+        <van-list v-model="loading"
+                  :finished="finished"
+                  finished-text="没有更多了"
+                  @load="getList">
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>入职时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="(item,index) in tableData"
+                  :key="index">
+                <td>{{item.index}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{$utils.formatTime(item.entryTime)}}</td>
+                <td>
+                  <van-icon name="ellipsis"
+                            @click="handleGoDetail(item)" />
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </van-list>
+      </van-pull-refresh>
+      <!-- <van-pagination class="fixed-page"
                       v-model="searchParams.pageNo"
                       :items-per-page="searchParams.pageSize"
                       :total-items="tableData.sumRow"
                       mode="simple"
-                      @change="getList" />
-      <footer></footer>
+                      @change="getList" /> -->
+      <!-- <footer></footer> -->
     </div>
     <!-- <van-tabbar v-model="active">
       <van-tabbar-item name="1"
@@ -79,9 +90,11 @@ import { h5_employee_findPage } from '@/http/api'
 import {
   Button,
   Icon,
+  PullRefresh,
+  List,
   // Tabbar,
   // TabbarItem,
-  Pagination,
+  // Pagination,
   Toast
 } from 'vant'
 export default {
@@ -93,19 +106,20 @@ export default {
         keywords: '',
         pageNo: 1,
         pageSize: 20,
-        disabledStatus:false
+        disabledStatus: false
       },
-      tableData: {
-        data: [],
-        sumRow: 0
-      }
+      tableData: [],
+      loading: false,
+      finished: false,
+      reloading: false
     }
   },
   components: {
     Bread,
     VanButton: Button,
     VanIcon: Icon,
-    VanPagination: Pagination
+    VanPullRefresh: PullRefresh,
+    VanList: List
   },
   methods: {
     handleGoDetail(item) {
@@ -132,7 +146,8 @@ export default {
     },
     handleSearch() {
       this.searchParams.pageNo = 1
-      this.getList()
+      this.tableData = []
+      this.refreshGetList()
     },
     async getList() {
       const params = { ...this.searchParams }
@@ -140,11 +155,30 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      this.tableData = res.model || {}
+      res.model.data && res.model.data.forEach((item, idx) => {
+        item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+      })
+      this.tableData = [...this.tableData, ...res.model.data]
+      this.searchParams.pageNo++
+      this.loading = false
+      this.finished = res.model.lastPage
+    },
+    async refreshGetList() {
+      const params = { ...this.searchParams }
+      const res = await this.$http.post(h5_employee_findPage, params)
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      res.model.data && res.model.data.forEach((item, idx) => {
+        item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+      })
+      this.tableData = [...this.tableData, ...res.model.data]
+      this.searchParams.pageNo++
+      this.reloading = false
     }
   },
   created() {
-    this.getList()
+    // this.getList()
   }
 }
 </script>
@@ -181,7 +215,7 @@ export default {
     }
   }
   .views {
-    height: calc(100vh - 140px);
+    height: calc(100vh - 100px);
     position: relative;
     .fixed-page {
       position: fixed;
@@ -192,6 +226,9 @@ export default {
     footer {
       height: 200px;
     }
+  }
+  .van-pull-refresh {
+    height: calc(100vh - 100px);
   }
 }
 </style>

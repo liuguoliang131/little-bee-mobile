@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 17:55:13
+ * @LastEditTime: 2022-05-19 14:42:35
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -13,48 +13,55 @@
     </bread>
     <div class="views">
       <div class="search">
-        <date-screen v-model="searchParams.billData" @change="dateChange"></date-screen>
+        <date-screen v-model="searchParams.billData"
+                     @change="dateChange"></date-screen>
       </div>
       <div class="list">
         <van-pull-refresh v-model="reloading"
                           @refresh="handleRefresh">
-          <table>
-            <thead>
-              <tr>
-                <th>序号</th>
-                <th>任务标题</th>
-                <th>成品</th>
-                <th>时间</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="item"
-                  v-for="(item,index) in tableData.data"
-                  :key="index">
-                <td>{{(searchParams.pageNo-1)*searchParams.pageSize+index+1}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.finishedProductCount}}</td>
-                <td>{{item.billData}}</td>
-                <td>
-                  <van-icon name="edit"
-                            @click="handleEdit(item)" />
-                  <van-icon name="ellipsis"
-                            @click="handleView(item)" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <van-list v-model="loading"
+                    :finished="finished"
+                    finished-text="没有更多了"
+                    @load="getList">
+            <table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>任务标题</th>
+                  <th>成品</th>
+                  <th>时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="item"
+                    v-for="(item,index) in tableData"
+                    :key="index">
+                  <td>{{item.index}}</td>
+                  <td>{{item.name}}</td>
+                  <td>{{item.finishedProductCount}}</td>
+                  <td>{{item.billData}}</td>
+                  <td>
+                    <van-icon name="edit"
+                              @click="handleEdit(item)" />
+                    <van-icon name="ellipsis"
+                              @click="handleView(item)" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </van-list>
         </van-pull-refresh>
       </div>
     </div>
     <footer></footer>
-    <van-pagination v-model="searchParams.pageNo"
+    <!-- <van-pagination v-model="searchParams.pageNo"
                     :items-per-page="searchParams.pageSize"
                     :total-items="tableData.sumRow"
                     mode="simple"
-                    @change="getList" />
-    <van-tabbar v-model="active" active-color="#CB9400">
+                    @change="getList" /> -->
+    <van-tabbar v-model="active"
+                active-color="#CB9400">
       <van-tabbar-item name="1"
                        icon="home-o"
                        to="/">首页</van-tabbar-item>
@@ -70,13 +77,10 @@
 
 <script>
 import {
-  Search,
   List,
   Toast,
   PullRefresh,
   Icon,
-  Dialog,
-  Pagination,
   Tabbar,
   TabbarItem,
 } from 'vant'
@@ -87,25 +91,23 @@ export default {
   name: 'Operation',
   data() {
     return {
-      active:'2',
+      active: '2',
       searchParams: {
         pageNo: 1,
         pageSize: 20,
         billData: this.$utils.getToday()
       },
-      tableData: {
-        sumRow: 0,
-        data: [
-
-        ]
-      },
+      tableData: [],
+      loading: false,
+      finished: false,
       reloading: false
     }
   },
   components: {
     VanPullRefresh: PullRefresh,
+    VanList: List,
     VanIcon: Icon,
-    VanPagination: Pagination,
+    // VanPagination: Pagination,
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
     Bread,
@@ -142,18 +144,21 @@ export default {
     // 时间筛选
     dateChange() {
       this.searchParams.pageNo = 1
-      this.getList()
+      this.tableData = []
+      this.refreshGetList()
     },
     // 搜索
     handleSearch() {
       this.searchParams.pageNo = 1
-      this.getList()
+      this.tableData = []
+      this.refreshGetList()
     },
     handleRefresh() {
       this.searchParams.pageNo = 1
-      this.getList()
+      this.tableData = []
+      this.refreshGetList()
     },
-    async getList() {
+    async refreshGetList() {
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
@@ -169,11 +174,39 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      this.tableData = res.model
+      res.model.data && res.model.data.forEach((item, idx) => {
+        item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+      })
+      this.tableData = [...this.tableData, ...res.model.data]
+      this.searchParams.pageNo++
+
+    },
+    async getList() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      const res = await this.$http({
+        method: 'post',
+        url: h5_process_findPage,
+        data: this.searchParams
+      })
+      toast.clear()
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      res.model.data && res.model.data.forEach((item, idx) => {
+        item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+      })
+      this.tableData = [...this.tableData, ...res.model.data]
+      this.searchParams.pageNo++
+      this.loading = false
+      this.finished = res.model.lastPage
     }
   },
   created() {
-    this.getList()
+    // this.getList()
   }
 }
 </script>
@@ -183,7 +216,7 @@ export default {
   width: 100%;
   .views {
     width: 100%;
-    height: calc( 100vh - 36px - 50px );
+    height: calc(100vh - 36px - 50px);
     overflow-y: scroll;
     .search {
       padding: 15px;

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-18 17:59:45
+ * @LastEditTime: 2022-05-19 11:18:46
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -23,35 +23,36 @@
       </div>
       <van-pull-refresh v-model="reloading"
                         @refresh="handleSearch">
-        <div class="item"
-             @click="handleShowMore(item)"
-             v-for="(item) in tableData.data"
-             :key="item.id">
-          <span>{{item.index}}</span>
-          <span class="title">
-            {{item.sortTitle||item.title}}
-            <i class="zijian">自建</i>
-            <!-- <i class="fenxiang">分享</i>
-            <i class="wai">外</i> -->
-          </span>
-          <span>{{$utils.formatTimeMMdd(item.createTime)}}</span>
-          <span>{{item.count}}</span>
-          <span class="caozuo">
-            <van-icon name="delete-o"
-                      @click.stop="handleShowDelDialog(item)" />
-            <!-- <van-icon name="more-o"
-                      @click="handleShowMore(item)" />
-            <van-icon name="edit"
-                      @click="handleGoDetail(item)" /> -->
-          </span>
-        </div>
+        <van-list v-model="loading"
+                  :finished="finished"
+                  finished-text="没有更多了"
+                  @load="getList">
+          <div class="item"
+               @click="handleShowMore(item)"
+               v-for="(item) in tableData"
+               :key="item.id">
+            <span>{{item.index}}</span>
+            <span class="title">
+              {{item.sortTitle||item.title}}
+              <i class="zijian">自建</i>
+              <!-- <i class="fenxiang">分享</i>
+              <i class="wai">外</i> -->
+            </span>
+            <span>{{$utils.formatTimeMMdd(item.createTime)}}</span>
+            <span>{{item.count}}</span>
+            <span class="caozuo">
+              <van-icon name="delete-o"
+                        @click.stop="handleShowDelDialog(item)" />
+            </span>
+          </div>
+        </van-list>
       </van-pull-refresh>
     </div>
-    <van-pagination v-model="searchParams.pageNo"
+    <!-- <van-pagination v-model="searchParams.pageNo"
                     :items-per-page="searchParams.pageSize"
                     :total-items="tableData.sumRow"
                     @change="getList"
-                    mode="simple" />
+                    mode="simple" /> -->
     <div class="fixed-r">
       <!-- <div class="r-btn"
            @click="$router.push('/operation')">
@@ -88,7 +89,8 @@ import {
   Dialog,
   Tabbar,
   TabbarItem,
-  Pagination
+  Pagination,
+  List
 } from 'vant'
 // import Bread from '@/components/bread/index.vue'
 import { h5_job_findPage, h5_job_updateStatus, h5_job_jobCheck } from '@/http/api.js'
@@ -100,7 +102,8 @@ export default {
     VanIcon: Icon,
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
-    VanPagination: Pagination,
+    // VanPagination: Pagination,
+    VanList: List
     // Bread
   },
   data() {
@@ -110,10 +113,7 @@ export default {
         pageNo: 1,
         pageSize: 20
       },
-      tableData: {
-        sumRow: 0,
-        data: []
-      },
+      tableData: [],
       loading: false,
       finished: false, //是否为最后一页
       reloading: false,
@@ -125,9 +125,39 @@ export default {
     handleSearch() {
       this.tableData = []
       this.searchParams.pageNo = 1
-      this.getList()
+      this.refreshGetList()
     },
     async getList() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      try {
+
+        const res = await this.$http({
+          method: 'post',
+          url: h5_job_findPage,
+          data: this.searchParams
+        })
+        toast.clear()
+        if (!res.success) {
+          return Toast(res.msg)
+        }
+        res.model.data && res.model.data.forEach((item, idx) => {
+          item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+        })
+        this.tableData = [...this.tableData, ...res.model.data]
+        this.searchParams.pageNo++
+        this.loading = false
+        this.finished = res.model.lastPage
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    // 刷新页面
+    async refreshGetList() {
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
@@ -148,9 +178,9 @@ export default {
         res.model.data && res.model.data.forEach((item, idx) => {
           item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
         })
-        this.tableData = res.model
+        this.tableData = [...this.tableData, ...res.model.data]
+        this.searchParams.pageNo++
       } catch (error) {
-        toast.clear()
         this.reloading = false
         console.log(error)
         throw error
@@ -226,7 +256,7 @@ export default {
         Dialog.confirm({
           message: '任务数量为0 请尽快购买任务数量!',
           confirmButtonColor: '#CB9400',
-          confirmButtonText:'立即购买'
+          confirmButtonText: '立即购买'
         }).then(async () => {
           this.$router.push('/renewalMember')
         }).catch(() => {
@@ -237,7 +267,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
 
   }
 }
@@ -261,7 +291,7 @@ export default {
     }
   }
   .van-pull-refresh {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 140px);
   }
   .item {
     margin: 0 15px;

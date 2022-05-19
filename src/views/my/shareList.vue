@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 13:37:56
+ * @LastEditTime: 2022-05-19 14:54:45
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -14,6 +14,12 @@
                   @search="handleSearch" />
     </div>
     <div class="views">
+      <van-pull-refresh v-model="reloading"
+                        @refresh="handleSearch">
+        <van-list v-model="loading"
+                  :finished="finished"
+                  finished-text="没有更多了"
+                  @load="getList">
       <table>
         <thead>
           <tr>
@@ -25,8 +31,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item,index) in tableData.data" :key="index">
-            <td>{{(searchParams.pageNo-1)*searchParams.pageSize+index+1}}</td>
+          <tr v-for="(item,index) in tableData" :key="index">
+            <td>{{item.index}}</td>
             <td>{{item.sortTitle}}</td>
             <td>{{item.createTime}}</td>
             <td>{{item.count}}</td>
@@ -37,13 +43,9 @@
           </tr>
         </tbody>
       </table>
-      <footer></footer>
+      </van-list>
+      </van-pull-refresh>
     </div>
-    <van-pagination v-model="searchParams.pageNo"
-                    :items-per-page="searchParams.pageSize"
-                    :total-items="tableData.sumRow"
-                    @change="getList"
-                    mode="simple" />
   </div>
 </template>
 
@@ -54,8 +56,8 @@ import {
   Search,
   Toast,
   Icon,
-  Pagination,
-  Dialog
+  PullRefresh,
+  List,
 } from 'vant'
 export default {
   name:'history',
@@ -66,22 +68,53 @@ export default {
         pageSize:20,
         keywords:''
       },
-      tableData:{
-        items:[],
-        sumRow:0
-      }
+      tableData:[],
+      loading: false,
+      finished: false,
+      reloading: false
     }
   },
   components: {
     VanSearch: Search,
     VanIcon: Icon,
-    VanPagination: Pagination,
+    VanPullRefresh: PullRefresh,
+    VanList: List,
     Bread
   },
   methods: {
     handleSearch() {
       this.searchParams.pageNo = 1
-      this.getList()
+      this.tableData = []
+      this.refreshGetList()
+    },
+    async refreshGetList() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      try {
+
+        const res = await this.$http({
+          method: 'post',
+          url: h5_jobShare_findPage,
+          data: this.searchParams
+        })
+        toast.clear()
+        this.reloading = false
+        if (!res.success) {
+          return Toast(res.msg)
+        }
+        res.model.data && res.model.data.forEach((item, idx) => {
+          item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+        })
+        this.tableData = [...this.tableData, ...res.model.data]
+        this.searchParams.pageNo++
+      } catch (error) {
+        toast.clear()
+        console.log(error)
+        throw error
+      }
     },
     async getList() {
       const toast = Toast.loading({
@@ -100,7 +133,13 @@ export default {
         if (!res.success) {
           return Toast(res.msg)
         }
-        this.tableData = res.model
+        res.model.data && res.model.data.forEach((item, idx) => {
+          item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+        })
+        this.tableData = [...this.tableData, ...res.model.data]
+        this.searchParams.pageNo++
+        this.loading = false
+        this.finished = res.model.lastPage
       } catch (error) {
         toast.clear()
         console.log(error)
@@ -117,7 +156,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
   }
 }
 </script>
@@ -129,15 +168,9 @@ export default {
     .del {
       margin-right: 10px;
     }
-  }
-  .van-pagination {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
-  footer {
-    height: 100px;
+    .van-pull-refresh {
+      height: calc(100% - 90px);
+    }
   }
 }
 </style>
