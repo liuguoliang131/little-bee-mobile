@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:34
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 10:56:05
+ * @LastEditTime: 2022-05-19 16:55:43
  * @FilePath: \little-bee-mobile\src\views\my\summary.vue
  * @Description: 汇总统计
 -->
@@ -9,22 +9,19 @@
   <div class="summary">
     <bread></bread>
     <div class="views">
-      <van-field
-        v-model="month"
-        is-link
-        readonly
-        name="picker"
-        label="月份"
-        placeholder="点击选择月份"
-        @click="showPicker = true"
-      />
-      <van-popup v-model="showPicker" position="bottom">
-        <van-picker
-          show-toolbar
-          :columns="columns"
-          @confirm="handleMonthConfirm"
-          @cancel="showPicker = false"
-        />
+      <van-field v-model="month"
+                 is-link
+                 readonly
+                 name="picker"
+                 label="月份"
+                 placeholder="点击选择月份"
+                 @click="showPicker = true" />
+      <van-popup v-model="showPicker"
+                 position="bottom">
+        <van-picker show-toolbar
+                    :columns="columns"
+                    @confirm="handleMonthConfirm"
+                    @cancel="showPicker = false" />
       </van-popup>
       <div id="top"></div>
       <div id="bottom"></div>
@@ -43,17 +40,17 @@ import {
   Toast
 } from 'vant'
 export default {
-  name:'summary',
+  name: 'summary',
   components: {
     Bread,
-    VanPopup:Popup,
-    VanField:Field,
-    VanPicker:Picker
+    VanPopup: Popup,
+    VanField: Field,
+    VanPicker: Picker
   },
   data() {
     return {
-      showPicker:false,
-      columns:[
+      showPicker: false,
+      columns: [
         '全部',
         '1月',
         '2月',
@@ -68,8 +65,8 @@ export default {
         '11月',
         '12月'
       ],
-      month:null,
-      data:[],
+      month: null,
+      data: [],
       topInstance: null,
       bottomInstance: null
     }
@@ -131,8 +128,8 @@ export default {
       const params = {
         statisticsData
       }
-      const res = await this.$http.post(h5_performanceStatistics_companyStatistics,params)
-      if(!res.success) {
+      const res = await this.$http.post(h5_performanceStatistics_companyStatistics, params)
+      if (!res.success) {
         return Toast(res.msg)
       }
       this.data = res.model || []
@@ -140,12 +137,12 @@ export default {
       this.initBottomEcharts()
     },
     // 生成线型图
-    initEcharts () {
+    initEcharts() {
       var chartDom = document.getElementById('top')
       this.topInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = this.data.map(item=>item.billData)
-      let yAxisDataList = this.data.map(item=>item.finishedProductCount)
+      let xAxisNameList = this.data.map(item => item.billData)
+      let yAxisDataList = this.data.map(item => item.finishedProductCount)
       option = {
         title: {
           text: '任务'
@@ -160,7 +157,7 @@ export default {
         },
         series: [
           {
-            name: this.$store.state.user.userInfo.name,
+            name: this.$store.state.user.userInfo.name || this.$store.state.user.userInfo.companyName,
             data: yAxisDataList,
             type: 'line',
             areaStyle: {}
@@ -177,8 +174,8 @@ export default {
       var chartDom = document.getElementById('bottom')
       this.bottomInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = this.data.map(item=>item.billData)
-      let yAxisDataList = this.data.map(item=>item.totalPrice)
+      let xAxisNameList = this.data.map(item => item.billData)
+      let yAxisDataList = this.data.map(item => item.totalPrice)
       option = {
         title: {
           text: '总收入(元)'

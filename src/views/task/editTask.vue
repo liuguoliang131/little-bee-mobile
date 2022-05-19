@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-16 15:30:18
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 11:34:59
+ * @LastEditTime: 2022-05-19 16:57:35
  * @FilePath: \little-bee-mobile\src\views\task\editTask.vue
  * @Description: 
 -->
@@ -246,7 +246,7 @@ export default {
       this.form.jobUpdateProcessRequestList.forEach(item => {
         sum += Number(item.unitPrice.value)
       })
-      console.log('processTotal',this.form.count,sum)
+      console.log('processTotal', this.form.count, sum)
       return Number((sum * this.form.count).toFixed(2))
     },
     // 利润
@@ -263,7 +263,7 @@ export default {
       this.dialogForm = {
         name: '',
         unitPrice: {
-          value:1
+          value: 1
         },
         imagesIds: '',
         remark: '',
@@ -342,10 +342,10 @@ export default {
           imagesIds: item.imagesResponseList.map(item => item.id).join(','),
           imagesResponseList: item.imagesResponseList,
           remark: item.remark,
-          jobId:this.form.id,
-          companyId:this.$store.state.user.userInfo.companyId
+          jobId: this.form.id,
+          companyId: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id
         }
-        if(item.id) {
+        if (item.id) {
           newItem.id = item.id
         }
         return newItem
@@ -355,8 +355,8 @@ export default {
         method: 'post',
         url: h5_job_update,
         data: {
-          companyId: this.$store.state.user.userInfo.companyId,
-          companyName: this.$store.state.user.userInfo.name,
+          companyId: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id,
+          companyName: this.$store.state.user.userInfo.companyName || this.$store.state.user.userInfo.name,
           id: this.form.id,
           title: this.form.title,
           sortTitle: this.form.sortTitle,
@@ -418,8 +418,8 @@ export default {
       if (form.imagesIds) {
         this.photos = await this.$utils.getPhoto(form.imagesIds)
       }
-      form.jobDetailProcessResponseList.forEach(item=>{
-        item.imagesResponseList = item.imagesResponseList?item.imagesResponseList : []
+      form.jobDetailProcessResponseList.forEach(item => {
+        item.imagesResponseList = item.imagesResponseList ? item.imagesResponseList : []
       })
       form.jobUpdateProcessRequestList = form.jobDetailProcessResponseList
       delete form.jobDetailProcessResponseList

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-17 15:21:42
+ * @LastEditTime: 2022-05-19 16:56:30
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -86,7 +86,7 @@ export default {
         method: 'get',
         url: h5_company_findById,
         params: {
-          id: this.$store.state.user.userInfo.companyId
+          id: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id
         }
       })
       if (!res.success) {
@@ -130,7 +130,7 @@ export default {
           url: h5_membership_getAmountsPayable,
           params: {
             id: that.checked.id,
-            companyId: that.$store.state.user.userInfo.companyId
+            companyId: that.$store.state.user.userInfo.companyId || that.$store.state.user.userInfo.id
           }
         }).then(res => {
           if (!res.success) {

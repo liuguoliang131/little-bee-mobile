@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 15:16:19
+ * @LastEditTime: 2022-05-19 16:58:41
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -56,13 +56,13 @@ router.$addRoutes = (params) => {
 }
 // onReady只在初始加载一次  比如刷新页面
 router.onReady(() => {
-  console.log('router.onready 环境',process.env.NODE_ENV)
+  console.log('router.onready 环境', process.env.NODE_ENV)
   let appURL = ''
-  if (process.env.NODE_ENV==='test') {
+  if (process.env.NODE_ENV === 'test') {
     appURL = 'http://littlebee.ouryou.cn/'
-  }else if(process.env.NODE_ENV==='production') {
+  } else if (process.env.NODE_ENV === 'production') {
     appURL = 'http://littlebee.forniao.cn/'
-  }else if(process.env.NODE_ENV==='development') {
+  } else if (process.env.NODE_ENV === 'development') {
     appURL = 'http://littlebee.ouryou.cn/'
   }
   if (url.includes('code=') && !utils.getOpenId()) {
@@ -82,35 +82,35 @@ router.onReady(() => {
       // window.history.go(-2)
       window.location.href = window.localStorage.getItem('littleBeeLink')
     })
-  }else if(url.includes('code=') && utils.getOpenId()) {
+  } else if (url.includes('code=') && utils.getOpenId()) {
     // window.history.go(-1)
   }
   if (!utils.getCode()) {
     let nowRoute = '#/'
-    if(window.location.href.includes('#/')) {
+    if (window.location.href.includes('#/')) {
       nowRoute = `#/${window.location.href.split('#/')[1]}`
     }
     // history.pushState({ nowRoute }, 'firstPage', nowRoute)
-    window.localStorage.setItem('littleBeeLink',appURL+nowRoute)
+    window.localStorage.setItem('littleBeeLink', appURL + nowRoute)
     window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
   }
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
     // 请求动态路由
     store.dispatch('jurisdiction/getDynamicRoutes', null).then(list => {
-        console.log('动态路由', list)
-        // 根据获取回来的信息判断是否要添加到路由表里
-        const addList = []
-        list.forEach(item => {
-          dynamicRouterMap.forEach(routeItem => {
-            if (item.path === routeItem.path) {
-              console.log('routeItem', routeItem)
-              addList.push(routeItem)
-            }
-          })
+      console.log('动态路由', list)
+      // 根据获取回来的信息判断是否要添加到路由表里
+      const addList = []
+      list.forEach(item => {
+        dynamicRouterMap.forEach(routeItem => {
+          if (item.path === routeItem.path) {
+            console.log('routeItem', routeItem)
+            addList.push(routeItem)
+          }
         })
-        router.addRoutes(addList) // 添加动态路由,这里不必用$addRoutes，因为刷新后就没有上一次的动态路由，故不必清除
       })
+      router.addRoutes(addList) // 添加动态路由,这里不必用$addRoutes，因为刷新后就没有上一次的动态路由，故不必清除
+    })
   } else {
     console.log('没有token')
   }
@@ -138,8 +138,8 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from, next) => {
   // console.log(from,to,next)
+  document.title = to.meta.bread
   NProgress.done()
-  document.title = store.state.user.userInfo ? store.state.user.userInfo.name : '小蜜蜂'
 })
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
