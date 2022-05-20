@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 16:02:54
+ * @LastEditTime: 2022-05-20 16:18:29
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -192,7 +192,7 @@ export default {
         }
       })
       if (res.success) {
-        this.shipHistory = res.model
+        this.shipHistory = res.model|| { userCount: 0 }
       }
     }
   },

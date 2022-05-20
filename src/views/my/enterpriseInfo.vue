@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 17:06:20
+ * @LastEditTime: 2022-05-20 16:46:41
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -81,10 +81,10 @@
             </template>
           </van-field>
         </van-cell-group>
-        <div class="fixed-button">
+        <!-- <div class="fixed-button">
           <van-button color="#CB9400"
                       type="info">领取</van-button>
-        </div>
+        </div> -->
       </van-form>
       <footer></footer>
     </div>

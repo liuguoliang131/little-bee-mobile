@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 14:08:04
+ * @LastEditTime: 2022-05-20 17:25:15
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -15,11 +15,11 @@
     </div>
     <div>
       <div class="thead">
-        <span>序号</span>
+        <span class="xuhao">序号</span>
         <span>标题</span>
         <span>日期</span>
         <span>数量</span>
-        <span>操作</span>
+        <span class="caozuo">操作</span>
       </div>
       <van-pull-refresh v-model="reloading"
                         @refresh="handleSearch">
@@ -31,9 +31,9 @@
                @click="handleShowMore(item)"
                v-for="(item) in tableData"
                :key="item.id">
-            <span>{{item.index}}</span>
+            <span class="xuhao">{{item.index}}</span>
             <span class="title">
-              {{item.sortTitle||item.title}}
+              {{item.title}}
               <i class="zijian">自建</i>
               <!-- <i class="fenxiang">分享</i>
               <i class="wai">外</i> -->
@@ -287,6 +287,7 @@ export default {
       text-align: center;
     }
   }
+  
   .van-pull-refresh {
     height: calc(100vh - 140px);
   }
@@ -303,12 +304,14 @@ export default {
       align-items: center;
       min-height: 49px;
     }
+    
     .caozuo {
       .van-icon:nth-child(1) {
         margin-right: 10px;
       }
     }
     .title {
+      position: relative;
       color: #cb9400;
       .zijian {
         background-color: #cb9400;
@@ -321,8 +324,9 @@ export default {
         height: 18px;
         text-align: center;
         line-height: 18px;
-        position: relative;
-        top: -5px;
+        position: absolute;
+        top: 15px;
+        right: -27px;
       }
       .fenxiang {
         display: inline-block;
@@ -354,11 +358,11 @@ export default {
       }
     }
   }
-  .van-pagination {
-    position: fixed;
-    bottom: 50px;
-    left: 0;
-    width: 100%;
+  .xuhao {
+    flex: 0.5!important;
+  }
+  .caozuo {
+    flex: 0.5!important;
   }
 
   .fixed-r {

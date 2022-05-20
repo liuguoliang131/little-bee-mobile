@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 16:52:17
+ * @LastEditTime: 2022-05-20 17:06:10
  * @FilePath: \little-bee-mobile\src\http\index.js
  * @Description: 
  */
@@ -10,7 +10,7 @@ import store from '@/store/index'
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
-  timeout: 10000,
+  timeout: 50000,
   headers: {
     // 'token':store.getters['user/get_token']||''
   }

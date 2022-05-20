@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 09:55:26
+ * @LastEditTime: 2022-05-20 16:56:52
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -12,7 +12,7 @@
       <span class="date">{{searchParams.date}}</span>
       <div class="input">
         <input v-model="searchParams.keywordFields"
-        placeholder="请输入员工姓名"
+               placeholder="请输入员工姓名"
                type="text"
                name=""
                id="">
@@ -25,13 +25,16 @@
     <div class="views">
       <div class="views-left">
         <div class="title">
-          员工
+          姓名
         </div>
         <div class="scroll-list">
           <div :class="['staff-item',item.employeeId===activeStaff.employeeId?'active':'']"
                v-for="item in staffList"
                :key="item.employeeId"
-               @click="handleActiveStaff(item)">{{item.name}}</div>
+               @click="handleActiveStaff(item)">
+            <div :class="['yellow-line']"></div>
+            <span>{{item.name}}</span>
+          </div>
         </div>
       </div>
       <div class="views-right"
@@ -126,10 +129,7 @@ export default {
 
 <style scoped lang="less">
 .operationEdit {
-  background-color: #f7f7f7;
-  .active {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
+  background-color: #ffff;
   .search {
     padding: 10px 15px;
     display: flex;
@@ -156,16 +156,16 @@ export default {
   }
   .views {
     height: calc(100vh - 88px);
-    background-color: #f7f7f7;
+    background-color: #ffff;
     padding: 10px 15px;
     display: flex;
     .views-left {
+      background-color: #f7f7f7;
       width: 100px;
-      margin-right: 10px;
-      border-radius: 5px;
-      background: #ffffff;
-      height: calc(100vh - 110px);
-      padding: 15px;
+      height: calc(100vh - 97px);
+      position: relative;
+      left: -15px;
+      padding: 15px 0;
       .title {
         font-size: 15px;
         font-family: PingFang SC;
@@ -176,23 +176,39 @@ export default {
       .scroll-list {
         height: calc(100vh - 170px);
         overflow-y: scroll;
-        overflow-x: hidden;
+        overflow-x: visible;
         font-size: 14px;
         font-family: PingFang SC;
         font-weight: 500;
         color: #666666;
         line-height: 20.5px;
         .staff-item {
-          padding: 10px 0;
+          padding: 10px 15px;
+          display: flex;
+          align-items: center;
+          .yellow-line {
+            // position: relative;
+            // left: -7px;
+            height: 14px;
+            width: 3px;
+            background-color: #cb9400;
+            margin-right: 7px;
+            display: none;
+          }
+        }
+        .active {
+          background-color: #fff;
+          .yellow-line {
+            display: block;
+          }
         }
       }
     }
     .views-right {
       flex: 1;
-      border-radius: 5px;
       background: #ffffff;
-      height: calc(100vh - 110px);
-      padding: 15px;
+      height: calc(100vh - 97px);
+      padding: 15px 0;
       overflow-y: scroll;
       overflow-x: hidden;
       .list-item {
