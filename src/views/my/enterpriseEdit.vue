@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 15:41:33
+ * @LastEditTime: 2022-05-20 14:42:59
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseEdit.vue
  * @Description: 注册
 -->
@@ -141,7 +141,7 @@ export default {
           }
         })
         console.log(res)
-        if (!res.data.success) {
+        if (!res.success) {
           return Toast(res.msg)
         }
         Toast('修改成功')

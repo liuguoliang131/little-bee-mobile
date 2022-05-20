@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 11:18:46
+ * @LastEditTime: 2022-05-20 14:08:04
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -89,11 +89,10 @@ import {
   Dialog,
   Tabbar,
   TabbarItem,
-  Pagination,
   List
 } from 'vant'
 // import Bread from '@/components/bread/index.vue'
-import { h5_job_findPage, h5_job_updateStatus, h5_job_jobCheck } from '@/http/api.js'
+import { h5_job_findPage, job_deleteById, h5_job_jobCheck } from '@/http/api.js'
 export default {
   name: 'Index',
   components: {
@@ -102,7 +101,6 @@ export default {
     VanIcon: Icon,
     VanTabbar: Tabbar,
     VanTabbarItem: TabbarItem,
-    // VanPagination: Pagination,
     VanList: List
     // Bread
   },
@@ -195,10 +193,9 @@ export default {
         // on confirm
         const res = await this.$http({
           method: 'post',
-          url: h5_job_updateStatus,
+          url: job_deleteById,
           data: {
-            id: item.id,
-            jobStatus: 'Finish'
+            id: item.id
           }
         })
         if (!res.success) {

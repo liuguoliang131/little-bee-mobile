@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-18 17:41:06
+ * @LastEditTime: 2022-05-20 09:51:51
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -13,6 +13,14 @@
     </bread>
     <div class="views">
       <van-form @submit="onSubmit">
+        <van-field v-model.trim="form.id"
+                   type="text"
+                   name="ID"
+                   label="ID"
+                   placeholder="请输入标题"
+                   required
+                   :rules="[{ required: true, message: '请填写ID' }]"
+                   :disabled="true" />
         <van-field v-model.trim="form.title"
                    type="text"
                    name="title"
@@ -28,6 +36,14 @@
                    placeholder="请输入副标题"
                    required
                    :rules="[{ required: true, message: '请填写标题' }]"
+                   :disabled="true" />
+        <van-field v-model="form.createTime"
+                   type="text"
+                   name="时间"
+                   label="时间"
+                   placeholder="请输入副标题"
+                   required
+                   :rules="[{ required: true, message: '请填写时间' }]"
                    :disabled="true" />
         <van-field v-model="form.count"
                    type="digit"
@@ -133,7 +149,7 @@
         <tbody v-if="form.jobDetailProcessResponseList.length">
           <tr v-for="(item,index) in form.jobDetailProcessResponseList"
               :key="index">
-            <td>{{index}}</td>
+            <td>{{index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.unitPrice.value}}</td>
             <td>

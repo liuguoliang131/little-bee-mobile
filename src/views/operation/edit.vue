@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-18 15:46:33
+ * @LastEditTime: 2022-05-20 15:53:01
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -13,7 +13,7 @@
       <div class="input">
         <img src="../../assets/search.png"
              alt="">
-        <input v-model="searchParams.keywords"
+        <input v-model="searchParams.keywordFields"
                @keyup.enter="handleSearch"
                type="text"
                name=""
@@ -114,7 +114,7 @@ export default {
     return {
       searchParams: {
         date: this.$utils.getToday(),
-        keywords: ''
+        keywordFields: ''
       },
       active: null,
       staffList: [],
@@ -144,7 +144,7 @@ export default {
         }
         if (activeTaskItem.count - activeTaskItem.shareCount < activeTaskItem.todayCount) {
           return Toast(`今日完成成品数量最大为${activeTaskItem.count - activeTaskItem.shareCount}`)
-        }else if(activeTaskItem.count - activeTaskItem.shareCount === 0) {
+        } else if (activeTaskItem.count - activeTaskItem.shareCount === 0) {
           return Toast(`今日可完成成品数量为0`)
         }
         for (let i = 0; i < activeTaskItem.list.length; i++) {
@@ -170,7 +170,7 @@ export default {
           employeeId: this.activeStaff.employeeId,
           employeeBillingList,
           finishedProductCount: activeTaskItem.todayCount,
-          name: this.searchParams.date
+          name: activeTaskItem.title || ''
         }
 
         const toast = Toast.loading({
@@ -222,6 +222,9 @@ export default {
         }
         console.log('tab', res)
         const tabs = res.model.data || []
+        if (tabs.length === 0) {
+          return Toast('没有找到已开始的任务')
+        }
         const i = {
           count: tabs.length
         }
@@ -281,7 +284,7 @@ export default {
           }
         })
       })
-      activeItem.employeeBillingProcessList.forEach(item=>{
+      activeItem.employeeBillingProcessList.forEach(item => {
         activeTask.list.forEach(item1 => {
           if (item.processId === item1.id) {
             item1.countField = item.count //输入框的数量

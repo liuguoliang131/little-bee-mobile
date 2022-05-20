@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 17:17:35
+ * @LastEditTime: 2022-05-19 17:22:42
  * @FilePath: \little-bee-mobile\vue.config.js
  * @Description: 
  */
@@ -35,19 +35,20 @@ module.exports = {
     }
   },
   configureWebpack: config => {
-    if (process.env.NODE_ENV === 'test') {
-      config.optimization.minimizer[0].options.terserOptions.compress.warnings = true //去除警告
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true //去除console
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true //去除debugger
-    } else if (process.env.NODE_ENV === 'production') {
-      config.optimization.minimizer[0].options.terserOptions.compress.warnings = true //去除警告
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true //去除console
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true //去除debugger
-    } else {
-      config.optimization.minimizer[0].options.terserOptions.compress.warnings = false //去除警告
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false //去除console
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = false //去除debugger
-    }
+    console.log('vue.config.js',process.env.NODE_ENV)
+    // if (process.env.NODE_ENV === 'test') {
+    //   config.optimization.minimizer[0].options.terserOptions.compress.warnings = false //去除警告
+    //   config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false //去除console 
+    //   config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = false //去除debugger
+    // } else if (process.env.NODE_ENV === 'production') {
+    //   config.optimization.minimizer[0].options.terserOptions.compress.warnings = false //去除警告
+    //   config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false //去除console
+    //   config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = false //去除debugger
+    // } else {
+    //   config.optimization.minimizer[0].options.terserOptions.compress.warnings = false //去除警告
+    //   config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false //去除console
+    //   config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = false //去除debugger
+    // }
 
   }
 }

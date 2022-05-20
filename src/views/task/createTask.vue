@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:32:55
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 16:58:14
+ * @LastEditTime: 2022-05-20 09:52:01
  * @FilePath: \little-bee-mobile\src\views\task\createTask.vue
  * @Description: 创建任务
 -->
@@ -97,7 +97,7 @@
         <tbody v-if="form.createProcessRequestList.length">
           <tr v-for="(item,index) in form.createProcessRequestList"
               :key="index">
-            <td>{{index}}</td>
+            <td>{{index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.unitPrice}}</td>
             <td>

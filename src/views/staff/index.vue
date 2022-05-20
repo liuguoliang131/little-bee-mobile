@@ -1,13 +1,14 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 14:40:26
+ * @LastEditTime: 2022-05-20 16:02:54
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
 <template>
   <div class="staff">
     <bread></bread>
+    <div class="top-fixed">员工数量: {{sumRow||'0'}}/{{shipHistory.userCount||'0'}}</div>
     <div class="search">
       <div class="left">
         <input type="text"
@@ -86,7 +87,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
-import { h5_employee_findPage } from '@/http/api'
+import { h5_employee_findPage, companyMembershipHistory_findById } from '@/http/api'
 import {
   Button,
   Icon,
@@ -109,9 +110,13 @@ export default {
         disabledStatus: false
       },
       tableData: [],
+      sumRow: 0,
       loading: false,
       finished: false,
-      reloading: false
+      reloading: false,
+      shipHistory: {
+        userCount: 0
+      }
     }
   },
   components: {
@@ -155,6 +160,7 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
+      this.sumRow = res.model.sumRow || 0
       res.model.data && res.model.data.forEach((item, idx) => {
         item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
       })
@@ -169,22 +175,48 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
+      this.sumRow = res.model.sumRow || 0
       res.model.data && res.model.data.forEach((item, idx) => {
         item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
       })
       this.tableData = [...this.tableData, ...res.model.data]
       this.searchParams.pageNo++
       this.reloading = false
+    },
+    async getShipHistory() {
+      const res = await this.$http({
+        method: 'get',
+        url: companyMembershipHistory_findById,
+        params: {
+          id: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId
+        }
+      })
+      if (res.success) {
+        this.shipHistory = res.model
+      }
     }
   },
   created() {
-    // this.getList()
+    this.getShipHistory()
   }
 }
 </script>
 
 <style scoped lang="less">
 .staff {
+  position: relative;
+  .top-fixed {
+    position: fixed;
+    height: 36px;
+    line-height: 36px;
+    top: 0;
+    right: 54.5px;
+    z-index: 10;
+    font-size: 13px;
+    font-family: PingFang SC;
+    font-weight: 500;
+    color: #999999;
+  }
   .search {
     display: flex;
     align-items: center;

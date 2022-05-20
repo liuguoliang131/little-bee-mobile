@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-16 15:30:18
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 16:57:35
+ * @LastEditTime: 2022-05-20 09:52:11
  * @FilePath: \little-bee-mobile\src\views\task\editTask.vue
  * @Description: 
 -->
@@ -97,7 +97,7 @@
         <tbody v-if="form.jobUpdateProcessRequestList.length">
           <tr v-for="(item,index) in form.jobUpdateProcessRequestList"
               :key="index">
-            <td>{{index}}</td>
+            <td>{{index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.unitPrice.value}}</td>
             <td>

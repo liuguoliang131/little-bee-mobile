@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 16:58:41
+ * @LastEditTime: 2022-05-20 15:56:24
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -92,7 +92,10 @@ router.onReady(() => {
     }
     // history.pushState({ nowRoute }, 'firstPage', nowRoute)
     window.localStorage.setItem('littleBeeLink', appURL + nowRoute)
-    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+    if(process.env.NODE_ENV !== 'development') {
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+    }
+    
   }
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 17:27:24
+ * @LastEditTime: 2022-05-20 09:55:26
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -11,7 +11,7 @@
     <div class="search">
       <span class="date">{{searchParams.date}}</span>
       <div class="input">
-        <input v-model="searchParams.keywords"
+        <input v-model="searchParams.keywordFields"
         placeholder="请输入员工姓名"
                type="text"
                name=""
@@ -67,7 +67,7 @@ export default {
     return {
       searchParams: {
         date: this.$utils.getToday(),
-        keywords: ''
+        keywordFields: ''
       },
       staffList: [],
       activeStaff: {},
