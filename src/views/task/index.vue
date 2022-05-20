@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 17:25:15
+ * @LastEditTime: 2022-05-20 17:57:13
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -38,7 +38,7 @@
               <!-- <i class="fenxiang">分享</i>
               <i class="wai">外</i> -->
             </span>
-            <span>{{$utils.formatTimeMMdd(item.createTime)}}</span>
+            <span>{{$utils.formatTimeYYMMdd(item.createTime)}}</span>
             <span>{{item.count}}</span>
             <span class="caozuo">
               <van-icon name="delete-o"
@@ -311,7 +311,7 @@ export default {
       }
     }
     .title {
-      position: relative;
+      // position: relative;
       color: #cb9400;
       .zijian {
         background-color: #cb9400;
@@ -324,9 +324,9 @@ export default {
         height: 18px;
         text-align: center;
         line-height: 18px;
-        position: absolute;
-        top: 15px;
-        right: -27px;
+        position: relative;
+        top: -5px;
+        // right: -27px;
       }
       .fenxiang {
         display: inline-block;

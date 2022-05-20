@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-18 18:01:01
+ * @LastEditTime: 2022-05-20 17:56:04
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -100,15 +100,16 @@ utils.formatTimeDate = function (data) {
   return `${y}-${mon}-${d}`
 
 }
-// return 6.30
-utils.formatTimeMMdd = function (data) {
+// return 22.6.30
+utils.formatTimeYYMMdd = function (data) {
   const date = new Date(data)
+  let y = date.getFullYear()
   let mon = date.getMonth() + 1
   let d = date.getDate()
   // mon = mon < 10 ? '0' + mon : mon
   // d = d < 10 ? '0' + d : d
 
-  return `${mon}.${d}`
+  return `${y}.${mon}.${d}`
 }
 // 根据图片ID获取图片地址
 utils.getPhoto = function (ids) {
