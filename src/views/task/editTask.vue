@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-16 15:30:18
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 09:52:11
+ * @LastEditTime: 2022-05-23 17:35:30
  * @FilePath: \little-bee-mobile\src\views\task\editTask.vue
  * @Description: 
 -->
@@ -137,7 +137,7 @@
                      name="name"
                      label="名称"
                      placeholder="名称"
-                     :rules="[{ required: true, message: '请填写用户名' }]" />
+                     :rules="[{ required: true, message: '请填写名称' }]" />
           <van-field v-model="dialogForm.unitPrice.value"
                      type="number"
                      name="unitPrice"

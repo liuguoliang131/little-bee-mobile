@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 16:18:29
+ * @LastEditTime: 2022-05-23 17:50:05
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -41,7 +41,12 @@
                 <th>序号</th>
                 <th>姓名</th>
                 <th>手机号</th>
-                <th>入职时间</th>
+                <th>
+                  <select class="disabledStatus" name="" id="" v-model="searchParams.disabledStatus" @change="handleSearch">
+                    <option :value="false">在职</option>
+                    <option :value="true">离职</option>
+                  </select>
+                </th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -52,7 +57,8 @@
                 <td>{{item.index}}</td>
                 <td>{{item.name}}</td>
                 <td>{{item.phone}}</td>
-                <td>{{$utils.formatTime(item.entryTime)}}</td>
+                <!-- <td>{{$utils.formatTime(item.entryTime)}}</td> -->
+                <td>{{item.disabledStatus?'离职':'在职'}}</td>
                 <td>
                   <van-icon name="ellipsis"
                             @click="handleGoDetail(item)" />
@@ -261,6 +267,21 @@ export default {
   }
   .van-pull-refresh {
     height: calc(100vh - 100px);
+  }
+  .disabledStatus {
+    border: none;
+    background-color: #F0F0F0;
+    font-size: 12px;
+    font-family: PingFang SC;
+    font-weight: 700;
+    color: #666666;
+    option {
+    
+    }
+    option:hover {
+      background-color: #fff;
+      color: #cb9400;
+    }
   }
 }
 </style>

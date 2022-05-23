@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 14:54:45
+ * @LastEditTime: 2022-05-23 13:32:15
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -34,7 +34,7 @@
           <tr v-for="(item,index) in tableData" :key="index">
             <td>{{item.index}}</td>
             <td>{{item.sortTitle}}</td>
-            <td>{{item.createTime}}</td>
+            <td>{{$utils.formatTime(item.createTime)}}</td>
             <td>{{item.count}}</td>
             <td>
             <van-icon name="more-o"

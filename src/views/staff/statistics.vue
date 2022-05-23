@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 12:43:30
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-09 19:52:37
+ * @LastEditTime: 2022-05-23 17:28:56
  * @FilePath: \little-bee-mobile\src\views\staff\statistics.vue
  * @Description: 绩效统计
 -->
@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           <tr v-for="(item,idx) in tableData" :key="item.id">
-            <td>{{idx}}</td>
+            <td>{{idx+1}}</td>
             <td>{{item.employeeName}}</td>
             <td>
               <span v-if="item.salaryType==='BASIC_SALARY'">基本工资</span>
@@ -45,7 +45,7 @@
             </td>
             <td>{{item.totalAmount.value}}</td>
             <td>
-              <van-icon name="more-o" />
+              <van-icon name="more-o" @click="handleShowMore(item)" />
             </td>
           </tr>
         </tbody>
@@ -158,9 +158,20 @@ export default {
         return Toast(res.msg)
       }
       this.tableData = res.model.data||[]
+    },
+    handleShowMore(item) {
+      this.$router.push({
+        path:'performanceDetails',
+        query: {
+          employeeId:item.employeeId,
+          // month: this.month,
+          salaryData: item.salaryData
+        }
+      })
     }
   },
   created() {
+    this.month = `${new Date().getMonth()+1}月`
     this.getList()
   }
 }

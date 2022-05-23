@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:34
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 16:55:43
+ * @LastEditTime: 2022-05-23 13:42:06
  * @FilePath: \little-bee-mobile\src\views\my\summary.vue
  * @Description: 汇总统计
 -->
@@ -76,6 +76,10 @@ export default {
       console.log(e)
       this.month = e
       this.showPicker = false
+      this.getData()
+      
+    },
+    getData() {
       let statisticsData = ''
       let year = new Date().getFullYear()
       switch (this.month) {
@@ -198,8 +202,11 @@ export default {
       option && this.bottomInstance.setOption(option)
     }
   },
+  created() {
+    this.month = `${new Date().getMonth()+1}月`
+  },
   mounted() {
-    this.getStatistic('')
+    this.getData()
   }
 }
 </script>

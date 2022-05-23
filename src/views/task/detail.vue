@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 09:51:51
+ * @LastEditTime: 2022-05-23 17:30:52
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -37,7 +37,7 @@
                    required
                    :rules="[{ required: true, message: '请填写标题' }]"
                    :disabled="true" />
-        <van-field v-model="form.createTime"
+        <van-field :value="$utils.formatTime(form.createTime)"
                    type="text"
                    name="时间"
                    label="时间"

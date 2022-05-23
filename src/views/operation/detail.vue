@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 16:56:52
+ * @LastEditTime: 2022-05-23 13:25:42
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -95,6 +95,10 @@ export default {
         }
         this.staffList = res.model.data || []
         this.activeStaff = {}
+        if(res.model.data.length) {
+          this.activeStaff = res.model.data[0]
+          this.getList()
+        }
       } catch (error) {
         console.log(error)
       }

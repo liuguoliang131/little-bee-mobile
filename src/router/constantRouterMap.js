@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 17:11:01
+ * @LastEditTime: 2022-05-23 13:52:06
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -246,6 +246,16 @@ const normalRoutes = [
           white: false
         }
       },
+
+      {
+        name:'PerformanceDetails',
+        path:'/performanceDetails',
+        component:()=>import('../views/staff/performanceDetails.vue'),
+        meta: {
+          bread: '绩效明细',
+          white: false
+        }
+      }
     ]
   },
 ]
