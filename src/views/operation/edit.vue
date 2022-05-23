@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 15:53:01
+ * @LastEditTime: 2022-05-23 11:35:20
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -161,16 +161,22 @@ export default {
           employeeBillingList.push({
             jobId: activeTaskItem.id,
             processId: item.id,
-            count: item.countField
+            count: item.countField,
+            finishedProductNum: activeTaskItem.todayCount
           })
         })
+        const employeeJobBillingList = [{
+          jobId: activeTaskItem.id,
+          finishedProductNum: activeTaskItem.todayCount,
+          employeeBillingList
+        }]
         let params = {
           billData: this.searchParams.date,
           // companyId: this.activeStaff.companyId,
           employeeId: this.activeStaff.employeeId,
-          employeeBillingList,
-          finishedProductCount: activeTaskItem.todayCount,
-          name: activeTaskItem.title || ''
+          // finishedProductCount: activeTaskItem.todayCount,
+          name: activeTaskItem.title || '',
+          employeeJobBillingList
         }
 
         const toast = Toast.loading({
@@ -202,6 +208,10 @@ export default {
         }
         this.staffList = res.model.data || []
         this.activeStaff = {}
+        if(res.model.data.length) {
+          this.activeStaff = res.model.data[0]
+          this.echoData()
+        }
       } catch (error) {
         console.log(error)
       }
@@ -234,6 +244,7 @@ export default {
           this.getTaskDetail(item, i, toast)
         })
         this.tabs = tabs
+        
       } catch (error) {
         console.log(error)
       }
@@ -259,10 +270,12 @@ export default {
       i.count--
       if (i.count === 0) {
         toast.clear()
+        this.getStaffList()
       }
     },
     // 选择员工时调用 回显
     async echoData() {
+
       const params = {
         employeeId: this.activeStaff.employeeId,
         billData: this.searchParams.date
@@ -273,8 +286,22 @@ export default {
       const activeItem = res.model.billingJobs.find(item => {
         return item.id === activeTask.id
       }) //筛选出当前选中任务
+      // 先重置要显示的属性
+
       console.log('activeItem', activeItem)
-      activeTask.count = activeItem.count
+      activeTask.count = activeItem.count || 0
+      activeTask.todayCount = 0
+      activeTask.list.forEach(item => {
+        item.finishCount = 0
+        item.countField = 0 //输入框的数量
+        item.count = 0
+      })
+      // 回显成品数量
+      res.model.employeeBillingJobs.forEach(item => {
+        if (item.jobId === activeTask.id) {
+          activeTask.todayCount = item.finishedProductNum
+        }
+      })
       activeItem.billingProcessList.forEach(item => {
         activeTask.list.forEach(item1 => {
           if (item.id === item1.id) {
@@ -298,7 +325,7 @@ export default {
     }
   },
   created() {
-    this.getStaffList()
+    // this.getStaffList()
     this.getTaskList()
   }
 }
