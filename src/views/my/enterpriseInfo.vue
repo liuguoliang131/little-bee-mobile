@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 10:50:00
+ * @LastEditTime: 2022-05-24 13:24:42
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -19,7 +19,7 @@
                      label="企业号"
                      placeholder=""
                      readonly />
-          <van-field v-model="form.name"
+          <van-field :value="form.name||form.companyName"
                      name="企业名称"
                      label="企业名称"
                      placeholder=""

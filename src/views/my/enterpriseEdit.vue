@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 14:42:59
+ * @LastEditTime: 2022-05-24 14:00:50
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseEdit.vue
  * @Description: 注册
 -->
@@ -10,60 +10,77 @@
     <bread></bread>
     <van-form @submit="onSubmit">
       <van-field v-model="form.companyPhone"
-      center
-      clearable
-      label="企业电话"
-      name="companyPhone"
-      placeholder="请输入手机号"
-      required
-      :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]" />
-      <van-field v-model.trim="form.companyName" 
-      label="企业名称"
-      placeholder="请输入企业名称"
-      required
-      :rules="[{ required: true, message: '请填写企业名称' }]" />
-      <van-field
-        readonly
-        clickable
-        required
-        name="area"
-        :value="form.province+form.city+form.area"
-        label="地区"
-        :rules="[{ required: true, message: '请选择地区' }]"
-        placeholder="点击选择省市区"
-        @click="showArea = true"
-      />
-      <van-field required v-model.trim="form.address" label="详细地址" name="address" :rules="[{ required: true, message: '请输入详细地址' }]" placeholder="请输入详细地址" />
-      <van-field v-model.trim="form.abbreviationName" :rules="[{ required: true, message: '请输入简称' }]" label="简称" placeholder="请输入简称" />
+                 center
+                 clearable
+                 label="企业电话"
+                 name="companyPhone"
+                 placeholder="请输入手机号"
+                 required
+                 :rules="[{ required: true, message: '请填写手机号' },{ pattern:/^[1]{1}[0-9]{10}$/, message: '手机号不符合规则' }]" />
+      <van-field v-model.trim="form.companyName"
+                 label="企业名称"
+                 placeholder="请输入企业名称"
+                 required
+                 :rules="[{ required: true, message: '请填写企业名称' }]" />
+      <van-field readonly
+                 clickable
+                 required
+                 name="area"
+                 :value="form.province+form.city+form.area"
+                 label="地区"
+                 :rules="[{ required: true, message: '请选择地区' }]"
+                 placeholder="点击选择省市区"
+                 @click="showArea = true" />
+      <van-field required
+                 v-model.trim="form.address"
+                 label="详细地址"
+                 name="address"
+                 :rules="[{ required: true, message: '请输入详细地址' }]"
+                 placeholder="请输入详细地址" />
+      <van-field v-model.trim="form.abbreviationName"
+                 :rules="[{ required: true, message: '请输入简称' }]"
+                 label="简称"
+                 placeholder="请输入简称" />
       <!-- <van-field v-model.trim="form.num" label="企业编号" placeholder="请输入企业编号" /> -->
-      <van-field v-model.trim="form.contact" label="联系人姓名" placeholder="请输入联系人姓名" />
-      <van-field v-model.trim="form.website" label="官网地址" placeholder="请输入官网地址" />
+      <van-field v-model.trim="form.contact"
+                 label="联系人姓名"
+                 placeholder="请输入联系人姓名" />
+      <van-field v-model.trim="form.website"
+                 label="官网地址"
+                 placeholder="请输入官网地址" />
       <!-- <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" /> -->
-      <van-field v-model.trim="form.remark" label="备注" placeholder="请输入备注" />
+      <van-field v-model.trim="form.remark"
+                 label="备注"
+                 placeholder="请输入备注" />
       <div class="file">
         <span class="label">公司logo</span>
-        <van-uploader v-model="logoPath" :before-read="logoPhotosBeforeRead" :deletable="false" />
+        <van-uploader v-model="logoPath"
+                      :before-read="logoPhotosBeforeRead"
+                      :after-read="logoPhotosAfterRead"
+                      :deletable="false" />
       </div>
       <div class="file">
         <span class="label">营业执照</span>
-        <van-uploader v-model="businessPhotos" :deletable="false" :before-read="businessPhotosBeforeRead" />
+        <van-uploader v-model="businessPhotos"
+                      :deletable="false"
+                      :before-read="businessPhotosBeforeRead"
+                      :after-read="businessPhotosAfterRead" />
       </div>
       <div class="sub-btn">
         <van-button color="#CB9400"
-          block
-          type="info"
-          native-type="submit">提交</van-button>
+                    block
+                    type="info"
+                    native-type="submit">提交</van-button>
       </div>
       <footer></footer>
     </van-form>
-    <van-popup v-model="showArea" position="bottom">
-      <van-area
-        class="area"
-        :value="activeAreaCode"
-        :area-list="areaList"
-        @confirm="onConfirm"
-        @cancel="showArea = false"
-      />
+    <van-popup v-model="showArea"
+               position="bottom">
+      <van-area class="area"
+                :value="activeAreaCode"
+                :area-list="areaList"
+                @confirm="onConfirm"
+                @cancel="showArea = false" />
     </van-popup>
   </div>
 </template>
@@ -88,8 +105,8 @@ import {
 } from '@/http/api.js'
 import { areaList } from '@vant/area-data'
 export default {
-  name:'EnterpriseEdit',
-  components:{
+  name: 'EnterpriseEdit',
+  components: {
     VanForm: Form,
     VanField: Field,
     VanButton: Button,
@@ -100,7 +117,7 @@ export default {
   },
   data() {
     return {
-      form:{
+      form: {
         abbreviationName: '', //企业缩写
         address: '', //详细地址
         openId: '',//用户openId
@@ -114,14 +131,14 @@ export default {
         num: '',
         province: '',//省
         remark: '',//备注
-        website:'',//官网
-        appId:this.$store.state.user.openId
+        website: '',//官网
+        appId: this.$store.state.user.openId
       },
-      showArea: false, 
+      showArea: false,
       areaList: areaList,
       activeAreaCode: null,//选中的地区代码
-      businessPhotos:[],
-      logoPath:[]
+      businessPhotos: [],
+      logoPath: []
     }
   },
   methods: {
@@ -137,7 +154,7 @@ export default {
             ...this.form,
             businessPhotos,
             logoPath,
-            appId:this.$store.state.user.openId
+            appId: this.$store.state.user.openId
           }
         })
         console.log(res)
@@ -150,12 +167,12 @@ export default {
         console.log(error)
       }
     },
-   
+
     // 显示地址选择器
-    handleShowAreas () {
+    handleShowAreas() {
       this.showArea = true
     },
-    onConfirm (result) {
+    onConfirm(result) {
       console.log(result)
       this.form.province = result[0].name
       this.form.city = result[1].name
@@ -163,22 +180,30 @@ export default {
       this.activeAreaCode = result[2].code
       this.showArea = false
     },
-    async logoPhotosBeforeRead(e,detail) {
-      console.log(e,detail)
+    async logoPhotosBeforeRead(e, detail) {
+      console.log(e, detail)
       const fd = new FormData()
       fd.append('file', e)
       const res = await this.uploadFile(fd, 'logoPath')
-      console.log('上传完成',res)
+      console.log('上传完成', res)
+    },
+    logoPhotosAfterRead(e) {
+      console.log('after', e)
+      this.logoPath.pop()
     },
     async businessPhotosBeforeRead(e) {
       console.log(e)
       const fd = new FormData()
       fd.append('file', e)
       const res = await this.uploadFile(fd, 'businessPhotos')
-      console.log('上传完成',res)
+      console.log('上传完成', res)
+    },
+    businessPhotosAfterRead(e) {
+      console.log('after', e)
+      this.businessPhotos.pop()
     },
     // 上传
-    uploadFile(fd,key) {
+    uploadFile(fd, key) {
       const toast = Toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
@@ -189,32 +214,33 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
-      return new Promise((resolve)=>{
+      return new Promise((resolve) => {
         this.$http.post(sys_version_file_upload, fd, config).then((res) => {
           toast.clear()
-          if(res.success) {
+          if (res.success) {
             Toast('上传完成')
-            setTimeout(()=>{
-              this[key] = [{url: res.model.url||''}]
-            },100)
-            
-          }else {
+            if (res.model && res.model.url) {
+              this[key] = [{ url: res.model.url }]
+              console.log('list', this[key])
+            }
+            resolve(res.success)
+          } else {
             Toast(res.msg)
+            resolve(res.success)
           }
-          resolve(res.success)
         })
       })
-      
+
     },
     async echoData() {
       const res = await this.$http({
         method: 'get',
         url: h5_company_findById,
         params: {
-          id:this.$route.query.id
+          id: this.$route.query.id
         }
       })
-      if(!res.success) {
+      if (!res.success) {
         return Toast(res.msg)
       }
       this.form = {
@@ -231,19 +257,19 @@ export default {
         num: res.model.num,
         province: res.model.province,//省
         remark: res.model.remark,//备注
-        website:res.model.website,//官网
-        appId:this.$store.state.user.openId
+        website: res.model.website,//官网
+        appId: this.$store.state.user.openId
       }
       this.businessPhotos = []
       this.logoPath = []
-      res.model.businessPhotos&&res.model.businessPhotos.split(',').forEach(item=>{
+      res.model.businessPhotos && res.model.businessPhotos.split(',').forEach(item => {
         this.businessPhotos.push({
-          url:item
+          url: item
         })
       })
-      res.model.logoPath&&res.model.logoPath.split(',').forEach(item=>{
+      res.model.logoPath && res.model.logoPath.split(',').forEach(item => {
         this.logoPath.push({
-          url:item
+          url: item
         })
       })
     }
@@ -294,7 +320,6 @@ export default {
     .label {
       flex: 1;
     }
-    
   }
   footer {
     height: 200px;

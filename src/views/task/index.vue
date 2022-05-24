@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 17:57:13
+ * @LastEditTime: 2022-05-24 15:11:17
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -33,10 +33,11 @@
                :key="item.id">
             <span class="xuhao">{{item.index}}</span>
             <span class="title">
-              {{item.title}}
+              <span class="text">{{item.title}}</span>
               <i class="zijian">自建</i>
               <!-- <i class="fenxiang">分享</i>
               <i class="wai">外</i> -->
+              
             </span>
             <span>{{$utils.formatTimeYYMMdd(item.createTime)}}</span>
             <span>{{item.count}}</span>
@@ -311,23 +312,29 @@ export default {
       }
     }
     .title {
-      // position: relative;
+      position: relative;
+      display: flex;
       color: #cb9400;
+      .text {
+        width: 95px;
+        padding-right: 32px;
+      }
       .zijian {
+        z-index: 9;
         background-color: #cb9400;
         color: white;
         font-style: normal;
         font-size: 12px;
         border-radius: 0 3px 3px 3px;
         display: inline-block;
-        width: 32px;
-        height: 18px;
-        text-align: center;
-        line-height: 18px;
-        position: relative;
-        top: -5px;
-        // right: -27px;
+        // width: 32px;
+        // height: 18px;
+        padding: 1px 3px;
+        position: absolute;
+        top: 15px;
+        right: 0;
       }
+      
       .fenxiang {
         display: inline-block;
         width: 32px;

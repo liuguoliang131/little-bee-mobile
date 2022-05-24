@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 10:52:36
+ * @LastEditTime: 2022-05-24 11:01:24
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -11,8 +11,8 @@
     <div class="views">
       <div class="member-data">
         <div class="data-row1">
-          <span>员工数量：&nbsp;0</span>
-          <span>任务数量：&nbsp;0</span>
+          <span>员工数量：&nbsp;{{shipHistory.userCount}}</span>&nbsp;
+          <span>任务数量：&nbsp;{{shipHistory.jobCount}}</span>
         </div>
         <div class="data-row2">
           剩余天数：&nbsp;{{$store.state.user.userInfo.useDayCount||'0'}}
@@ -56,7 +56,7 @@
 
 <script>
 import Bread from '@/components/bread/index'
-import { h5_membership_selectAll, h5_company_findById, h5_membership_getAmountsPayable, h5_membership_createOrder, h5_membership_pay, appId } from '@/http/api'
+import { companyMembershipHistory_findById, h5_membership_selectAll, h5_company_findById, h5_membership_getAmountsPayable, h5_membership_createOrder, h5_membership_pay, appId } from '@/http/api'
 import {
   Checkbox,
   Button,
@@ -74,13 +74,29 @@ export default {
     return {
       agree: false,
       list: [],
-      checked: {}
+      checked: {},
+      shipHistory: {
+        userCount: 0,
+        jobCount: 0
+      }
     }
   },
   computed: {
 
   },
   methods: {
+    async getShipHistory() {
+      const res = await this.$http({
+        method: 'get',
+        url: companyMembershipHistory_findById,
+        params: {
+          id: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId
+        }
+      })
+      if (res.success) {
+        this.shipHistory = res.model || { userCount: 0, jobCount: 0 }
+      }
+    },
     async getUserInfo() {
       const res = await this.$http({
         method: 'get',
@@ -265,6 +281,7 @@ export default {
   },
   created() {
     this.getUserInfo()
+    this.getShipHistory()
     this.getList()
   }
 }
@@ -376,7 +393,6 @@ export default {
     padding: 0 15px;
     .left {
       flex: 4;
-      
     }
     .right {
       flex: 6;
