@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-06 18:30:36
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:54:16
+ * @LastEditTime: 2022-05-24 10:40:10
  * @FilePath: \little-bee-mobile\src\views\staff\edit.vue
  * @Description: 编辑员工
 -->
@@ -33,7 +33,7 @@
                      placeholder=""
                      type="number"
                      :rules="[{ required: true, message: '请填写手机号' },{pattern:/^[1]{1}[0-9]{10}$/,message: '手机号规则为11位数字'}]" />
-          <van-field v-model="form.entryTime"
+          <van-field v-model="form.cnTime"
                      is-link
                      readonly
                      name="calendar"
@@ -62,7 +62,7 @@
                      label="工资数额"
                      placeholder=""
                      type="number"
-                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[0-9]{1,9}$/,message: '请填写工资数额'}]" />
+                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,message: '数额是非负数且小数位小于3位的数字'}]" />
           <van-field name="状态"
                      label="状态">
             <template #input>
@@ -127,7 +127,8 @@ export default {
         appId: '',
         openId: '',
         employeeId: null,
-        companyId: null
+        companyId: null,
+        cnTime:''
       },
       showCalendar: false
     }
@@ -141,6 +142,7 @@ export default {
       return new Date(oneYearAfter)
     },
     handleTimeConfirm(e) {
+      this.form.cnTime = this.$utils.formatTimeDate(e)
       this.form.entryTime = new Date(e).toISOString()
       // this.form.entryTime = this.$utils.formatTime(e)
       this.showCalendar = false
@@ -156,6 +158,7 @@ export default {
           ...this.form,
           phone: this.form.phone.toString()
         }
+        delete params.cnTime
         const res = await this.$http.post(h5_employee_update, params)
         toast.clear()
         if (!res.success) {

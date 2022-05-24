@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 16:56:30
+ * @LastEditTime: 2022-05-24 10:52:36
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -376,6 +376,7 @@ export default {
     padding: 0 15px;
     .left {
       flex: 4;
+      
     }
     .right {
       flex: 6;
@@ -390,6 +391,9 @@ export default {
         padding: 0 15px;
       }
     }
+  }
+  /deep/.van-checkbox {
+    font-size: 12px;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 11:07:19
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:54:12
+ * @LastEditTime: 2022-05-24 09:59:33
  * @FilePath: \little-bee-mobile\src\views\staff\detail.vue
  * @Description: 员工详情
 -->
@@ -37,7 +37,7 @@
                      placeholder=""
                      type="number"
                      :rules="[{ required: true, message: '请填写手机号' },{pattern:/^[1]{1}[0-9]{10}$/,message: '手机号规则为11位数字'}]" />
-          <van-field v-model="form.entryTime"
+          <van-field v-model="form.cnTime"
                      :disabled="true"
                      readonly
                      name="calendar"
@@ -64,7 +64,7 @@
                      label="工资数额"
                      placeholder=""
                      type="number"
-                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[0-9]{1,9}$/,message: '请填写工资数额'}]" />
+                     :rules="[{ required: true, message: '请填写工资数额' }]" />
           <van-field name="状态"
                      :disabled="true"
                      label="状态">

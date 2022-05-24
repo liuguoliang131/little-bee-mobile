@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 17:50:05
+ * @LastEditTime: 2022-05-24 09:59:15
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -137,6 +137,7 @@ export default {
       this.$store.commit('staff/set_item', {
         disabledStatus: item.disabledStatus,
         entryTime: item.entryTime,
+        cnTime: this.$utils.formatTimeDate(item.entryTime),
         name: item.name,
         phone: item.phone,
         salaryAmount: item.salaryAmount ? item.salaryAmount.value : 0,

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 16:46:41
+ * @LastEditTime: 2022-05-24 10:50:00
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -18,37 +18,37 @@
                      name="企业号"
                      label="企业号"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.name"
                      name="企业名称"
                      label="企业名称"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.abbreviationName"
                      name="简称"
                      label="简称"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.contact"
                      name="联系人"
                      label="联系人"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.companyPhone"
                      name="联系电话"
                      label="联系电话"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field :value="form.province+form.city+form.area+form.address"
                      name="公司地址"
                      label="公司地址"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.logoPath"
                      name="企业logo"
                      label="企业logo"
                      placeholder=""
-                     :disabled="true">
+                     readonly>
             <template #input>
               <van-uploader readonly
                             :deletable="false"
@@ -60,7 +60,7 @@
                      name="营业执照"
                      label="营业执照"
                      placeholder=""
-                     :disabled="true">
+                     readonly>
             <template #input>
               <van-uploader readonly
                             :deletable="false"
@@ -68,11 +68,11 @@
                             v-model="form.businessPhotoss" />
             </template>
           </van-field>
-          <van-field v-model="form.useDayCount"
+          <van-field :value="form.useDayCount===0?'已过期':`${form.useDayCount}天后到期`"
                      name="会员"
                      label="会员"
                      placeholder=""
-                     :disabled="true">
+                     readonly>
             <template #button>
               <van-button color="#CB9400"
                           size="small"
