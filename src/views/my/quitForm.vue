@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 13:38:24
+ * @LastEditTime: 2022-05-25 10:40:46
  * @FilePath: \little-bee-mobile\src\views\my\quitForm.vue
  * @Description: 历史纪录
 -->
@@ -67,6 +67,7 @@ export default {
         pageNo: 1,
         pageSize: 20,
         keywords: '',
+        keywordFields: 'name',
         disabledStatus: true
       },
       tableData: {

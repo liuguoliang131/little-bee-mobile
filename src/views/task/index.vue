@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 15:11:17
+ * @LastEditTime: 2022-05-25 10:34:04
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -109,6 +109,7 @@ export default {
     return {
       searchParams: {
         keywords: '',
+        keywordFields:'title',
         pageNo: 1,
         pageSize: 20
       },

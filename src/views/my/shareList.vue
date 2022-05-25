@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 13:32:15
+ * @LastEditTime: 2022-05-25 10:41:51
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -66,7 +66,8 @@ export default {
       searchParams: {
         pageNo:1,
         pageSize:20,
-        keywords:''
+        keywords:'',
+        keywordFields: 'title'
       },
       tableData:[],
       loading: false,

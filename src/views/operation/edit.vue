@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 11:35:20
+ * @LastEditTime: 2022-05-25 10:38:01
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -13,7 +13,7 @@
       <div class="input">
         <img src="../../assets/search.png"
              alt="">
-        <input v-model="searchParams.keywordFields"
+        <input v-model="searchParams.keywords"
                @keyup.enter="handleSearch"
                type="text"
                name=""
@@ -52,6 +52,7 @@
               <div class="sum-count">
                 今日完成成品数量:&nbsp;
                 <input type="number"
+                      step="0.1"
                        placeholder="今日完成成品数量"
                        v-model="tabItem.todayCount"
                        oninput="value=Math.abs(value)">
@@ -114,7 +115,8 @@ export default {
     return {
       searchParams: {
         date: this.$utils.getToday(),
-        keywordFields: ''
+        keywords:'',
+        keywordFields: 'name'
       },
       active: null,
       staffList: [],

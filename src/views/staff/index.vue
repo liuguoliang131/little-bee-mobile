@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 09:59:15
+ * @LastEditTime: 2022-05-25 10:42:38
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -111,6 +111,7 @@ export default {
       active: '2',
       searchParams: {
         keywords: '',
+        keywordFields: 'name',
         pageNo: 1,
         pageSize: 20,
         disabledStatus: false
