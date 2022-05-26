@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 18:17:34
+ * @LastEditTime: 2022-05-26 11:06:08
  * @FilePath: \little-bee-mobile\src\views\staff\performanceDetails.vue
  * @Description: 分享列表
 -->
@@ -11,7 +11,7 @@
     <div class="head">
       <div class="month">{{$route.query.salaryData | fMonth}}</div>
       <div class="staff">
-        <div class="staff-name">张三</div>
+        <div class="staff-name">{{$route.query.employeeName||''}}</div>
         <div class="staff-wages">固定工资￥{{sumPrice.toFixed(2)}}</div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 10:34:04
+ * @LastEditTime: 2022-05-26 14:54:07
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -194,9 +194,9 @@ export default {
       }).then(async () => {
         // on confirm
         const res = await this.$http({
-          method: 'post',
+          method: 'get',
           url: job_deleteById,
-          data: {
+          params: {
             id: item.id
           }
         })

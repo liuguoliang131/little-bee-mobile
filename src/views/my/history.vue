@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 10:40:07
+ * @LastEditTime: 2022-05-26 10:32:55
  * @FilePath: \little-bee-mobile\src\views\my\history.vue
  * @Description: 历史纪录
 -->
@@ -34,7 +34,7 @@
               <tr v-for="(item,index) in tableData"
                   :key="index">
                 <td>{{item.index}}</td>
-                <td>{{item.sortTitle}}</td>
+                <td>{{item.title}}</td>
                 <td>{{$utils.formatTime(item.createTime)}}</td>
                 <td>{{item.count}}</td>
                 <td>

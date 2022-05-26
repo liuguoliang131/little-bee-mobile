@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 13:57:01
+ * @LastEditTime: 2022-05-26 10:30:26
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -33,7 +33,7 @@
                      placeholder=""
                      type="number"
                      :rules="[{ required: true, message: '请填写手机号' },{pattern:/^[1]{1}[0-9]{10}$/,message: '手机号规则为11位数字'}]" />
-          <van-field v-model="form.entryTime"
+          <van-field v-model="form.cnTime"
                      is-link
                      readonly
                      name="calendar"
@@ -125,7 +125,8 @@ export default {
         sex: 1,
         remark: '',
         appId:'',
-        openId:''
+        openId:'',
+        cnTime:''
       },
       showCalendar: false
     }
@@ -140,7 +141,7 @@ export default {
     },
     handleTimeConfirm(e) {
       this.form.entryTime = new Date(e).toISOString()
-      // this.form.entryTime = this.$utils.formatTime(e)
+      this.form.cnTime = this.$utils.formatTimeDate(this.form.entryTime)
       this.showCalendar = false
     },
     async onSubmit() {
@@ -153,6 +154,7 @@ export default {
         ...this.form,
         phone: this.form.phone.toString()
       }
+      delete params.cnTime
       const res = await this.$http.post(h5_employee_create, params)
       toast.clear()
       if (!res.success) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 17:30:52
+ * @LastEditTime: 2022-05-26 14:48:28
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -12,7 +12,7 @@
                 color="#cb9400" />
     </bread>
     <div class="views">
-      <van-form @submit="onSubmit">
+      <van-form>
         <van-field v-model.trim="form.id"
                    type="text"
                    name="ID"
@@ -51,7 +51,7 @@
                    label="数量"
                    placeholder="请输入数量"
                    required
-                   :rules="[{ required: true, message: '请填写数量' },{ validator: countValidator, message: '数量必须大于0' }]"
+                   :rules="[{ required: true, message: '请填写数量' }]"
                    :disabled="true" />
         <van-field v-model="form.unitPrice.value"
                    type="number"
@@ -59,7 +59,7 @@
                    label="单价"
                    placeholder="请输入单价"
                    required
-                   :rules="[{ required: true, message: '请填写单价' }, { validator: unitPriceValidator, message: '单价必须大于0' }]"
+                   :rules="[{ required: true, message: '请填写单价' }]"
                    :disabled="true" />
         <van-field v-model.trim="form.remark"
                    type="text"
@@ -193,13 +193,13 @@
                      name="count"
                      label="数量"
                      placeholder="数量"
-                     :rules="[{ required: true, message: '请填写数量' },{ validator: unitPriceValidator, message: '数量必须大于0' }]" />
+                     :rules="[{ required: true, message: '请填写数量' }]" />
           <van-field v-model="dialogForm.unitPrice"
                      type="number"
                      name="unitPrice"
                      label="分享单价"
                      placeholder="分享单价"
-                     :rules="[{ required: true, message: '请填写数量' },{ validator: unitPriceValidator, message: '分享单价必须大于0' }]" />
+                     :rules="[{ required: true, message: '请填写数量' },]" />
           <!-- <van-field v-model.trim="dialogForm.total"
                      type="number"
                      name="total"
@@ -373,22 +373,25 @@ export default {
         }
       })
       let { timestamp, nonceStr, appId, signature, jsApiList: jsApiLists } = res.model
-
-
+      const apiList = ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
+      let paramsApis = new Set([...apiList,...jsApiLists])
+      paramsApis = Array.from(paramsApis)
+      console.log('paramsApis',paramsApis)
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: appId, // 必填，公众号的唯一标识
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
         signature: signature, // 必填，签名
-        // jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
-        jsApiList: jsApiLists
+        jsApiList: paramsApis
       })
+      console.log('setWx已完成 wx.config的jsApiList', paramsApis)
 
     },
     // 分享成功 调用wx分享
     async weixinShare(shareId) {
       const link = `${window.location.href.split('#')[0]}#/receiveTask/${shareId}`
+      console.log('weixinShare link', link)
       wx.ready(() => {
         const that = this
         console.log('link', link)
@@ -398,13 +401,13 @@ export default {
           link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: window.location.origin + '/static/logo.png', // 分享图标
           success: function () {
-            Toast('触发SUCCESS')
+            // Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
           },
           trigger: function (e) {
-            Toast('触发trigger')
+            // Toast('触发trigger')
             console.log('trigger', e)
-            alert('触发trigger')
+            // alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
@@ -417,13 +420,13 @@ export default {
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
-            Toast('触发SUCCESS')
+            // Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
           },
           trigger: function (e) {
-            Toast('触发trigger')
+            // Toast('触发trigger')
             console.log('trigger', e)
-            alert('触发trigger')
+            // alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
@@ -436,13 +439,13 @@ export default {
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
-            Toast('触发SUCCESS')
+            // Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
           },
           trigger: function (e) {
-            Toast('触发trigger')
+            // Toast('触发trigger')
             console.log('trigger', e)
-            alert('触发trigger')
+            // alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
@@ -455,13 +458,13 @@ export default {
           type: '', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
-            Toast('触发SUCCESS')
+            // Toast('触发SUCCESS')
             // 用户点击了分享后执行的回调函数
           },
           trigger: function (e) {
-            Toast('触发trigger')
+            // Toast('触发trigger')
             console.log('trigger', e)
-            alert('触发trigger')
+            // alert('触发trigger')
             // 监听Menu中的按钮点击时触发的方法，该方法仅支持Menu中的相关接口。
             that.handleShareCallBack()
           }
@@ -604,8 +607,10 @@ export default {
       })
       let completeCount = res1.model || 0
       this.sureShare = (Number(this.form.count) - Number(this.form.shareCount) - Number(completeCount))
-      if (this.sureShare) {
-        this.setWx()
+      console.log('可分享数量', this.sureShare)
+      this.setWx()
+      if (this.sureShare <= 0) {
+        Toast('可分享数量为0, 不能分享')
       }
 
     }

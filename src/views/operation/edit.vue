@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 15:59:38
+ * @LastEditTime: 2022-05-26 13:44:24
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -211,14 +211,14 @@ export default {
         this.activeStaff = {}
         if (res.model.data.length) {
           // 回显定位到那个员工
-          if(this.$route.query.employeeId) {
-            this.activeStaff = this.staffList.find(item=>{
+          if (this.$route.query.employeeId) {
+            this.activeStaff = this.staffList.find(item => {
               return item.employeeId === Number(this.$route.query.employeeId)
-            })||{}
-          }else {
+            }) || {}
+          } else {
             this.activeStaff = res.model.data[0]
           }
-          
+
 
           this.echoData()
         }
@@ -272,7 +272,7 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      const list = res.model.jobDetailProcessResponseList || []
+      const list = res.model ? res.model.jobDetailProcessResponseList : []
       list.forEach(item => {
         item.countField = 0
       })
