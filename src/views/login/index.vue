@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 14:48:16
+ * @LastEditTime: 2022-05-25 16:46:09
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -43,7 +43,7 @@
       </van-form>
       <footer>
         <span>登录代表您已同意</span>
-        <span>小蜜蜂用户协议、隐私协议</span>
+        <span @click="$router.push('/agreement')">小蜜蜂用户协议、隐私协议</span>
       </footer>
     </div>
   </div>
@@ -92,7 +92,8 @@ export default {
       if (!res.data.success) {
         return Toast(res.data.msg)
       }
-      this.$store.dispatch('user/login', res.data.model)
+
+      this.$store.dispatch('user/login', {...res.data.model,origin:this.$route.query.origin||'/'})
     },
     //发送验证码
     async handleSendCode() {
@@ -147,7 +148,7 @@ export default {
         return Toast(res.data.msg)
       }
       
-      this.$store.dispatch('user/login', res.data.model)
+      this.$store.dispatch('user/login', {...res.data.model,origin:this.$route.query.origin||'/'})
 
     },
   },

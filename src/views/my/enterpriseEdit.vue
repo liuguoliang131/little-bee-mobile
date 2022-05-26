@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 14:00:50
+ * @LastEditTime: 2022-05-25 17:24:47
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseEdit.vue
  * @Description: 注册
 -->
@@ -45,13 +45,7 @@
       <van-field v-model.trim="form.contact"
                  label="联系人姓名"
                  placeholder="请输入联系人姓名" />
-      <van-field v-model.trim="form.website"
-                 label="官网地址"
-                 placeholder="请输入官网地址" />
-      <!-- <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" /> -->
-      <van-field v-model.trim="form.remark"
-                 label="备注"
-                 placeholder="请输入备注" />
+
       <div class="file">
         <span class="label">公司logo</span>
         <van-uploader v-model="logoPath"
@@ -99,7 +93,7 @@ import {
 import axios from 'axios'
 import {
   appId,
-  company_update,
+  h5_company_update,
   sys_version_file_upload,
   h5_company_findById
 } from '@/http/api.js'
@@ -149,7 +143,7 @@ export default {
       try {
         const res = await this.$http({
           method: 'post',
-          url: company_update,
+          url: h5_company_update,
           data: {
             ...this.form,
             businessPhotos,

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 14:14:14
+ * @LastEditTime: 2022-05-25 17:24:20
  * @FilePath: \little-bee-mobile\src\views\login\register.vue
  * @Description: 注册
 -->
@@ -37,14 +37,14 @@
       <van-field v-model.trim="form.abbreviationName"
                  :rules="[{ required: true, message: '请输入简称' }]"
                  label="简称" />
-      <!-- <van-field v-model.trim="form.num" label="企业编号" placeholder="请输入企业编号" /> -->
+
       <van-field v-model.trim="form.contact"
                  label="联系人姓名" />
-      <van-field v-model.trim="form.website"
+      <!-- <van-field v-model.trim="form.website"
                  label="官网地址" />
-      <!-- <van-field v-model.trim="form.appId" label="微信appId" placeholder="请输入微信appId" /> -->
+
       <van-field v-model.trim="form.remark"
-                 label="备注" />
+                 label="备注" /> -->
       <div class="file">
         <span class="label">公司logo</span>
         <van-uploader v-model="logoPath"

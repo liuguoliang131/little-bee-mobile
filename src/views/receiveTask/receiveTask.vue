@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 10:43:10
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-16 10:54:31
+ * @LastEditTime: 2022-05-25 17:52:47
  * @FilePath: \little-bee-mobile\src\views\receiveTask\receiveTask.vue
  * @Description: 领取任务页面
 -->
@@ -20,66 +20,54 @@
     <div class="views">
       <van-form>
         <van-cell-group inset>
-          <van-field v-model="form.jobNum"
+          <!-- <van-field v-model="form.jobNum"
                      name="任务编号"
                      label="任务编号"
                      placeholder=""
-                     :disabled="true" />
+                     readonly /> -->
           <van-field v-model="form.title"
                      name="标题"
                      label="标题"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.count"
                      name="数量"
                      label="数量"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.unitPrice.value"
                      name="单价"
                      label="单价"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.totalPrice.value"
                      name="总价"
                      label="总价"
                      placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.remark"
-                     name="备注"
-                     label="备注"
-                     placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.createTime"
-                     name="分享时间"
-                     label="分享时间"
-                     placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.shareCompany.companyName"
-                     name="任务出处"
-                     label="任务出处"
-                     placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.status"
-                     name="任务状态"
-                     label="任务状态"
-                     placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.shareCompany.companyPhone"
-                     name="任务联系方式"
-                     label="任务联系方式"
-                     placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.shareCompany.contact"
-                     name="任务联系人"
-                     label="任务联系人"
+                     name="联系人"
+                     label="联系人"
                      placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.takeOverCompany"
-                     name="任务接收方"
-                     label="任务接收方"
+                     readonly />
+          <van-field v-model="form.shareCompany.companyPhone"
+                     name="联系方式"
+                     label="联系方式"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
+          <van-field :value="form.shareCompany.province+form.shareCompany.city+form.shareCompany.area+form.shareCompany.address"
+                     name="联系地址"
+                     label="联系地址"
+                     placeholder=""
+                     readonly />
+          <div class="file">
+            <span class="label">图片</span>
+            <van-uploader v-model="imagesIds"
+                          disabled
+                          readonly
+                          :show-upload="false"
+                          :deletable="false" />
+          </div>
           <div class="sub-btn">
             <van-button color="#CB9400"
                         block
@@ -112,7 +100,7 @@ export default {
     VanField: Field,
     VanCellGroup: CellGroup,
     VanForm: Form,
-    // VanUploader: Uploader
+    VanUploader: Uploader
   },
   data() {
     return {
@@ -128,8 +116,10 @@ export default {
           companyPhone: '',
           contact: '',
           takeOverCompany: ''
-        }
-      }
+        },
+        imagesIds: ''
+      },
+      imagesIds: []
     }
   },
   methods: {
@@ -145,6 +135,9 @@ export default {
         return Toast(res.msg)
       }
       this.form = res.model
+      if (this.form.imagesIds) {
+        this.imagesIds = await this.$utils.getPhoto(this.form.imagesIds)
+      }
     },
     async onSubmit() {
       const toast = Toast.loading({
@@ -223,6 +216,9 @@ export default {
   }
   .van-form {
     margin-top: 15px;
+    .van-cell-group {
+      min-height: calc( 100vh - 66px );
+    }
   }
   .sub-btn {
     display: flex;
@@ -232,6 +228,18 @@ export default {
     margin-bottom: 15px;
     .van-button {
       width: 200px;
+    }
+  }
+  .file {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 13px;
+    margin: 0 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgb(245, 246, 247);
+    .label {
+      width: 80px;
     }
   }
 }

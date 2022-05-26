@@ -1,14 +1,14 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 10:42:38
+ * @LastEditTime: 2022-05-25 17:30:18
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
 <template>
   <div class="staff">
     <bread></bread>
-    <div class="top-fixed">员工数量: {{sumRow||'0'}}/{{shipHistory.userCount||'0'}}</div>
+    <div class="top-fixed">员工数量: {{sumRow||'0'}}/{{shipHistory.employeeCount||'0'}}</div>
     <div class="search">
       <div class="left">
         <input type="text"
@@ -42,7 +42,11 @@
                 <th>姓名</th>
                 <th>手机号</th>
                 <th>
-                  <select class="disabledStatus" name="" id="" v-model="searchParams.disabledStatus" @change="handleSearch">
+                  <select class="disabledStatus"
+                          name=""
+                          id=""
+                          v-model="searchParams.disabledStatus"
+                          @change="handleSearch">
                     <option :value="false">在职</option>
                     <option :value="true">离职</option>
                   </select>
@@ -56,7 +60,15 @@
                   :key="index">
                 <td>{{item.index}}</td>
                 <td>{{item.name}}</td>
-                <td>{{item.phone}}</td>
+                <td>
+                  <div :class="['phone']" @click="item.hidePhone=!item.hidePhone">
+                    <span :class="['phone-text',item.hidePhone?'addblur':'']">{{item.phone}}</span>
+                    <span class="phone-icon">
+                      <van-icon v-if="item.hidePhone" name="closed-eye" />
+                      <van-icon v-else name="eye-o" />
+                    </span>
+                  </div>
+                </td>
                 <!-- <td>{{$utils.formatTime(item.entryTime)}}</td> -->
                 <td>{{item.disabledStatus?'离职':'在职'}}</td>
                 <td>
@@ -93,7 +105,9 @@
 
 <script>
 import Bread from '@/components/bread/index'
-import { h5_employee_findPage, companyMembershipHistory_findById } from '@/http/api'
+import {
+  h5_employee_findPage, h5_membership_findCompanyInfo
+} from '@/http/api'
 import {
   Button,
   Icon,
@@ -122,7 +136,7 @@ export default {
       finished: false,
       reloading: false,
       shipHistory: {
-        userCount: 0
+        employeeCount: 0
       }
     }
   },
@@ -171,6 +185,7 @@ export default {
       this.sumRow = res.model.sumRow || 0
       res.model.data && res.model.data.forEach((item, idx) => {
         item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+        item.hidePhone = true
       })
       this.tableData = [...this.tableData, ...res.model.data]
       this.searchParams.pageNo++
@@ -186,6 +201,7 @@ export default {
       this.sumRow = res.model.sumRow || 0
       res.model.data && res.model.data.forEach((item, idx) => {
         item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
+        item.hidePhone = true
       })
       this.tableData = [...this.tableData, ...res.model.data]
       this.searchParams.pageNo++
@@ -194,13 +210,13 @@ export default {
     async getShipHistory() {
       const res = await this.$http({
         method: 'get',
-        url: companyMembershipHistory_findById,
+        url: h5_membership_findCompanyInfo,
         params: {
           id: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId
         }
       })
       if (res.success) {
-        this.shipHistory = res.model|| { userCount: 0 }
+        this.shipHistory = res.model || { employeeCount: 0 }
       }
     }
   },
@@ -249,6 +265,9 @@ export default {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      .van-icon {
+        font-size: 4.27vw;
+      }
       .van-icon-bar-chart-o {
         margin-right: 15px;
       }
@@ -272,17 +291,28 @@ export default {
   }
   .disabledStatus {
     border: none;
-    background-color: #F0F0F0;
+    background-color: #f0f0f0;
     font-size: 12px;
     font-family: PingFang SC;
     font-weight: 700;
     color: #666666;
     option {
-    
     }
     option:hover {
       background-color: #fff;
       color: #cb9400;
+    }
+  }
+  .phone {
+    
+    .phone-text {
+
+    }
+    .phone-icon {
+      margin-left: 5px;
+    }
+    .addblur {
+      filter: blur(3px);
     }
   }
 }

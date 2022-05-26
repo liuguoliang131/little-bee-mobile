@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 18:10:13
+ * @LastEditTime: 2022-05-25 13:44:35
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -15,7 +15,7 @@ export const h5_company_register = '/h5/company/register' //注册企业
 export const h5_company_findById = '/h5/company/findById' //企业信息
 export const companyMembershipHistory_findById = '/companyMembershipHistory/findById' //查询账号的可注册人员数量和任务容量之类的
 export const company_update = '/company/update'  //修改企业
-
+export const h5_company_update = '/h5/company/update' //h5修改企业
 export const sys_version_file_upload = '/sys/version/file/upload' //上传文件
 
 export const h5_job_findPage = '/h5/job/findPage' // 任务列表
@@ -59,6 +59,7 @@ export const wx_getWxConfigWeb = '/wx/getWxConfigWeb' //下单H5的
 export const h5_wx_getOpenid = '/h5/wx/getOpenid'  //根据code获取openid
 // 会员
 export const h5_membership_selectAll = '/h5/membership/selectAll' //会员列表
+export const h5_membership_findCompanyInfo = '/h5/membership/findCompanyInfo' //查询当前企业会员详情
 export const h5_membership_getAmountsPayable = '/h5/membership/getAmountsPayable' //id查询会员多少钱 返回流水号 get
 export const h5_membership_createOrder = '/h5/membership/createOrder' //下单 post
 export const h5_membership_pay = '/h5/membership/pay' //支付 get

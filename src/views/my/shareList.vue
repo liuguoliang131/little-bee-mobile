@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 10:41:51
+ * @LastEditTime: 2022-05-25 11:21:38
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -20,30 +20,31 @@
                   :finished="finished"
                   finished-text="没有更多了"
                   @load="getList">
-      <table>
-        <thead>
-          <tr>
-            <th>序号</th>
-            <th>标题</th>
-            <th>分享时间</th>
-            <th>数量</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item,index) in tableData" :key="index">
-            <td>{{item.index}}</td>
-            <td>{{item.sortTitle}}</td>
-            <td>{{$utils.formatTime(item.createTime)}}</td>
-            <td>{{item.count}}</td>
-            <td>
-            <van-icon name="more-o"
-                      @click="handleShowMore(item)" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </van-list>
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>标题</th>
+                <th>分享时间</th>
+                <th>数量</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item,index) in tableData"
+                  :key="index">
+                <td>{{item.index}}</td>
+                <td>{{item.sortTitle}}</td>
+                <td>{{$utils.formatTime(item.createTime)}}</td>
+                <td>{{item.count}}</td>
+                <td>
+                  <van-icon name="more-o"
+                            @click="handleShowMore(item)" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </van-list>
       </van-pull-refresh>
     </div>
   </div>
@@ -60,16 +61,17 @@ import {
   List,
 } from 'vant'
 export default {
-  name:'history',
+  name: 'history',
   data() {
     return {
       searchParams: {
-        pageNo:1,
-        pageSize:20,
-        keywords:'',
-        keywordFields: 'title'
+        pageNo: 1,
+        pageSize: 20,
+        keywords: '',
+        keywordFields: 'title',
+        shareCompanyId: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId
       },
-      tableData:[],
+      tableData: [],
       loading: false,
       finished: false,
       reloading: false
@@ -149,9 +151,9 @@ export default {
     },
     handleShowMore(item) {
       this.$router.push({
-        path:'/shareDetail',
+        path: '/shareDetail',
         query: {
-          id:item.id
+          id: item.id
         }
       })
     }

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 19:09:22
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-10 19:37:18
+ * @LastEditTime: 2022-05-25 17:36:09
  * @FilePath: \little-bee-mobile\src\views\my\shareDetail.vue
  * @Description: 分享详情
 -->
@@ -15,62 +15,62 @@
                      name="ID"
                      label="ID"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.title"
                      name="标题"
                      label="标题"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.count"
                      name="数量"
                      label="数量"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.unitPrice.value"
                      name="单价"
                      label="单价"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.totalPrice.value"
                      name="总价"
                      label="总价"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.remark"
                      name="备注"
                      label="备注"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.createTime"
                      name="分享时间"
                      label="分享时间"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.shareCompany.companyName"
                      name="任务出处"
                      label="任务出处"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.status"
                      name="任务状态"
                      label="任务状态"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.shareCompany.companyPhone"
                      name="任务联系方式"
                      label="任务联系方式"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
           <van-field v-model="form.shareCompany.contact"
                      name="任务联系人"
                      label="任务联系人"
                      placeholder=""
-                     :disabled="true" />
-          <van-field v-model="form.takeOverCompany"
+                     readonly />
+          <van-field v-model="form.takeOverCompany.contact"
                      name="任务接收方"
                      label="任务接收方"
                      placeholder=""
-                     :disabled="true" />
+                     readonly />
         </van-cell-group>
       </van-form>
       <footer></footer>

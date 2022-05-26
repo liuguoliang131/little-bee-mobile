@@ -1,14 +1,13 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 13:52:06
+ * @LastEditTime: 2022-05-25 15:29:17
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
 import login from '../views/login/index'
 import layout from '../components/layout/index'
 import register from '../views/login/register'
-
 const normalRoutes = [
   {
     path:'/',
@@ -33,11 +32,11 @@ const normalRoutes = [
     }
   },
   {
-    name:'Empty',
-    path:'/empty',
-    component:register,
+    name:'Agreement',
+    path:'/agreement',
+    component:()=>import('../views/agreement/index.vue'),
     meta: {
-      bread: 'empty',
+      bread: '用户协议',
       white: true
     }
   },

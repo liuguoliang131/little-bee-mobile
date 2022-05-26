@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 10:37:11
+ * @LastEditTime: 2022-05-26 09:56:29
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -70,7 +70,7 @@ export default {
     return {
       searchParams: {
         date: this.$utils.getToday(),
-        keywords:'',
+        keywords: '',
         keywordFields: 'name'
       },
       staffList: [],
@@ -87,6 +87,7 @@ export default {
     // 获取左侧员工列表
     async getStaffList() {
       try {
+        this.list = []
         let params = {
           ...this.searchParams
         }
@@ -96,8 +97,14 @@ export default {
         }
         this.staffList = res.model.data || []
         this.activeStaff = {}
-        if(res.model.data.length) {
-          this.activeStaff = res.model.data[0]
+        if (res.model.data.length) {
+          if (this.$route.query.employeeId) {
+            this.activeStaff = this.staffList.find(item => {
+              return item.employeeId === Number(this.$route.query.employeeId)
+            }) || {}
+          } else {
+            this.activeStaff = res.model.data[0]
+          }
           this.getList()
         }
       } catch (error) {
@@ -177,6 +184,7 @@ export default {
         font-weight: bold;
         color: #333333;
         padding-bottom: 15px;
+        padding-left: 15px;
       }
       .scroll-list {
         height: calc(100vh - 170px);

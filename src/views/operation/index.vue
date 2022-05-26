@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-19 14:42:35
+ * @LastEditTime: 2022-05-26 09:49:19
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -28,8 +28,8 @@
                 <tr>
                   <th>序号</th>
                   <th>任务标题</th>
-                  <th>成品</th>
-                  <th>时间</th>
+                  <th>当天数量</th>
+                  <th>已完成/总数量</th>
                   <th>操作</th>
                 </tr>
               </thead>
@@ -38,9 +38,9 @@
                     v-for="(item,index) in tableData"
                     :key="index">
                   <td>{{item.index}}</td>
-                  <td>{{item.name}}</td>
-                  <td>{{item.finishedProductCount}}</td>
-                  <td>{{item.billData}}</td>
+                  <td>{{item.title}}</td>
+                  <td>{{item.theDataFinishedNum||0}}</td>
+                  <td>{{item.finishedNum||0}}/{{item.count||0}}</td>
                   <td>
                     <van-icon name="edit"
                               @click="handleEdit(item)" />
@@ -86,7 +86,8 @@ import {
 } from 'vant'
 import Bread from '@/components/bread/index'
 import DateScreen from '@/components/dateScreen/index'
-import { h5_process_findPage } from '@/http/api'
+import axios from 'axios'
+import { host,h5_process_findPage } from '@/http/api'
 export default {
   name: 'Operation',
   data() {
@@ -95,6 +96,7 @@ export default {
       searchParams: {
         pageNo: 1,
         pageSize: 20,
+        companyId:this.$store.state.user.userInfo.id||this.$store.state.user.userInfo.companyId,
         billData: this.$utils.getToday()
       },
       tableData: [],
@@ -164,20 +166,20 @@ export default {
         forbidClick: true,
         message: '加载中'
       })
-      const res = await this.$http({
+      const res = await axios({
         method: 'post',
-        url: h5_process_findPage,
+        url: host+h5_process_findPage,
         data: this.searchParams
       })
       this.reloading = false
       toast.clear()
-      if (!res.success) {
-        return Toast(res.msg)
+      if (!res.data.success) {
+        return Toast(res.data.msg)
       }
-      res.model.data && res.model.data.forEach((item, idx) => {
+      res.data.model.data && res.data.model.data.forEach((item, idx) => {
         item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
       })
-      this.tableData = [...this.tableData, ...res.model.data]
+      this.tableData = [...this.tableData, ...res.data.model.data]
       this.searchParams.pageNo++
 
     },
@@ -187,22 +189,22 @@ export default {
         forbidClick: true,
         message: '加载中'
       })
-      const res = await this.$http({
+      const res = await axios({
         method: 'post',
-        url: h5_process_findPage,
+        url: host+h5_process_findPage,
         data: this.searchParams
       })
       toast.clear()
-      if (!res.success) {
-        return Toast(res.msg)
+      if (!res.data.success) {
+        return Toast(res.data.msg)
       }
-      res.model.data && res.model.data.forEach((item, idx) => {
+      res.data.model.data && res.data.model.data.forEach((item, idx) => {
         item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
       })
-      this.tableData = [...this.tableData, ...res.model.data]
+      this.tableData = [...this.tableData, ...res.data.model.data]
       this.searchParams.pageNo++
       this.loading = false
-      this.finished = res.model.lastPage
+      this.finished = res.data.model.lastPage
     }
   },
   created() {

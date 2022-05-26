@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-06 18:30:36
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 10:40:10
+ * @LastEditTime: 2022-05-25 13:56:26
  * @FilePath: \little-bee-mobile\src\views\staff\edit.vue
  * @Description: 编辑员工
 -->
@@ -62,7 +62,7 @@
                      label="工资数额"
                      placeholder=""
                      type="number"
-                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^(([1-9]+)|([0-9]+\.[0-9]{1,2}))$/,message: '数额是非负数且小数位小于3位的数字'}]" />
+                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[1-9]\d*.\d*|0.\d*[1-9]\d*$/,message: '数额必须大于0'}]" />
           <van-field name="状态"
                      label="状态">
             <template #input>

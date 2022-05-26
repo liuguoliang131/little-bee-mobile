@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 15:56:24
+ * @LastEditTime: 2022-05-25 16:39:47
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -134,7 +134,12 @@ router.beforeEach((to, from, next) => {
       return next()
     } else {
       // this.$store.commit('user/set_code',)
-      return next('/login')
+      return next({
+        path:'/login',
+        query: {
+          origin: from.path
+        }
+      })
     }
   }
 

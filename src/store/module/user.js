@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 20:01:57
+ * @LastEditTime: 2022-05-25 16:45:35
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -55,7 +55,7 @@ const user = {
     // 登录
     login( context, data ) {
       context.commit('set_userInfo', data)
-      router.push('/')
+      router.push(data.origin)
     }
   }
 }

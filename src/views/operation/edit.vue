@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 10:38:01
+ * @LastEditTime: 2022-05-25 15:59:38
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -51,11 +51,10 @@
             <div class="tab-pane">
               <div class="sum-count">
                 今日完成成品数量:&nbsp;
-                <input type="number"
-                      step="0.1"
-                       placeholder="今日完成成品数量"
+                <input placeholder="今日完成成品数量"
+                       type="number"
                        v-model="tabItem.todayCount"
-                       oninput="value=Math.abs(value)">
+                       oninput="value=parseInt(Math.abs(value))">
                 &nbsp;{{tabItem.shareCount}}/{{tabItem.count}}
               </div>
               <div class="scroll-table">
@@ -73,9 +72,9 @@
                         :key="item.id">
                       <td>{{index+1}}</td>
                       <td>{{item.name}}</td>
-                      <td>{{item.finishCount}}/{{item.count}}</td>
+                      <td>{{item.finishCount||0}}/{{item.count||0}}</td>
                       <td><input type="number"
-                               oninput="value=Math.abs(value)"
+                               oninput="value=parseInt(Math.abs(value))"
                                v-model="item.countField" /></td>
                     </tr>
                   </tbody>
@@ -115,7 +114,7 @@ export default {
     return {
       searchParams: {
         date: this.$utils.getToday(),
-        keywords:'',
+        keywords: '',
         keywordFields: 'name'
       },
       active: null,
@@ -210,8 +209,17 @@ export default {
         }
         this.staffList = res.model.data || []
         this.activeStaff = {}
-        if(res.model.data.length) {
-          this.activeStaff = res.model.data[0]
+        if (res.model.data.length) {
+          // 回显定位到那个员工
+          if(this.$route.query.employeeId) {
+            this.activeStaff = this.staffList.find(item=>{
+              return item.employeeId === Number(this.$route.query.employeeId)
+            })||{}
+          }else {
+            this.activeStaff = res.model.data[0]
+          }
+          
+
           this.echoData()
         }
       } catch (error) {
@@ -246,7 +254,7 @@ export default {
           this.getTaskDetail(item, i, toast)
         })
         this.tabs = tabs
-        
+
       } catch (error) {
         console.log(error)
       }

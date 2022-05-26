@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-16 15:30:18
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 17:35:30
+ * @LastEditTime: 2022-05-25 14:21:25
  * @FilePath: \little-bee-mobile\src\views\task\editTask.vue
  * @Description: 
 -->
@@ -96,7 +96,7 @@
         </thead>
         <tbody v-if="form.jobUpdateProcessRequestList.length">
           <tr v-for="(item,index) in form.jobUpdateProcessRequestList"
-              :key="index">
+              :key="index" @click="handleShowPutDialog(index)">
             <td>{{index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.unitPrice.value}}</td>
@@ -111,7 +111,7 @@
             <td>{{item.remark}}</td>
             <td>
               <van-icon name="delete-o"
-                        @click="handleRemove(index)" />
+                        @click.stop="handleRemove(index)" />
             </td>
           </tr>
         </tbody>
@@ -130,7 +130,7 @@
                 :showConfirmButton="false"
                 close-on-click-overlay
                 @close="close">
-      <div class="dialog-content">
+      <div class="dialog-content" v-if="dialogVisible">
         <van-form @submit="dialogFormSubmit"
                   ref="dialogForm">
           <van-field v-model.trim="dialogForm.name"
@@ -161,6 +161,46 @@
                         type="info"
                         native-type="submit"
                         @click="handleAddProcess">添加</van-button>
+          </div>
+        </van-form>
+      </div>
+    </van-dialog>
+    <van-dialog v-model="putDialogVisible"
+                title="创建工序"
+                :showConfirmButton="false"
+                close-on-click-overlay
+                @close="close">
+      <div class="dialog-content" v-if="putDialogVisible">
+        <van-form @submit="putDialogFormSubmit"
+                  ref="dialogForm">
+          <van-field v-model.trim="dialogForm.name"
+                     name="name"
+                     label="名称"
+                     placeholder="名称"
+                     :rules="[{ required: true, message: '请填写名称' }]" />
+          <van-field v-model="dialogForm.unitPrice.value"
+                     type="number"
+                     name="unitPrice"
+                     label="单价"
+                     placeholder="单价"
+                     :rules="[{ required: true, message: '请填写单价' },{ validator: unitPriceValidator, message: '单价必须大于0' }]" />
+          <div class="file">
+            <span class="label">图标</span>
+            <van-uploader v-model="dialogForm.imagesResponseList"
+                          :after-read="dialogPhotosAfterRead"
+                          :deletable="true" />
+          </div>
+          <van-field v-model.trim="dialogForm.remark"
+                     type="text"
+                     name="remark"
+                     label="备注"
+                     placeholder="备注" />
+          <div class="dialog-submit">
+            <van-button color="#CB9400"
+                        block
+                        type="info"
+                        native-type="submit"
+                        @click="handlePutProcess">更改</van-button>
           </div>
         </van-form>
       </div>
@@ -225,7 +265,9 @@ export default {
         imagesIds: '',
         remark: '',
         imagesResponseList: []
-      }
+      },
+      putDialogVisible: false,
+      idx:null
     }
   },
   computed: {
@@ -400,6 +442,21 @@ export default {
     // 关闭弹窗
     close() {
       this.dialogFormInit()
+    },
+    // 打开编辑工序弹窗
+    handleShowPutDialog(idx) {
+      this.idx = idx
+      this.dialogForm = JSON.parse(JSON.stringify(this.form.jobUpdateProcessRequestList[idx]))
+      this.putDialogVisible = true
+    },
+    // 编辑工序确认
+    handlePutProcess() {
+      this.$refs.putDialogForm.submit()
+    },
+    putDialogFormSubmit(values) {
+      console.log(values)
+      this.form.jobUpdateProcessRequestList[this.idx] = this.dialogForm
+      this.putDialogVisible = false
     },
     async echoData() {
       const params = {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-12 14:54:01
+ * @LastEditTime: 2022-05-25 13:57:01
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -62,7 +62,7 @@
                      label="工资数额"
                      placeholder=""
                      type="number"
-                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[0-9]{1,9}$/,message: '请填写工资数额'}]" />
+                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[1-9]\d*.\d*|0.\d*[1-9]\d*$/,message: '数额必须大于0'}]" />
           <van-field name="状态"
                      label="状态">
             <template #input>
