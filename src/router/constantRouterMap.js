@@ -1,13 +1,15 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 15:29:17
+ * @LastEditTime: 2022-05-26 16:15:21
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
 import login from '../views/login/index'
 import layout from '../components/layout/index'
 import register from '../views/login/register'
+import wechatPushOperation from '../views/wechatPush/operation.vue'
+import wechatPushPerformance from '../views/wechatPush/performance.vue'
 const normalRoutes = [
   {
     path:'/',
@@ -37,6 +39,24 @@ const normalRoutes = [
     component:()=>import('../views/agreement/index.vue'),
     meta: {
       bread: '用户协议',
+      white: true
+    }
+  },
+  {
+    name:'WechatPushOperation',
+    path:'/wechatPushOperation',
+    component: wechatPushOperation,
+    meta: {
+      bread: '个人工账',
+      white: true
+    }
+  },
+  {
+    name:'WechatPushPerformance',
+    path:'/wechatPushPerformance',
+    component: wechatPushPerformance,
+    meta: {
+      bread: '个人绩效',
       white: true
     }
   },
@@ -254,7 +274,8 @@ const normalRoutes = [
           bread: '绩效明细',
           white: false
         }
-      }
+      },
+      
     ]
   },
 ]

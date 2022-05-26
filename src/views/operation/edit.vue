@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 13:44:24
+ * @LastEditTime: 2022-05-26 17:10:25
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -55,7 +55,7 @@
                        type="number"
                        v-model="tabItem.todayCount"
                        oninput="value=parseInt(Math.abs(value))">
-                &nbsp;{{tabItem.shareCount}}/{{tabItem.count}}
+                &nbsp;{{tabItem.shareCount||'0'}}/{{tabItem.count||'0'}}
               </div>
               <div class="scroll-table">
                 <table>
@@ -101,7 +101,8 @@ import {
   Toast
 } from 'vant'
 import Bread from '@/components/bread/index.vue'
-import { h5_process_createBilling, h5_employee_findPage, h5_job_findPage, h5_job_findById, h5_process_billingDetails } from '@/http/api'
+import axios from 'axios'
+import { host, h5_process_createBilling, h5_employee_findPage, h5_job_findPage, h5_job_findById, h5_process_billingDetails, h5_process_findPage } from '@/http/api'
 export default {
   name: 'OperationEdit',
   components: {
@@ -332,10 +333,27 @@ export default {
     },
     handleSearch() {
       this.getStaffList()
+    },
+    // 获取工序记账列表
+    async getOperationList() {
+      const res = await axios({
+        method: 'post',
+        url: host + h5_process_findPage,
+        data: {
+          pageNo: 1,
+          pageSize: 999999,
+          companyId: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId,
+          billData: this.$utils.getToday()
+        }
+      })
+      if (!res.data.success) {
+        return Toast(res.data.msg)
+      }
+      this.tableData = res.data.model.data || []
     }
   },
   created() {
-    // this.getStaffList()
+    this.getOperationList()
     this.getTaskList()
   }
 }

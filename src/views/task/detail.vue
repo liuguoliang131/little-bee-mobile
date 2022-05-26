@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 14:48:28
+ * @LastEditTime: 2022-05-26 17:48:47
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -224,7 +224,7 @@
                      label="联系地址"
                      placeholder="联系地址"
                      :disabled="true" /> -->
-          <div class="tips">分享成功后请手动点击右上角按钮分享给朋友</div>
+          <div class="tips">分享成功后请手动粘贴把地址分享给其他人</div>
           <div class="dialog-submit">
             <van-button color="#CB9400"
                         block
@@ -293,7 +293,7 @@ export default {
         unitPrice: 1
       },
       dialogVisible: false,
-      sureShare: false //  = count - shareCount - 已完成数量 >0  为true才可以分享
+      sureShare: 0 //  = count - shareCount - 已完成数量 >0  为true才可以分享
     }
   },
   computed: {
@@ -332,7 +332,7 @@ export default {
         return Toast('可分享数量为0, 不能分享')
       }
       this.dialogForm.title = this.form.title
-      this.dialogForm.count = this.form.count
+      this.dialogForm.count = this.sureShare
       // this.dialogForm.unitPrice = this.form.unitPrice
       this.dialogForm.imagesIds = this.form.imagesIds
       this.dialogForm.jobNum = this.form.num
@@ -358,9 +358,20 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      Toast('分享成功,请手动点击右上角按钮分享给朋友')
-      this.weixinShare(res.model.id)
+      const link = `${window.location.href.split('#')[0]}#/receiveTask/${res.model.id}`
+      this.handleCopyURL(link)
+      // this.weixinShare(res.model.id)
       this.dialogVisible = false
+    },
+    // 复制链接
+    handleCopyURL (url) {
+      let outInput = document.createElement('textarea')
+      outInput.value = url
+      document.body.appendChild(outInput)
+      outInput.select()
+      document.execCommand('copy')
+      document.body.removeChild(outInput)
+      Toast('分享成功,已自动复制链接,请手动分享给其他人')
     },
     async setWx() {
       const res = await this.$http({
@@ -606,7 +617,8 @@ export default {
         }
       })
       let completeCount = res1.model || 0
-      this.sureShare = (Number(this.form.count) - Number(this.form.shareCount) - Number(completeCount))
+      // this.sureShare = (Number(this.form.count) - Number(this.form.shareCount) - Number(completeCount))
+      this.sureShare = completeCount
       console.log('可分享数量', this.sureShare)
       this.setWx()
       if (this.sureShare <= 0) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 09:56:29
+ * @LastEditTime: 2022-05-26 16:02:15
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -42,7 +42,11 @@
         <div v-for="(item,index) in list"
              :key="index"
              class="list-item">
-          {{item.sortTitle}}&nbsp;{{item.processName}}x{{item.processFinishCount}}
+          <span>{{item.sortTitle}}</span>
+          <span class="ml15">{{item.processName}}</span>
+          <span class="x">&nbsp;×</span>
+          <span>{{item.count||'0'}}</span>
+          
         </div>
       </div>
       <div class="views-right"
@@ -224,8 +228,18 @@ export default {
       padding: 15px 0;
       overflow-y: scroll;
       overflow-x: hidden;
+      line-height: 34px;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #333333;
       .list-item {
-        line-height: 30px;
+        .ml15 {
+          margin-left: 15px;
+        }
+        .x {
+          color: #999999;
+        }
       }
     }
   }
