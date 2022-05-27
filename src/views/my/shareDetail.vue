@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 19:09:22
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 17:36:09
+ * @LastEditTime: 2022-05-27 18:00:39
  * @FilePath: \little-bee-mobile\src\views\my\shareDetail.vue
  * @Description: 分享详情
 -->
@@ -104,6 +104,14 @@ export default {
         },
         unitPrice: {
           value: 0
+        },
+        shareCompany: {
+          companyName: '',
+          companyPhone: '',
+          contact: ''
+        },
+        takeOverCompany: {
+          contact: ''
         }
       }
     }
@@ -121,7 +129,13 @@ export default {
         return Toast(res.msg)
       }
       res.model.id = Number(this.$route.query.id)
-      this.form = Object.assign(this.form, res.model)
+      // this.form = Object.assign(this.form, res.model)
+      for (let k in res.model) {
+        if (!res.model[k]) {
+          res.model[k] = this.form[k] || ''
+        }
+      }
+      this.form = res.model
     }
   },
   created() {

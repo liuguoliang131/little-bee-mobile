@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 11:21:38
+ * @LastEditTime: 2022-05-27 16:18:51
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -25,6 +25,7 @@
               <tr>
                 <th>序号</th>
                 <th>标题</th>
+                <th>短标题</th>
                 <th>分享时间</th>
                 <th>数量</th>
                 <th>操作</th>
@@ -34,6 +35,7 @@
               <tr v-for="(item,index) in tableData"
                   :key="index">
                 <td>{{item.index}}</td>
+                <td>{{item.title}}</td>
                 <td>{{item.sortTitle}}</td>
                 <td>{{$utils.formatTime(item.createTime)}}</td>
                 <td>{{item.count}}</td>

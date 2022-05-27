@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 17:10:25
+ * @LastEditTime: 2022-05-27 17:44:39
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -246,14 +246,41 @@ export default {
         if (tabs.length === 0) {
           return Toast('没有找到已开始的任务')
         }
+        // 获取所有今天的工序  把已完成和总数量回显到当前所有任务列表上
+        const res1 = await axios({
+          method: 'post',
+          url: host + h5_process_findPage,
+          data: {
+            pageNo: 1,
+            pageSize: 999999,
+            companyId: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId,
+            billData: this.searchParams.date
+          }
+        })
+        if (!res1.data.success) {
+          return Toast(res1.data.msg)
+        }
+        const todayOperationList = res1.data.model.data || [] 
         const i = {
           count: tabs.length
         }
-        tabs.forEach((item, index) => {
+        tabs.forEach(item=>{
           item.todayCount = 0 //今日完成成品数 输入框绑定的值
           item.list = []
           this.getTaskDetail(item, i, toast)
+          todayOperationList.forEach(item1=>{
+            if(item.id===item1.jobId) {
+              item.shareCount = item1.finishedNum
+              item.count = item1.count
+            }
+          })
         })
+        
+        // tabs.forEach((item, index) => {
+        //   item.todayCount = 0 //今日完成成品数 输入框绑定的值
+        //   item.list = []
+        //   this.getTaskDetail(item, i, toast)
+        // })
         this.tabs = tabs
 
       } catch (error) {
@@ -343,7 +370,7 @@ export default {
           pageNo: 1,
           pageSize: 999999,
           companyId: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId,
-          billData: this.$utils.getToday()
+          billData: this.searchParams.date
         }
       })
       if (!res.data.success) {
@@ -353,6 +380,9 @@ export default {
     }
   },
   created() {
+    if(this.$route.query.billData) {
+      this.searchParams.date = this.$route.query.billData
+    }
     this.getOperationList()
     this.getTaskList()
   }

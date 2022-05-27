@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 10:32:55
+ * @LastEditTime: 2022-05-26 17:57:17
  * @FilePath: \little-bee-mobile\src\views\my\history.vue
  * @Description: 历史纪录
 -->
@@ -175,7 +175,7 @@ export default {
         if (!res.success) {
           return Toast(res.msg)
         }
-        this.tableData.data.splice((() => {
+        this.tableData.splice((() => {
           let idx = null
           this.tableData.forEach((item1, index1) => {
             if (item1.id === item.id) {

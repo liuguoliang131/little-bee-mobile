@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 14:54:07
+ * @LastEditTime: 2022-05-27 17:03:29
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -34,9 +34,9 @@
             <span class="xuhao">{{item.index}}</span>
             <span class="title">
               <span class="text">{{item.title}}</span>
-              <i class="zijian">自建</i>
-              <!-- <i class="fenxiang">分享</i>
-              <i class="wai">外</i> -->
+              <!-- <i class="zijian">自建</i>
+              <i class="fenxiang">分享</i> -->
+              <i class="wai" v-if="item.share">外</i>
               
             </span>
             <span>{{$utils.formatTimeYYMMdd(item.createTime)}}</span>
@@ -347,22 +347,27 @@ export default {
         font-style: normal;
         font-size: 12px;
         border-radius: 0 3px 3px 3px;
-        position: relative;
-        top: -5px;
+        // width: 32px;
+        // height: 18px;
+        padding: 1px 3px;
+        position: absolute;
+        top: 15px;
+        right: 0;
       }
       .wai {
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 18px;
         height: 18px;
-        text-align: center;
-        line-height: 18px;
-        background-color: #398ebf;
+        background-color: #088F4E;
         color: white;
         font-style: normal;
         font-size: 12px;
         border-radius: 9px;
-        position: relative;
-        top: -5px;
+        position: absolute;
+        top: 15px;
+        right: 0;
       }
     }
   }

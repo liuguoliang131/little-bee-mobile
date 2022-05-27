@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 09:49:19
+ * @LastEditTime: 2022-05-27 17:32:30
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -87,7 +87,7 @@ import {
 import Bread from '@/components/bread/index'
 import DateScreen from '@/components/dateScreen/index'
 import axios from 'axios'
-import { host,h5_process_findPage } from '@/http/api'
+import { host, h5_process_findPage } from '@/http/api'
 export default {
   name: 'Operation',
   data() {
@@ -96,7 +96,7 @@ export default {
       searchParams: {
         pageNo: 1,
         pageSize: 20,
-        companyId:this.$store.state.user.userInfo.id||this.$store.state.user.userInfo.companyId,
+        companyId: this.$store.state.user.userInfo.id || this.$store.state.user.userInfo.companyId,
         billData: this.$utils.getToday()
       },
       tableData: [],
@@ -130,7 +130,8 @@ export default {
       this.$router.push({
         path: '/operationEdit',
         query: {
-          employeeId: item.employeeId
+          employeeId: item.employeeId,
+          billData: item.billData
         }
       })
     },
@@ -139,7 +140,8 @@ export default {
       this.$router.push({
         path: '/operationDetail',
         query: {
-          employeeId: item.employeeId
+          employeeId: item.employeeId,
+          billData: item.billData
         }
       })
     },
@@ -168,7 +170,7 @@ export default {
       })
       const res = await axios({
         method: 'post',
-        url: host+h5_process_findPage,
+        url: host + h5_process_findPage,
         data: this.searchParams
       })
       this.reloading = false
@@ -191,7 +193,7 @@ export default {
       })
       const res = await axios({
         method: 'post',
-        url: host+h5_process_findPage,
+        url: host + h5_process_findPage,
         data: this.searchParams
       })
       toast.clear()

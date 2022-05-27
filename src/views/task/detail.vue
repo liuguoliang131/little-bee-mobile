@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 17:48:47
+ * @LastEditTime: 2022-05-27 17:46:36
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -234,6 +234,7 @@
         </van-form>
       </div>
     </van-dialog>
+    <textarea name="" id="iosCopyInput" cols="30" rows="10"></textarea>
   </div>
 </template>
 
@@ -280,7 +281,8 @@ export default {
         jobStatus: 'INIT',
         totalPrice: {
           value: 0
-        }
+        },
+        createTime: ''
       },
       photos: [],
       dialogForm: {
@@ -364,14 +366,31 @@ export default {
       this.dialogVisible = false
     },
     // 复制链接
-    handleCopyURL (url) {
-      let outInput = document.createElement('textarea')
-      outInput.value = url
-      document.body.appendChild(outInput)
-      outInput.select()
-      document.execCommand('copy')
-      document.body.removeChild(outInput)
+    handleCopyURL(url) {
+      let userAgent = navigator.userAgent;
+      // let isAndroid = userAgent.indexOf('Android') > -1 || userAgent.indexOf('Adr') > -1 //android终端
+      let isiOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
+      if (isiOS) {
+        //---------ios--------
+        window.getSelection().removeAllRanges();   //将页面所有的文本区域都从选区中移除
+        let range = document.createRange();   //创建一个文本区域
+        let outInput = document.getElementById('iosCopyInput');  //获取所需要复制的节点
+        outInput.value = url
+        range.selectNode(outInput);   //将我们的所选节点添加到文本区域中
+        window.getSelection().addRange(range);  //将文本区域添加至选区中
+        document.execCommand('copy');   //执行浏览器的复制命令
+        window.getSelection().removeAllRanges();  //最后再移除选区中的所有文本区域
+        outInput.value = ''
+      }else {
+        let outInput = document.createElement('textarea')
+        outInput.value = url
+        document.body.appendChild(outInput)
+        outInput.select()
+        document.execCommand('copy')
+        document.body.removeChild(outInput)
+      }
       Toast('分享成功,已自动复制链接,请手动分享给其他人')
+
     },
     async setWx() {
       const res = await this.$http({
@@ -385,9 +404,9 @@ export default {
       })
       let { timestamp, nonceStr, appId, signature, jsApiList: jsApiLists } = res.model
       const apiList = ['onMenuShareTimeline', 'onMenuShareAppMessage', 'updateTimelineShareData', 'updateAppMessageShareData']  // 必填，需要使用的JS接口列表
-      let paramsApis = new Set([...apiList,...jsApiLists])
+      let paramsApis = new Set([...apiList, ...jsApiLists])
       paramsApis = Array.from(paramsApis)
-      console.log('paramsApis',paramsApis)
+      console.log('paramsApis', paramsApis)
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: appId, // 必填，公众号的唯一标识
@@ -620,7 +639,7 @@ export default {
       // this.sureShare = (Number(this.form.count) - Number(this.form.shareCount) - Number(completeCount))
       this.sureShare = completeCount
       console.log('可分享数量', this.sureShare)
-      this.setWx()
+      // this.setWx()
       if (this.sureShare <= 0) {
         Toast('可分享数量为0, 不能分享')
       }
@@ -742,6 +761,9 @@ export default {
     justify-content: center;
     color: red;
     font-size: 12px;
+  }
+  #iosCopyInput {
+    width: 0;
   }
 }
 </style>

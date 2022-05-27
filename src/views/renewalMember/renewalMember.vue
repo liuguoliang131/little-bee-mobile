@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 17:41:04
+ * @LastEditTime: 2022-05-27 15:31:45
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -27,8 +27,8 @@
             <img :src="require('../../assets/true.png')"
                  alt="">
           </div>
-          <div class="item-row1">任务数量：{{item.jobCount}}次</div>
-          <div class="item-row1">员工数量：{{item.userCount}}次</div>
+          <div class="item-row1">任务数量：{{item.jobCount}}</div>
+          <div class="item-row1">员工数量：{{item.userCount}}</div>
           <div class="item-row2">
             ￥{{item.unitPrice.value}}
             <span>{{item.unitPrice.value}}元/{{item.useDayCount}}天</span>
@@ -240,6 +240,8 @@ export default {
                     if (res.err_msg == "get_brand_wcpay_request:ok") {
                       // 使用以上方式判断前端返回,微信团队郑重提示：
                       //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                      this.getUserInfo()
+                      this.getShipHistory()
                     }
                     // 支付过程中用户取消
                     if (res.err_msg == "get_brand_wcpay_request:cancel") {
