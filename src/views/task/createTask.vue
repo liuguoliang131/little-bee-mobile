@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:32:55
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 14:15:32
+ * @LastEditTime: 2022-05-30 16:34:49
  * @FilePath: \little-bee-mobile\src\views\task\createTask.vue
  * @Description: 创建任务
 -->
@@ -96,7 +96,8 @@
         </thead>
         <tbody v-if="form.createProcessRequestList.length">
           <tr v-for="(item,index) in form.createProcessRequestList"
-              :key="index" @click="handleShowPutDialog(index)">
+              :key="index"
+              @click="handleShowPutDialog(index)">
             <td>{{index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.unitPrice}}</td>
@@ -130,7 +131,8 @@
                 :showConfirmButton="false"
                 close-on-click-overlay
                 @close="close">
-      <div class="dialog-content" v-if="dialogVisible">
+      <div class="dialog-content"
+           v-if="dialogVisible">
         <van-form @submit="dialogFormSubmit"
                   ref="dialogForm">
           <van-field v-model.trim="dialogForm.name"
@@ -170,7 +172,8 @@
                 :showConfirmButton="false"
                 close-on-click-overlay
                 @close="close">
-      <div class="dialog-content" v-if="putDialogVisible">
+      <div class="dialog-content"
+           v-if="putDialogVisible">
         <van-form @submit="putDialogFormSubmit"
                   ref="putDialogForm">
           <van-field v-model.trim="dialogForm.name"
@@ -263,8 +266,7 @@ export default {
         photos: []
       },
       putDialogVisible: false,
-      idx:null
-
+      idx: null
     }
   },
   computed: {
@@ -438,12 +440,12 @@ export default {
     },
     putDialogFormSubmit(values) {
       console.log(values)
-      this.form.createProcessRequestList[this.idx] = this.dialogForm
+      this.form.createProcessRequestList.splice(this.idx, 1, this.dialogForm)
       this.putDialogVisible = false
     },
     // 如果是重新创建的话 回显
     echoData() {
-      if(this.$route.query.type!=='again') return false
+      if (this.$route.query.type !== 'again') return false
       let data = this.$store.state.task.item
       if (!data) {
         return false

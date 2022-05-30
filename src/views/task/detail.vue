@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 17:46:36
+ * @LastEditTime: 2022-05-30 17:24:05
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -96,22 +96,23 @@
                         plain
                         native-type="button"
                         size="small"
-                        @click="handleGoDetail">编辑</van-button>
-            <van-button v-show="form.jobStatus==='PAUSE'||form.jobStatus==='INIT'"
+                        @click="handleGoDetail"
+                        v-show="form.shareCount===0">编辑</van-button>
+            <van-button v-show="(sureShare&&form.jobStatus==='PAUSE')||(sureShare&&form.jobStatus==='INIT')"
                         color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
                         size="small"
                         @click="handleStart">开始</van-button>
-            <van-button v-show="form.jobStatus!=='Finish'"
+            <van-button v-show="sureShare&&form.jobStatus!=='Finish'"
                         color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
                         size="small"
                         @click="handleComplete">完成</van-button>
-            <van-button v-show="form.jobStatus==='START'"
+            <van-button v-show="sureShare&&form.jobStatus==='START'"
                         color="#CB9400"
                         type="info"
                         plain
@@ -234,7 +235,10 @@
         </van-form>
       </div>
     </van-dialog>
-    <textarea name="" id="iosCopyInput" cols="30" rows="10"></textarea>
+    <textarea name=""
+              id="iosCopyInput"
+              cols="30"
+              rows="10"></textarea>
   </div>
 </template>
 
@@ -278,6 +282,7 @@ export default {
         num: '0',
         pidId: '0',
         share: false,
+        shareCount: 0,
         jobStatus: 'INIT',
         totalPrice: {
           value: 0
@@ -381,7 +386,7 @@ export default {
         document.execCommand('copy');   //执行浏览器的复制命令
         window.getSelection().removeAllRanges();  //最后再移除选区中的所有文本区域
         outInput.value = ''
-      }else {
+      } else {
         let outInput = document.createElement('textarea')
         outInput.value = url
         document.body.appendChild(outInput)
@@ -530,7 +535,7 @@ export default {
     },
 
     close() {
-      // this.dialogFormInit()
+      this.echoData()
     },
     // 开始
     async handleStart() {
@@ -610,6 +615,11 @@ export default {
       })
     },
     async echoData() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
       const params = {
         id: Number(this.$route.query.id)
       }
@@ -618,6 +628,7 @@ export default {
         url: h5_job_findById,
         params
       })
+      toast.clear()
       if (!res.success) {
         return Toast(res.msg)
       }
@@ -728,7 +739,10 @@ export default {
     .b-2 {
       flex: 1.8;
       display: flex;
-      justify-content: space-around;
+      justify-content: flex-end;
+      .van-button {
+        margin-left: 6px;
+      }
     }
   }
   .td-img {
@@ -764,6 +778,7 @@ export default {
   }
   #iosCopyInput {
     width: 0;
+    height: 0;
   }
 }
 </style>

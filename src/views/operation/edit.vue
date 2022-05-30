@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 17:44:39
+ * @LastEditTime: 2022-05-30 17:43:42
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -211,13 +211,12 @@ export default {
         this.staffList = res.model.data || []
         this.activeStaff = {}
         if (res.model.data.length) {
+          this.activeStaff = res.model.data[0]
           // 回显定位到那个员工
           if (this.$route.query.employeeId) {
             this.activeStaff = this.staffList.find(item => {
               return item.employeeId === Number(this.$route.query.employeeId)
-            }) || {}
-          } else {
-            this.activeStaff = res.model.data[0]
+            }) || res.model.data[0]
           }
 
 
@@ -282,6 +281,12 @@ export default {
         //   this.getTaskDetail(item, i, toast)
         // })
         this.tabs = tabs
+        // 根据路由传值显示任务
+        if(this.$route.query.jobId) {
+          this.active = this.tabs.findIndex(item=>{
+            return Number(this.$route.query.jobId) === item.id
+          })
+        }
 
       } catch (error) {
         console.log(error)
@@ -383,7 +388,7 @@ export default {
     if(this.$route.query.billData) {
       this.searchParams.date = this.$route.query.billData
     }
-    this.getOperationList()
+    // this.getOperationList()
     this.getTaskList()
   }
 }

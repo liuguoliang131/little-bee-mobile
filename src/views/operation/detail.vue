@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 17:45:37
+ * @LastEditTime: 2022-05-30 18:02:11
  * @FilePath: \little-bee-mobile\src\views\operation\detail.vue
  * @Description: 添加修改工序对账
 -->
@@ -46,7 +46,7 @@
           <span class="ml15">{{item.processName}}</span>
           <span class="x">&nbsp;×</span>
           <span>{{item.count||'0'}}</span>
-          
+
         </div>
       </div>
       <div class="views-right"
@@ -102,13 +102,12 @@ export default {
         this.staffList = res.model.data || []
         this.activeStaff = {}
         if (res.model.data.length) {
-          if (this.$route.query.employeeId) {
-            this.activeStaff = this.staffList.find(item => {
-              return item.employeeId === Number(this.$route.query.employeeId)
-            }) || {}
-          } else {
-            this.activeStaff = res.model.data[0]
-          }
+          this.activeStaff = res.model.data[0]
+          this.staffList.forEach(item => {
+            if(item.employeeId === Number(this.$route.query.employeeId)) {
+              this.activeStaff = item
+            }
+          })
           this.getList()
         }
       } catch (error) {
@@ -134,11 +133,12 @@ export default {
 
     },
     handleSearch() {
+      
       this.getStaffList()
     },
   },
   created() {
-    if(this.$route.query.billData) {
+    if (this.$route.query.billData) {
       this.searchParams.date = this.$route.query.billData
     }
     this.getStaffList()

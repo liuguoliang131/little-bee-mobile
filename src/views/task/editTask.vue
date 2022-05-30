@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-16 15:30:18
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 14:21:25
+ * @LastEditTime: 2022-05-30 16:31:54
  * @FilePath: \little-bee-mobile\src\views\task\editTask.vue
  * @Description: 
 -->
@@ -96,7 +96,8 @@
         </thead>
         <tbody v-if="form.jobUpdateProcessRequestList.length">
           <tr v-for="(item,index) in form.jobUpdateProcessRequestList"
-              :key="index" @click="handleShowPutDialog(index)">
+              :key="index"
+              @click="handleShowPutDialog(index)">
             <td>{{index+1}}</td>
             <td>{{item.name}}</td>
             <td>{{item.unitPrice.value}}</td>
@@ -130,7 +131,8 @@
                 :showConfirmButton="false"
                 close-on-click-overlay
                 @close="close">
-      <div class="dialog-content" v-if="dialogVisible">
+      <div class="dialog-content"
+           v-if="dialogVisible">
         <van-form @submit="dialogFormSubmit"
                   ref="dialogForm">
           <van-field v-model.trim="dialogForm.name"
@@ -170,9 +172,10 @@
                 :showConfirmButton="false"
                 close-on-click-overlay
                 @close="close">
-      <div class="dialog-content" v-if="putDialogVisible">
+      <div class="dialog-content"
+           v-if="putDialogVisible">
         <van-form @submit="putDialogFormSubmit"
-                  ref="dialogForm">
+                  ref="putDialogForm">
           <van-field v-model.trim="dialogForm.name"
                      name="name"
                      label="名称"
@@ -267,7 +270,7 @@ export default {
         imagesResponseList: []
       },
       putDialogVisible: false,
-      idx:null
+      idx: null
     }
   },
   computed: {
@@ -455,7 +458,9 @@ export default {
     },
     putDialogFormSubmit(values) {
       console.log(values)
-      this.form.jobUpdateProcessRequestList[this.idx] = this.dialogForm
+      this.form.jobUpdateProcessRequestList.splice(this.idx, 1, this.dialogForm)
+      // this.form.jobUpdateProcessRequestList.splice(0,this.idx,this.dialogForm)
+      // this.form.jobUpdateProcessRequestList[this.idx] = this.dialogForm
       this.putDialogVisible = false
     },
     async echoData() {

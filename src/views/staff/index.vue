@@ -1,14 +1,14 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 17:30:18
+ * @LastEditTime: 2022-05-30 14:19:49
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
 <template>
   <div class="staff">
     <bread></bread>
-    <div class="top-fixed">员工数量: {{sumRow||'0'}}/{{shipHistory.employeeCount||'0'}}</div>
+    <div class="top-fixed">员工数量: {{sumRow||'0'}}/{{shipHistory.memberIdEmployeeSize||'0'}}</div>
     <div class="search">
       <div class="left">
         <input type="text"
@@ -136,7 +136,7 @@ export default {
       finished: false,
       reloading: false,
       shipHistory: {
-        employeeCount: 0
+        memberIdEmployeeSize: 0
       }
     }
   },
@@ -216,7 +216,7 @@ export default {
         }
       })
       if (res.success) {
-        this.shipHistory = res.model || { employeeCount: 0 }
+        this.shipHistory = res.model || { memberIdEmployeeSize: 0 }
       }
     }
   },

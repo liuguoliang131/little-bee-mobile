@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 17:32:30
+ * @LastEditTime: 2022-05-30 17:03:23
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -131,7 +131,8 @@ export default {
         path: '/operationEdit',
         query: {
           employeeId: item.employeeId,
-          billData: item.billData
+          billData: item.billData,
+          jobId:item.jobId
         }
       })
     },
@@ -141,7 +142,8 @@ export default {
         path: '/operationDetail',
         query: {
           employeeId: item.employeeId,
-          billData: item.billData
+          billData: item.billData,
+          jobId:item.jobId
         }
       })
     },
