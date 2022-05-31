@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 14:42:10
+ * @LastEditTime: 2022-05-31 15:13:29
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -120,6 +120,7 @@ router.onReady(() => {
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('from',from)
   NProgress.start()
   if (Object.is(to.path, '/login')) {
     next()
@@ -137,7 +138,8 @@ router.beforeEach((to, from, next) => {
       return next({
         path:'/login',
         query: {
-          origin: from.path
+          origin: from.path,
+          sign: from.sign || ''
         }
       })
     }

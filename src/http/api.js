@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 11:16:19
+ * @LastEditTime: 2022-05-31 15:58:44
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -36,14 +36,14 @@ export const h5_employee_findPage = '/h5/employee/findPage' //列表post
 export const h5_employee_update = '/h5/employee/update' //编辑post
 
 export const sys_version_file_findByIds = '/sys/version/file/findByIds'  //获取图片
-export const h5_performanceStatistics_mechanicStatistics = '/h5/performanceStatistics/mechanicStatistics' // 员工统计汇总
+export const h5_performanceStatistics_mechanicStatistics = '/h5/performanceStatistics/mechanicStatistics' // 员工统计汇总 员工账号用
 export const h5_performanceStatistics_sum = '/h5/performanceStatistics/sum' // 员工工资合计
 export const employeeProcessView_findPage = '/employeeProcessView/findPage'  //员工统计汇总1
 
 // 绩效统计
 
 export const h5_performanceStatistics_findPage = '/h5/performanceStatistics/findPage'  //工资列表
-export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatistics/companyStatistics' //企业统计 
+// export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatistics/companyStatistics' //企业统计 
 
 // 分享
 export const h5_jobShare_jobShare = '/h5/jobShare/jobShare' //任务分享
@@ -63,3 +63,9 @@ export const h5_membership_findCompanyInfo = '/h5/membership/findCompanyInfo' //
 export const h5_membership_getAmountsPayable = '/h5/membership/getAmountsPayable' //id查询会员多少钱 返回流水号 get
 export const h5_membership_createOrder = '/h5/membership/createOrder' //下单 post
 export const h5_membership_pay = '/h5/membership/pay' //支付 get
+export const companyStatistics = ''
+export const jobShare_deleteById = '/jobShare/deleteById' // 删除分享的记录
+
+
+export const h5_performanceStatistics_companyAmountStatistics = '/h5/performanceStatistics/companyAmountStatistics' //企业统计金额任务汇总
+export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatistics/companyStatistics' //企业统计任务汇总

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:32:55
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-30 16:34:49
+ * @LastEditTime: 2022-05-31 14:54:59
  * @FilePath: \little-bee-mobile\src\views\task\createTask.vue
  * @Description: 创建任务
 -->
@@ -372,39 +372,44 @@ export default {
         forbidClick: true,
         message: '加载中'
       })
-      const createProcessRequestList = this.form.createProcessRequestList.map(item => {
-        return {
-          name: item.name,
-          unitPrice: Number(item.unitPrice),
-          imagesIds: item.photos.map(item => item.id).join(','),
-          remark: item.remark,
-        }
-      })
+      try {
+        const createProcessRequestList = this.form.createProcessRequestList.map(item => {
+          return {
+            name: item.name,
+            unitPrice: Number(item.unitPrice),
+            imagesIds: item.photos.map(item => item.id).join(','),
+            remark: item.remark,
+          }
+        })
 
-      const res = await this.$http({
-        method: 'post',
-        url: h5_job_create,
-        data: {
-          title: this.form.title,
-          sortTitle: this.form.sortTitle,
-          count: Number(this.form.count),
-          unitPrice: Number(this.form.unitPrice),//单价
-          remark: this.form.remark,
-          totalPrice: Number(this.totalPrice), //总价
-          ids: this.form.ids,
-          num: this.form.num,
-          pidId: this.form.pidId,
-          share: this.form.share,
-          imagesIds: this.photos.map(item => item.id).join(','),
-          createProcessRequestList
+        const res = await this.$http({
+          method: 'post',
+          url: h5_job_create,
+          data: {
+            title: this.form.title,
+            sortTitle: this.form.sortTitle,
+            count: Number(this.form.count),
+            unitPrice: Number(this.form.unitPrice),//单价
+            remark: this.form.remark,
+            totalPrice: Number(this.totalPrice), //总价
+            ids: this.form.ids,
+            num: this.form.num,
+            pidId: this.form.pidId,
+            share: this.form.share,
+            imagesIds: this.photos.map(item => item.id).join(','),
+            createProcessRequestList
+          }
+        })
+        toast.clear()
+        if (!res.success) {
+          return Toast(res.msg)
         }
-      })
-      toast.clear()
-      if (!res.success) {
-        return Toast(res.msg)
+        Toast('创建成功')
+        this.$router.go(-1)
+      } catch (error) {
+        toast.clear()
+        throw error
       }
-      Toast('创建成功')
-      this.$router.go(-1)
     },
     // 移除工序
     handleRemove(index) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-30 17:36:47
+ * @LastEditTime: 2022-05-31 14:23:04
  * @FilePath: \little-bee-mobile\src\views\my\shareList.vue
  * @Description: 分享列表
 -->
@@ -33,15 +33,16 @@
             </thead>
             <tbody>
               <tr v-for="(item,index) in tableData"
-                  :key="index">
+                  :key="index"
+                  @click="handleShowMore(item)">
                 <td>{{item.index}}</td>
                 <td>{{item.title}}</td>
                 <td>{{item.sortTitle}}</td>
                 <td>{{$utils.formatTime(item.createTime)}}</td>
                 <td>{{item.count}}</td>
                 <td>
-                  <van-icon name="more-o"
-                            @click="handleShowMore(item)" />
+                  <van-icon v-if="!item.shareStatus&&!item.takeOverCompanyId" name="delete-o"
+                            @click.stop="handleShowRemove(item,index)" />
                 </td>
               </tr>
             </tbody>
@@ -54,13 +55,14 @@
 
 <script>
 import Bread from '@/components/bread/index'
-import { h5_jobShare_findPage } from '@/http/api'
+import { h5_jobShare_findPage, jobShare_deleteById } from '@/http/api'
 import {
   Search,
   Toast,
   Icon,
   PullRefresh,
   List,
+  Dialog
 } from 'vant'
 export default {
   name: 'history',
@@ -158,6 +160,28 @@ export default {
           id: item.id
         }
       })
+    },
+    handleShowRemove(item, index) {
+      Dialog.confirm({
+        message: '确定删除此任务?',
+        confirmButtonColor: '#CB9400'
+      }).then(async () => {
+        // on confirm
+        const res = await this.$http({
+          method: 'get',
+          url: jobShare_deleteById,
+          params: {
+            id: item.id
+          }
+        })
+        if (!res.success) {
+          return Toast(res.msg)
+        }
+        this.tableData.splice(index, 1)
+        Toast('删除成功')
+      }).catch(() => {
+        // on cancel
+      })
     }
   },
   created() {
@@ -169,12 +193,12 @@ export default {
 <style scoped lang="less">
 .history {
   .views {
-    height: 536px;
+    height: calc(100vh - 90px);
     .del {
       margin-right: 10px;
     }
     .van-pull-refresh {
-      height: calc(100% - 90px);
+      height: calc(100vh - 90px);
     }
   }
 }

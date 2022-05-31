@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:34
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-23 13:42:06
+ * @LastEditTime: 2022-05-31 16:20:04
  * @FilePath: \little-bee-mobile\src\views\my\summary.vue
  * @Description: 汇总统计
 -->
@@ -23,15 +23,15 @@
                     @confirm="handleMonthConfirm"
                     @cancel="showPicker = false" />
       </van-popup>
-      <div id="top"></div>
-      <div id="bottom"></div>
+      <div class="show-box"><div id="top"></div></div>
+      <div  class="show-box"><div id="bottom"></div></div>
     </div>
   </div>
 </template>
 
 <script>
 import Bread from '@/components/bread/index'
-import { h5_performanceStatistics_companyStatistics } from '@/http/api'
+import { h5_performanceStatistics_companyStatistics, h5_performanceStatistics_companyAmountStatistics } from '@/http/api'
 import * as echarts from 'echarts'
 import {
   Popup,
@@ -66,7 +66,8 @@ export default {
         '12月'
       ],
       month: null,
-      data: [],
+      topData: [],
+      bottomData:[],
       topInstance: null,
       bottomInstance: null
     }
@@ -127,6 +128,7 @@ export default {
           break
       }
       this.getStatistic(statisticsData)
+      this.getAmountStatistics(statisticsData)
     },
     async getStatistic(statisticsData) {
       const params = {
@@ -136,8 +138,20 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      this.data = res.model || []
+      this.topData = res.model || []
       this.initEcharts()
+      // this.initBottomEcharts()
+    },
+    async getAmountStatistics(statisticsData) {
+      const params = {
+        statisticsData
+      }
+      const res = await this.$http.post(h5_performanceStatistics_companyAmountStatistics, params)
+      if (!res.success) {
+        return Toast(res.msg)
+      }
+      this.bottomData = res.model || []
+      // this.initEcharts()
       this.initBottomEcharts()
     },
     // 生成线型图
@@ -145,8 +159,8 @@ export default {
       var chartDom = document.getElementById('top')
       this.topInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = this.data.map(item => item.billData)
-      let yAxisDataList = this.data.map(item => item.finishedProductCount)
+      let xAxisNameList = this.topData.map(item=>item.billData)
+      let yAxisDataList = this.topData.map(item => item.jobCount)
       option = {
         title: {
           text: '任务'
@@ -173,13 +187,17 @@ export default {
       }
 
       option && this.topInstance.setOption(option)
+      // this.topInstance.resize({
+      //   width: 315,
+      //   height: 267.5
+      // })
     },
     initBottomEcharts() {
       var chartDom = document.getElementById('bottom')
       this.bottomInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = this.data.map(item => item.billData)
-      let yAxisDataList = this.data.map(item => item.totalPrice)
+      let xAxisNameList = this.bottomData.map(item => item.billData)
+      let yAxisDataList = this.bottomData.map(item => item.totalPrice.value)
       option = {
         title: {
           text: '总收入(元)'
@@ -200,6 +218,10 @@ export default {
       }
 
       option && this.bottomInstance.setOption(option)
+      // this.bottomInstance.resize({
+      //   width: 315,
+      //   height: 267.5
+      // })
     }
   },
   created() {
@@ -214,19 +236,17 @@ export default {
 <style scoped lang="less">
 .summary {
   background-color: #f7f7f7;
-  #top {
+  .show-box {
     width: 345px;
     height: 282.5px;
     margin: 15px 0 15px 15px;
     background-color: #fff;
     border-radius: 5px;
-  }
-  #bottom {
-    width: 345px;
-    height: 282.5px;
-    margin: 15px 0 15px 15px;
-    background-color: #fff;
-    border-radius: 5px;
+    padding: 15px;
+    div {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>
