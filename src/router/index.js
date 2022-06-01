@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 11:17:46
+ * @LastEditTime: 2022-06-01 15:23:07
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -150,6 +150,11 @@ router.beforeEach((to, from, next) => {
   } else {
     const userInfo = store.state.user.userInfo
     if (userInfo) {
+      // if(userInfo.type==='1') {
+      //   return next()
+      // }else {
+      //   return next('/wechatPushOperation')
+      // }
       return next()
     } else {
       // this.$store.commit('user/set_code',)

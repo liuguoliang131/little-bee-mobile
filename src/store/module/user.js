@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 16:45:35
+ * @LastEditTime: 2022-06-01 13:57:00
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -55,7 +55,13 @@ const user = {
     // 登录
     login( context, data ) {
       context.commit('set_userInfo', data)
-      router.push(data.origin)
+      // 企业登陆or员工登陆
+      if(data.type==='1') {
+        router.push(data.origin)
+      }else {
+        router.push('/wechatPushOperation')
+      }
+      
     }
   }
 }
