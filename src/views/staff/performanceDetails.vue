@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 11:06:08
+ * @LastEditTime: 2022-06-01 17:35:24
  * @FilePath: \little-bee-mobile\src\views\staff\performanceDetails.vue
  * @Description: 分享列表
 -->
@@ -12,7 +12,12 @@
       <div class="month">{{$route.query.salaryData | fMonth}}</div>
       <div class="staff">
         <div class="staff-name">{{$route.query.employeeName||''}}</div>
-        <div class="staff-wages">固定工资￥{{sumPrice.toFixed(2)}}</div>
+        <div class="staff-wages">
+          <span v-if="$route.query.salaryType==='BASIC_SALARY'">基本工资</span>
+          <span v-else-if="$route.query.salaryType==='GUARANTEED_SALARY'">保底工资</span>
+          <span v-else-if="$route.query.salaryType==='FIXED_SALARY'">固定工资</span>
+          <span>￥{{sumPrice.toFixed(2)}}</span>
+        </div>
       </div>
     </div>
     <div class="views">
@@ -22,29 +27,30 @@
                   :finished="finished"
                   finished-text="没有更多了"
                   @load="getList">
-        <table>
-          <thead>
-            <tr>
-              <th>日期</th>
-              <th>标题</th>
-              <th>工序</th>
-              <th>单价</th>
-              <th>总价</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item,index) in tableData"
-                :key="index">
-              <td>{{item.billData.substr(item.billData.length-2)}}日</td>
-              <td>{{item.title}}</td>
-              <td>{{item.processName}}x{{item.count}}</td>
-              <td>{{item.processUnitPrice.value}}</td>
-              <td>{{item.processUnitPrice.value*item.count}}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>标题</th>
+                <th>工序</th>
+                <th>单价</th>
+                <th>总价</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item,index) in tableData"
+                  :key="index">
+                <td>{{item.billData.substr(item.billData.length-2)}}日</td>
+                <td>{{item.title}}</td>
+                <td>{{item.processName}}x{{item.count}}</td>
+                <td>{{item.processUnitPrice.value}}</td>
+                <td>{{item.processUnitPrice.value*item.count}}</td>
+              </tr>
+            </tbody>
+          </table>
         </van-list>
       </van-pull-refresh>
+      <div class="totalPrice">合计: ￥{{totalPrice.toFixed(2)}}</div>
     </div>
   </div>
 </template>
@@ -63,8 +69,8 @@ export default {
   data() {
     return {
       searchParams: {
-        pageNo:1,
-        pageSize:20,
+        pageNo: 1,
+        pageSize: 20000,
         statisticsData: this.$route.query.salaryData,
         employeeId: this.$route.query.employeeId
       },
@@ -72,13 +78,14 @@ export default {
       loading: false,
       finished: false,
       reloading: false,
-      sumPrice: 0
+      sumPrice: 0,
+      totalPrice: 0
     }
   },
   filters: {
     fMonth(val) {
-      if(val) {
-        return String(Number(val.substr(val.length-2)))+'月'
+      if (val) {
+        return String(Number(val.substr(val.length - 2))) + '月'
       }
     }
   },
@@ -111,7 +118,12 @@ export default {
         res.model.data && res.model.data.forEach((item, idx) => {
           item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
         })
-        this.tableData = [...this.tableData,...res.model.data]
+        this.tableData = [...this.tableData, ...res.model.data]
+        let total = 0
+        this.tableData.forEach(item => {
+          total += item.processUnitPrice.value * item.count
+        })
+        this.totalPrice = total || 0
         this.searchParams.pageNo++
       } catch (error) {
         toast.clear()
@@ -156,6 +168,11 @@ export default {
           item.index = (this.searchParams.pageNo - 1) * this.searchParams.pageSize + idx + 1
         })
         this.tableData = [...this.tableData, ...res.model.data]
+        let total = 0
+        this.tableData.forEach(item => {
+          total += item.processUnitPrice.value * item.count
+        })
+        this.totalPrice = total || 0
         this.searchParams.pageNo++
         this.loading = false
         this.finished = res.model.lastPage
@@ -205,9 +222,24 @@ export default {
     }
   }
   .views {
-    height: calc( 100vh - 95px );
+    height: calc(100vh - 95px);
     .van-pull-refresh {
-      height: calc( 100% - 95px );
+      height: calc(100vh - 135px);
+    }
+    .totalPrice {
+      font-size: 15px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      color: #666666;
+      background-color: #f0f0f0;
+      height: 40px;
+      width: 100%;
+      padding: 0 15px;
+      line-height: 40px;
+      text-align: right;
+      position: fixed;
+      bottom: 0;
+      left: 0;
     }
   }
 }

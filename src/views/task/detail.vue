@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-31 14:56:22
+ * @LastEditTime: 2022-06-01 17:12:30
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -105,7 +105,7 @@
                         native-type="button"
                         size="small"
                         @click="handleStart">开始</van-button>
-            <van-button v-show="sureShare&&form.jobStatus!=='Finish'"
+            <van-button v-show="form.jobStatus!=='Finish'"
                         color="#CB9400"
                         type="info"
                         plain
@@ -695,9 +695,9 @@ export default {
       this.sureShare = completeCount
       console.log('可分享数量', this.sureShare)
       // this.setWx()
-      if (this.sureShare <= 0) {
-        Toast('可分享数量为0, 不能分享')
-      }
+      // if (this.sureShare <= 0) {
+      //   Toast('可分享数量为0, 不能分享')
+      // }
 
     }
   },

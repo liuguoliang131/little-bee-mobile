@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 12:43:30
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 11:05:34
+ * @LastEditTime: 2022-06-01 16:07:59
  * @FilePath: \little-bee-mobile\src\views\staff\statistics.vue
  * @Description: 绩效统计
 -->
@@ -166,7 +166,8 @@ export default {
           employeeId:item.employeeId,
           // month: this.month,
           salaryData: item.salaryData,
-          employeeName:item.employeeName
+          employeeName:item.employeeName,
+          salaryType:item.salaryType
         }
       })
     }

@@ -1,12 +1,13 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-20 17:56:04
+ * @LastEditTime: 2022-06-01 16:28:00
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
-import { sys_version_file_findByIds } from '@/http/api'
+import { sys_version_file_findByIds, h5_membership_findCompanyInfo } from '@/http/api'
 import instance from '@/http/index'
+import store from '@/store/index'
 const utils = {
 
 }
@@ -36,19 +37,19 @@ utils.deleteUserInfo = function () {
 }
 
 // 存储openid
-utils.setOpenId = function (data){
-  window.localStorage.setItem('littleBeeOpenId',data)
+utils.setOpenId = function (data) {
+  window.localStorage.setItem('littleBeeOpenId', data)
 }
 // 获取openid
-utils.getOpenId = function (){
+utils.getOpenId = function () {
   return window.localStorage.getItem('littleBeeOpenId')
 }
 // 存储code
-utils.setCode = function (data){
-  window.localStorage.setItem('littleBeeCode',data)
+utils.setCode = function (data) {
+  window.localStorage.setItem('littleBeeCode', data)
 }
 // 获取code
-utils.getCode = function (){
+utils.getCode = function () {
   return window.localStorage.getItem('littleBeeCode')
 }
 // 获取动态路由+初始化路由  只在登录和刷新页面时调用
@@ -121,8 +122,8 @@ utils.getPhoto = function (ids) {
         ids
       }
     }).then(res => {
-      console.log('p',res)
-      resolve(res.model||[])
+      console.log('p', res)
+      resolve(res.model || [])
     }).catch(error => {
       console.log(error)
       resolve([])
@@ -155,7 +156,7 @@ utils.getPhotos = function (list) {
   return newList
 }
 // 获取今天日期 yyyy-MM-dd
-utils.getToday = function() {
+utils.getToday = function () {
   const date = new Date()
   let y = date.getFullYear()
   let mon = date.getMonth() + 1
@@ -164,5 +165,34 @@ utils.getToday = function() {
   mon = mon < 10 ? '0' + mon : mon
   d = d < 10 ? '0' + d : d
   return `${y}-${mon}-${d}`
+}
+utils.getMemberInfo = function () {
+  h5_membership_findCompanyInfo
+  return new Promise((resolve) => {
+    instance({
+      method: 'get',
+      url: h5_membership_findCompanyInfo,
+      params: {
+        id: store.state.user.userInfo.id || store.state.user.userInfo.companyId
+      }
+    }).then(res => {
+      console.log('p', res)
+      resolve(res.model || {
+        memberIdEmployeeSize: 0,
+        memberJobSize: 0,
+        useDayCount: 0,
+        member: false //是否是会员
+      })
+
+    }).catch(error => {
+      console.log(error)
+      resolve({
+        memberIdEmployeeSize: 0,
+        memberJobSize: 0,
+        useDayCount: 0,
+        member: false //是否是会员
+      })
+    })
+  })
 }
 export default utils

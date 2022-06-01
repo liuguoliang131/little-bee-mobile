@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-30 17:03:23
+ * @LastEditTime: 2022-06-01 17:15:37
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -36,16 +36,14 @@
               <tbody>
                 <tr class="item"
                     v-for="(item,index) in tableData"
-                    :key="index">
+                    :key="index" @click="handleView(item)">
                   <td>{{item.index}}</td>
-                  <td>{{item.title}}</td>
+                  <td style="color:#cb9400;">{{item.title}}</td>
                   <td>{{item.theDataFinishedNum||0}}</td>
                   <td>{{item.finishedNum||0}}/{{item.count||0}}</td>
                   <td>
                     <van-icon name="edit"
-                              @click="handleEdit(item)" />
-                    <van-icon name="ellipsis"
-                              @click="handleView(item)" />
+                              @click.stop="handleEdit(item)" />
                   </td>
                 </tr>
               </tbody>

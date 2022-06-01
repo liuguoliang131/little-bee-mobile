@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 13:27:01
+ * @LastEditTime: 2022-06-01 16:13:29
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
@@ -140,7 +140,7 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      let info = res.model || this.$store.state.user.userInfo
+      let info = {...this.$store.state.user.userInfo, ...res.model||{}}
       this.$store.commit('user/set_userInfo', info)
     }
   },

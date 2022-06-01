@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 10:30:26
+ * @LastEditTime: 2022-06-01 16:31:57
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -50,7 +50,8 @@
                      :rules="[{ required: true, message: '请填写选择工资方式' }]">
             <template #input>
               <van-radio-group v-model="form.salaryType"
-                               direction="horizontal">
+                               direction="horizontal"
+                               :disabled="!isMember">
                 <van-radio name="BASIC_SALARY">基本工资</van-radio>
                 <van-radio name="GUARANTEED_SALARY">保底工资</van-radio>
                 <van-radio name="FIXED_SALARY">固定工资</van-radio>
@@ -115,6 +116,7 @@ export default {
   },
   data() {
     return {
+      isMember: false,
       form: {
         disabledStatus: false,
         entryTime: '',
@@ -124,16 +126,16 @@ export default {
         salaryType: 'BASIC_SALARY',
         sex: 1,
         remark: '',
-        appId:'',
-        openId:'',
-        cnTime:''
+        appId: '',
+        openId: '',
+        cnTime: ''
       },
       showCalendar: false
     }
   },
   methods: {
     minDate() {
-      return new Date(1980,1,1)
+      return new Date(1980, 1, 1)
     },
     maxDate() {
       const oneYearAfter = Date.now() + 31536000000 //最大可选从现在开始一年后
@@ -162,7 +164,20 @@ export default {
       }
       Toast('创建成功')
       this.$router.go(-1)
+    },
+    async getIsMember() {
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中'
+      })
+      
+      this.isMember = await this.$utils.getMemberInfo()
+      toast.clear()
     }
+  },
+  created() {
+    this.getIsMember()
   }
 }
 </script>
