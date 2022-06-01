@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 17:50:17
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 16:46:09
+ * @LastEditTime: 2022-05-31 18:13:49
  * @FilePath: \little-bee-mobile\src\views\login\index.vue
  * @Description: 
 -->
@@ -65,7 +65,7 @@ export default {
       form: {
         phone: '',
         code: '',
-        type: 1,
+        type: '1',
         openId: '',
         appId: this.$store.state.user.openId
       },
@@ -140,7 +140,7 @@ export default {
         url: host + h5_login_wxLogin,
         params: {
           appId: this.$utils.getOpenId(),
-          type: '2'
+          type: this.form.type
         }
       })
       console.log('wxlogin',res)
@@ -148,12 +148,17 @@ export default {
         return Toast(res.data.msg)
       }
       
-      this.$store.dispatch('user/login', {...res.data.model,origin:this.$route.query.origin||'/'})
+      this.$store.dispatch('user/login', {...res.data.model,origin:this.$route.query.origin||'/',type: this.form.type})
 
     },
   },
   created() {
     this.form.phone = this.$route.params.phone || ''
+    if(this.$route.query.sign) {
+      this.form.type = this.$route.query.sign || '1'
+    }else {
+      this.form.type = window.localStorage.getItem('littleBeeSign')||'1'
+    }
   }
 }
 </script>

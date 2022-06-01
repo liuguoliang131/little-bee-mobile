@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:34
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-31 16:20:04
+ * @LastEditTime: 2022-05-31 16:56:14
  * @FilePath: \little-bee-mobile\src\views\my\summary.vue
  * @Description: 汇总统计
 -->
@@ -23,8 +23,12 @@
                     @confirm="handleMonthConfirm"
                     @cancel="showPicker = false" />
       </van-popup>
-      <div class="show-box"><div id="top"></div></div>
-      <div  class="show-box"><div id="bottom"></div></div>
+      <div class="show-box">
+        <div id="top"></div>
+      </div>
+      <div class="show-box">
+        <div id="bottom"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -67,7 +71,7 @@ export default {
       ],
       month: null,
       topData: [],
-      bottomData:[],
+      bottomData: [],
       topInstance: null,
       bottomInstance: null
     }
@@ -78,7 +82,7 @@ export default {
       this.month = e
       this.showPicker = false
       this.getData()
-      
+
     },
     getData() {
       let statisticsData = ''
@@ -159,7 +163,7 @@ export default {
       var chartDom = document.getElementById('top')
       this.topInstance = echarts.init(chartDom)
       var option
-      let xAxisNameList = this.topData.map(item=>item.billData)
+      let xAxisNameList = this.topData.map(item => item.billData)
       let yAxisDataList = this.topData.map(item => item.jobCount)
       option = {
         title: {
@@ -178,12 +182,25 @@ export default {
             name: this.$store.state.user.userInfo.name || this.$store.state.user.userInfo.companyName,
             data: yAxisDataList,
             type: 'line',
-            areaStyle: {}
+            areaStyle: {},
+            itemStyle: {
+              normal: {
+                label: {
+                  show: true  //展示点位数据
+                }
+              }
+            }
           }
         ],
         legend: { //颜色标志
           data: ['Email']
         },
+        grid: {
+          left: '1%',
+          right: '1%',
+          bottom: '10%',
+          containLabel: true
+        }
       }
 
       option && this.topInstance.setOption(option)
@@ -213,8 +230,21 @@ export default {
         series: [{
           data: yAxisDataList,
           type: 'line',
-          areaStyle: {}
-        }]
+          areaStyle: {},
+          itemStyle: {
+            normal: {
+              label: {
+                show: true  //展示点位数据
+              }
+            }
+          }
+        }],
+        grid: {
+          left: '1%',
+          right: '1%',
+          bottom: '10%',
+          containLabel: true
+        }
       }
 
       option && this.bottomInstance.setOption(option)
@@ -225,7 +255,7 @@ export default {
     }
   },
   created() {
-    this.month = `${new Date().getMonth()+1}月`
+    this.month = `${new Date().getMonth() + 1}月`
   },
   mounted() {
     this.getData()

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-31 15:13:29
+ * @LastEditTime: 2022-06-01 11:17:46
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -88,15 +88,33 @@ router.onReady(() => {
   if (!utils.getCode()) {
     let nowRoute = '#/'
     if (window.location.href.includes('#/')) {
-      nowRoute = `#/${window.location.href.split('#/')[1]}`
+      nowRoute = `#/${window.location.href.split('#/').length > 1 ? window.location.href.split('#/')[1] : ''}`
     }
     // history.pushState({ nowRoute }, 'firstPage', nowRoute)
     window.localStorage.setItem('littleBeeLink', appURL + nowRoute)
-    if(process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== 'development') {
       window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
     }
-    
+
   }
+  // 判断是企业还是员工  sign 1企业 2员工
+  let sign = '1' //默认企业类型  1企业登录 2员工登录
+  if (window.location.href.includes('#/')) {
+    let endValue = `${window.location.href.split('#/').length > 1 ? window.location.href.split('#/')[1] : ''}`
+    if (endValue.includes('?')) {
+      let query = endValue.split('?')[1]
+      if (query.includes('sign=')) {
+        let arr = query.split('&')
+        arr.forEach(item => {
+          if (item.includes('sign=')) {
+            sign = item.substr(5) || '1'
+          }
+        })
+      }
+    }
+  }
+  window.localStorage.setItem('littleBeeSign', sign)
+
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
     // 请求动态路由
@@ -120,7 +138,7 @@ router.onReady(() => {
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('from',from)
+  console.log('from', from)
   NProgress.start()
   if (Object.is(to.path, '/login')) {
     next()
@@ -136,10 +154,10 @@ router.beforeEach((to, from, next) => {
     } else {
       // this.$store.commit('user/set_code',)
       return next({
-        path:'/login',
+        path: '/login',
         query: {
-          origin: from.path,
-          sign: from.sign || ''
+          origin: from.path
+          // sign: window.localStorage.getItem('littleBeeSign') || '1'
         }
       })
     }
