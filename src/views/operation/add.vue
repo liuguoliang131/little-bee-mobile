@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-02 09:42:54
+ * @LastEditTime: 2022-06-02 14:50:07
  * @FilePath: \little-bee-mobile\src\views\operation\add.vue
  * @Description: 添加工序对账
 -->
@@ -50,7 +50,7 @@
                    :key="tabItem.id">
             <div class="tab-pane">
               <div class="sum-count">
-                今日完成成品数量:&nbsp;
+                今日成品数量:&nbsp;
                 <input placeholder="今日完成成品数量"
                        type="number"
                        v-model="tabItem.todayCount"

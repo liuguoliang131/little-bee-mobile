@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-31 15:58:44
+ * @LastEditTime: 2022-06-02 16:57:50
  * @FilePath: \little-bee-mobile\src\http\api.js
  * @Description: 
  */
@@ -69,3 +69,6 @@ export const jobShare_deleteById = '/jobShare/deleteById' // 删除分享的记�
 
 export const h5_performanceStatistics_companyAmountStatistics = '/h5/performanceStatistics/companyAmountStatistics' //企业统计金额任务汇总
 export const h5_performanceStatistics_companyStatistics = '/h5/performanceStatistics/companyStatistics' //企业统计任务汇总
+
+
+export const companyEmployeeProcess_findPage = '/companyEmployeeProcess/findPage'  // 根据"companyId": 6,"processId": 97,"jobId": 45查询当前任务技工信息
