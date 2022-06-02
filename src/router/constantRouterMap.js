@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-26 16:15:21
+ * @LastEditTime: 2022-06-02 09:43:45
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -114,6 +114,15 @@ const normalRoutes = [
         name:'OperationEdit',
         path:'/operationEdit',
         component:()=>import('../views/operation/edit.vue'),
+        meta: {
+          bread: '创建/修改记账',
+          white: false
+        }
+      },
+      {
+        name:'OperationAdd',
+        path:'/operationAdd',
+        component:()=>import('../views/operation/add.vue'),
         meta: {
           bread: '创建/修改记账',
           white: false

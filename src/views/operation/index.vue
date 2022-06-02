@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 17:15:37
+ * @LastEditTime: 2022-06-02 09:44:42
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -117,7 +117,7 @@ export default {
     // 新增记账
     handleAddBill() {
       this.$router.push({
-        path: '/operationEdit',
+        path: '/operationAdd',
         query: {
 
         }

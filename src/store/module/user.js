@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 13:57:00
+ * @LastEditTime: 2022-06-02 13:39:49
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -14,8 +14,8 @@ Vue.use(Vuex)
 const user = {
   namespaced: true,
   state: {
-    token:utils.getToken() || '',
-    userInfo:utils.getUserInfo() || null,
+    token: utils.getToken() || '',
+    userInfo: utils.getUserInfo() || null,
     code: utils.getCode() || null,
     openId: utils.getOpenId() || null
   },
@@ -37,11 +37,11 @@ const user = {
       state.userInfo = null
       router.replace('/login')
     },
-    set_code(state,data) {
+    set_code(state, data) {
       state.code = data
       utils.setCode(data)
     },
-    set_openId(state,data) {
+    set_openId(state, data) {
       state.openId = data
       utils.setOpenId(data)
     }
@@ -53,15 +53,16 @@ const user = {
   },
   actions: {
     // 登录
-    login( context, data ) {
+    login(context, data) {
       context.commit('set_userInfo', data)
       // 企业登陆or员工登陆
-      if(data.type==='1') {
+      router.push(data.origin)
+      if (data.type === '1' || !data.type) {
         router.push(data.origin)
-      }else {
+      } else if(data.type === '2'){
         router.push('/wechatPushOperation')
       }
-      
+
     }
   }
 }
