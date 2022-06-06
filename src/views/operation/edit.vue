@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-02 14:49:55
+ * @LastEditTime: 2022-06-06 17:00:41
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -10,7 +10,7 @@
     <bread></bread>
     <div class="search">
       <span class="date">{{searchParams.date}}</span>
-      <div class="input">
+      <!-- <div class="input">
         <img src="../../assets/search.png"
              alt="">
         <input v-model="searchParams.keywords"
@@ -19,7 +19,7 @@
                name=""
                placeholder="请输入姓名"
                id="">
-      </div>
+      </div> -->
       <van-button color="#CB9400"
                   type="info"
                   size="small"
@@ -208,16 +208,16 @@ export default {
         if (!res.success) {
           return Toast(res.msg)
         }
-        this.staffList = res.model.data || []
+        let staffList = res.model.data || []
+        let theStaff = staffList.find(item => {
+          return item.employeeId === Number(this.$route.query.employeeId)
+        })
+        this.staffList = [theStaff]
         this.activeStaff = {}
         if (res.model.data.length) {
-          this.activeStaff = res.model.data[0]
-          // 回显定位到那个员工
-          if (this.$route.query.employeeId) {
-            this.activeStaff = this.staffList.find(item => {
-              return item.employeeId === Number(this.$route.query.employeeId)
-            }) || res.model.data[0]
-          }
+          this.activeStaff = this.staffList.find(item => {
+            return item.employeeId === Number(this.$route.query.employeeId)
+          }) || res.model.data[0]
 
 
           this.echoData()
@@ -241,10 +241,15 @@ export default {
           return Toast(res.msg)
         }
         console.log('tab', res)
-        const tabs = res.model.data || []
+        let tabs = res.model.data || []
         if (tabs.length === 0) {
           return Toast('没有找到已开始的任务')
         }
+        // 只需要对应的任务 其他的不显示
+        const theTask = tabs.find(item => {
+          return Number(this.$route.query.jobId) === item.id
+        })
+        tabs = [theTask]
         // 获取所有今天的工序  把已完成和总数量回显到当前所有任务列表上
         const res1 = await axios({
           method: 'post',
@@ -259,22 +264,22 @@ export default {
         if (!res1.data.success) {
           return Toast(res1.data.msg)
         }
-        const todayOperationList = res1.data.model.data || [] 
+        const todayOperationList = res1.data.model.data || []
         const i = {
           count: tabs.length
         }
-        tabs.forEach(item=>{
+        tabs.forEach(item => {
           item.todayCount = 0 //今日完成成品数 输入框绑定的值
           item.list = []
           this.getTaskDetail(item, i, toast)
-          todayOperationList.forEach(item1=>{
-            if(item.id===item1.jobId) {
+          todayOperationList.forEach(item1 => {
+            if (item.id === item1.jobId) {
               item.shareCount = item1.finishedNum
               item.count = item1.count
             }
           })
         })
-        
+
         // tabs.forEach((item, index) => {
         //   item.todayCount = 0 //今日完成成品数 输入框绑定的值
         //   item.list = []
@@ -282,11 +287,11 @@ export default {
         // })
         this.tabs = tabs
         // 根据路由传值显示任务
-        if(this.$route.query.jobId) {
-          this.active = this.tabs.findIndex(item=>{
-            return Number(this.$route.query.jobId) === item.id
-          })
-        }
+        // if(this.$route.query.jobId) {
+        //   this.active = this.tabs.findIndex(item=>{
+        //     return Number(this.$route.query.jobId) === item.id
+        //   })
+        // }
 
       } catch (error) {
         console.log(error)
@@ -385,7 +390,7 @@ export default {
     }
   },
   created() {
-    if(this.$route.query.billData) {
+    if (this.$route.query.billData) {
       this.searchParams.date = this.$route.query.billData
     }
     // this.getOperationList()
