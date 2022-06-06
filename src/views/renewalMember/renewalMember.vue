@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-11 14:43:27
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-30 13:56:41
+ * @LastEditTime: 2022-06-06 17:28:42
  * @FilePath: \little-bee-mobile\src\views\renewalMember\renewalMember.vue
  * @Description: 续费会员
 -->
@@ -40,7 +40,7 @@
     <div class="fixed-bottom">
       <div class="left">
         <van-checkbox shape="square"
-                      v-model="agree">同意小蜜蜂协议</van-checkbox>
+                      v-model="agree">同意<span @click.stop="handleGoAgreement" class="theme">小蜜蜂协议</span></van-checkbox>
       </div>
       <div class="right">
         <div class="text">应付金额：{{checked.unitPrice?checked.unitPrice.value:'0'}}元</div>
@@ -285,6 +285,9 @@ export default {
         })
       })
 
+    },
+    handleGoAgreement() {
+      this.$router.push('/payment')
     }
   },
   created() {
@@ -418,6 +421,9 @@ export default {
   }
   /deep/.van-checkbox {
     font-size: 12px;
+  }
+  .theme {
+    color: #cb9400;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-06 14:16:23
+ * @LastEditTime: 2022-06-06 17:28:26
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -39,6 +39,15 @@ const normalRoutes = [
     component:()=>import('../views/agreement/index.vue'),
     meta: {
       bread: '用户协议',
+      white: true
+    }
+  },
+  {
+    name:'Payment',
+    path:'/payment',
+    component:()=>import('../views/agreement/payment.vue'),
+    meta: {
+      bread: '充值协议',
       white: true
     }
   },
