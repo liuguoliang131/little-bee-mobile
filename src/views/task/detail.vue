@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 17:12:30
+ * @LastEditTime: 2022-06-06 14:21:52
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -144,14 +144,13 @@
             <th>单价(元)</th>
             <th>图标</th>
             <th>备注</th>
-            <th>技工信息</th>
           </tr>
         </thead>
         <tbody v-if="form.jobDetailProcessResponseList.length">
           <tr v-for="(item,index) in form.jobDetailProcessResponseList"
-              :key="index">
+              :key="index" @click="handleGoProcessDetail(item)">
             <td>{{index+1}}</td>
-            <td>{{item.name}}</td>
+            <td style="color:#cb9400;">{{item.name}}</td>
             <td>{{item.unitPrice.value}}</td>
             <td>
               <div class="td-img"
@@ -162,9 +161,6 @@
               </div>
             </td>
             <td>{{item.remark}}</td>
-            <td>
-              <!-- 技工1 x5 技工2 x5 -->
-            </td>
           </tr>
         </tbody>
         <tbody v-else
@@ -699,6 +695,16 @@ export default {
       //   Toast('可分享数量为0, 不能分享')
       // }
 
+    },
+    // 去往工序详情
+    handleGoProcessDetail(item) {
+      this.$router.push({
+        path:'/process',
+        query: {
+          jobId: this.form.id,
+          ...item
+        }
+      })
     }
   },
   created() {

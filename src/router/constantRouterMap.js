@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-14 15:41:49
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-02 09:43:45
+ * @LastEditTime: 2022-06-06 14:16:23
  * @FilePath: \little-bee-mobile\src\router\constantRouterMap.js
  * @Description: 静态路由
  */
@@ -284,6 +284,16 @@ const normalRoutes = [
           white: false
         }
       },
+      
+      {
+        name:'Process',
+        path:'/process',
+        component:()=>import('../views/task/process.vue'),
+        meta: {
+          bread: '工序详情',
+          white: false
+        }
+      }
       
     ]
   },
