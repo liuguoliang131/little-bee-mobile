@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-06 14:21:52
+ * @LastEditTime: 2022-06-07 10:33:32
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -13,14 +13,14 @@
     </bread>
     <div class="views">
       <van-form>
-        <van-field v-model.trim="form.id"
+        <!-- <van-field v-model.trim="form.id"
                    type="text"
                    name="ID"
                    label="ID"
                    placeholder="请输入标题"
                    required
                    :rules="[{ required: true, message: '请填写ID' }]"
-                   :disabled="true" />
+                   :disabled="true" /> -->
         <van-field v-model.trim="form.title"
                    type="text"
                    name="title"

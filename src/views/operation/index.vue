@@ -1,20 +1,22 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-02 09:44:42
+ * @LastEditTime: 2022-06-07 10:35:54
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
 <template>
   <div class="operation">
-    <bread @click="handleAddBill">
+    <!-- <bread @click="handleAddBill">
       <van-icon name="plus"
                 color="#cb9400" />
-    </bread>
+    </bread> -->
     <div class="views">
       <div class="search">
         <date-screen v-model="searchParams.billData"
                      @change="dateChange"></date-screen>
+        <van-icon name="plus"
+                color="#cb9400" />
       </div>
       <div class="list">
         <van-pull-refresh v-model="reloading"
@@ -220,10 +222,13 @@ export default {
   width: 100%;
   .views {
     width: 100%;
-    height: calc(100vh - 36px - 50px);
+    height: calc(100vh - 50px);
     overflow-y: scroll;
     .search {
       padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       input {
         width: 160px;
         height: 30px;
@@ -233,11 +238,11 @@ export default {
       }
     }
     .list {
-      height: calc(100% - 136px);
+      height: calc(100vh - 112px);
       overflow-y: scroll;
     }
     .van-pull-refresh {
-      height: calc(100% - 136px);
+      height: calc(100vh - 112px);
     }
   }
   footer {

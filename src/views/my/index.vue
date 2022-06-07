@@ -1,18 +1,23 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 16:13:29
+ * @LastEditTime: 2022-06-07 10:58:31
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
 <template>
   <div class="my">
-    <bread @click="handleShowQuit">
+    <!-- <bread @click="handleShowQuit">
       <img :src="require('../../assets/quit.png')"
            alt=""
            class="quit">
-    </bread>
+    </bread> -->
     <div class="views">
+      <div class="bread">
+        <img @click="handleShowQuit" :src="require('../../assets/quit.png')"
+             alt=""
+             class="quit">
+      </div>
       <div class="vip">
         <div class="vip-1">
           <div class="vip-icon"></div>
@@ -39,7 +44,8 @@
         </div>
       </div>
     </div>
-    <van-tabbar v-model="active" active-color="#CB9400">
+    <van-tabbar v-model="active"
+                active-color="#CB9400">
       <van-tabbar-item name="1"
                        icon="home-o"
                        to="/">首页</van-tabbar-item>
@@ -130,7 +136,7 @@ export default {
     },
     async getUserInfo() {
       const params = {
-        id: this.$store.state.user.userInfo.companyId||this.$store.state.user.userInfo.id
+        id: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id
       }
       const res = await this.$http({
         method: 'get',
@@ -140,7 +146,7 @@ export default {
       if (!res.success) {
         return Toast(res.msg)
       }
-      let info = {...this.$store.state.user.userInfo, ...res.model||{}}
+      let info = { ...this.$store.state.user.userInfo, ...res.model || {} }
       this.$store.commit('user/set_userInfo', info)
     }
   },
@@ -158,11 +164,18 @@ export default {
   }
   .views {
     text-align: center;
+    overflow: hidden;
+    .bread {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px;
+    }
     .vip {
       display: inline-block;
       // height: 65.5px;
       width: 316px;
-      margin-top: 27.5px;
+      // margin-top: 27.5px;
       background: no-repeat url("~@/assets/vipbg.png") center;
       background-size: cover;
       border-radius: 5px 5px 0 0;
@@ -213,7 +226,7 @@ export default {
     .card {
       margin: 0 15px 15px 15px;
       padding: 0 15px;
-      height: 519px;
+      height: 520px;
       background: #ffffff;
       border-radius: 15px;
       .card-item {
