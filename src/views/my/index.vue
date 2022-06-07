@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 14:28:37
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 10:58:31
+ * @LastEditTime: 2022-06-07 17:35:38
  * @FilePath: \little-bee-mobile\src\views\my\index.vue
  * @Description: 我的
 -->
@@ -13,11 +13,12 @@
            class="quit">
     </bread> -->
     <div class="views">
-      <div class="bread">
-        <img @click="handleShowQuit" :src="require('../../assets/quit.png')"
+      <!-- <div class="bread">
+        <img @click="handleShowQuit"
+             :src="require('../../assets/quit.png')"
              alt=""
              class="quit">
-      </div>
+      </div> -->
       <div class="vip">
         <div class="vip-1">
           <div class="vip-icon"></div>
@@ -32,7 +33,7 @@
       </div>
       <div class="card">
         <div class="card-item"
-             @click="$router.push(item.path)"
+             @click="handleGoOrQuit(item.path)"
              v-for="item in list"
              :key="item.name">
           <img class="left"
@@ -106,6 +107,11 @@ export default {
           icon: require('../../assets/staff.png'),
           path: '/staffList'
         },
+        {
+          name: '退出登录',
+          icon: require('../../assets/quit.png'),
+          path: ''
+        },
         // {
         //   name: '员工离职表',
         //   icon: require('../../assets/lizhi.png'),
@@ -115,6 +121,13 @@ export default {
     }
   },
   methods: {
+    handleGoOrQuit(path) {
+      if(path) {
+        this.$router.push(path)
+      }else {
+        this.handleShowQuit()
+      }
+    },
     handleShowQuit() {
       Dialog.confirm({
         message: '确认要退出吗?',
@@ -163,6 +176,7 @@ export default {
     width: 13.5px;
   }
   .views {
+    padding-top: 16px;
     text-align: center;
     overflow: hidden;
     .bread {
@@ -226,7 +240,7 @@ export default {
     .card {
       margin: 0 15px 15px 15px;
       padding: 0 15px;
-      height: 520px;
+      height: 550px;
       background: #ffffff;
       border-radius: 15px;
       .card-item {
