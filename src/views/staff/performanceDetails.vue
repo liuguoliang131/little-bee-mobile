@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:59
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 17:35:24
+ * @LastEditTime: 2022-06-07 13:19:31
  * @FilePath: \little-bee-mobile\src\views\staff\performanceDetails.vue
  * @Description: 分享列表
 -->
@@ -13,7 +13,7 @@
       <div class="staff">
         <div class="staff-name">{{$route.query.employeeName||''}}</div>
         <div class="staff-wages">
-          <span v-if="$route.query.salaryType==='BASIC_SALARY'">基本工资</span>
+          <span v-if="$route.query.salaryType==='BASIC_SALARY'">计件工资</span>
           <span v-else-if="$route.query.salaryType==='GUARANTEED_SALARY'">保底工资</span>
           <span v-else-if="$route.query.salaryType==='FIXED_SALARY'">固定工资</span>
           <span>￥{{sumPrice.toFixed(2)}}</span>

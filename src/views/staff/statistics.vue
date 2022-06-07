@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 12:43:30
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 16:07:59
+ * @LastEditTime: 2022-06-07 13:19:40
  * @FilePath: \little-bee-mobile\src\views\staff\statistics.vue
  * @Description: 绩效统计
 -->
@@ -38,7 +38,7 @@
             <td>{{idx+1}}</td>
             <td>{{item.employeeName}}</td>
             <td>
-              <span v-if="item.salaryType==='BASIC_SALARY'">基本工资</span>
+              <span v-if="item.salaryType==='BASIC_SALARY'">计件工资</span>
               <span v-else-if="item.salaryType==='GUARANTEED_SALARY'">保底工资</span>
               <span v-else-if="item.salaryType==='FIXED_SALARY'">固定工资</span>
               <span v-else-if="item.salaryType==='INIT'">未设置</span>

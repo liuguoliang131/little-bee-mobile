@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 17:03:29
+ * @LastEditTime: 2022-06-07 15:18:17
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -33,11 +33,13 @@
                :key="item.id">
             <span class="xuhao">{{item.index}}</span>
             <span class="title">
-              <span class="text">{{item.title}}</span>
+              <i class="wai"
+                 v-if="item.share">外</i>
+              {{item.title}}
+              <!-- <span class="text"></span> -->
               <!-- <i class="zijian">自建</i>
               <i class="fenxiang">分享</i> -->
-              <i class="wai" v-if="item.share">外</i>
-              
+
             </span>
             <span>{{$utils.formatTimeYYMMdd(item.createTime)}}</span>
             <span>{{item.count}}</span>
@@ -93,7 +95,7 @@ import {
   List
 } from 'vant'
 // import Bread from '@/components/bread/index.vue'
-import { h5_job_findPage, job_deleteById, h5_job_jobCheck } from '@/http/api.js'
+import { h5_job_findPage, job_deleteById, h5_job_jobCheck, h5_employee_findPage } from '@/http/api.js'
 export default {
   name: 'Index',
   components: {
@@ -109,7 +111,7 @@ export default {
     return {
       searchParams: {
         keywords: '',
-        keywordFields:'title',
+        keywordFields: 'title',
         pageNo: 1,
         pageSize: 20
       },
@@ -248,10 +250,28 @@ export default {
           companyId: this.$store.state.user.userInfo.companyId || this.$store.state.user.userInfo.id
         }
       })
-      toast.clear()
       if (res.success) {
-        this.$router.push('/createTask')
+        const params = {
+          keywords: '',
+          keywordFields: 'name',
+          pageNo: 1,
+          pageSize: 1,
+          disabledStatus: false
+        }
+        const res1 = await this.$http.post(h5_employee_findPage, params)
+        toast.clear()
+        if (res1.success) {
+          if (res1.model.sumRow) {
+            this.$router.push('/createTask')
+          } else {
+            return Toast('没有员工,不能创建任务')
+          }
+        } else {
+          return Toast('查询员工数量时服务器错误')
+        }
+
       } else {
+        toast.clear()
         Dialog.confirm({
           message: '任务数量为0 请尽快购买任务数量!',
           confirmButtonColor: '#CB9400',
@@ -289,7 +309,7 @@ export default {
       text-align: center;
     }
   }
-  
+
   .van-pull-refresh {
     height: calc(100vh - 140px);
   }
@@ -306,7 +326,7 @@ export default {
       align-items: center;
       min-height: 49px;
     }
-    
+
     .caozuo {
       .van-icon:nth-child(1) {
         margin-right: 10px;
@@ -318,7 +338,7 @@ export default {
       color: #cb9400;
       .text {
         width: 95px;
-        padding-right: 32px;
+        padding-left: 32px;
       }
       .zijian {
         z-index: 9;
@@ -335,7 +355,7 @@ export default {
         top: 15px;
         right: 0;
       }
-      
+
       .fenxiang {
         display: inline-block;
         width: 32px;
@@ -360,22 +380,22 @@ export default {
         justify-content: center;
         width: 18px;
         height: 18px;
-        background-color: #088F4E;
+        background-color: #088f4e;
         color: white;
         font-style: normal;
         font-size: 12px;
         border-radius: 9px;
         position: absolute;
         top: 15px;
-        right: 0;
+        left: 0;
       }
     }
   }
   .xuhao {
-    flex: 0.5!important;
+    flex: 0.5 !important;
   }
   .caozuo {
-    flex: 0.5!important;
+    flex: 0.5 !important;
   }
 
   .fixed-r {

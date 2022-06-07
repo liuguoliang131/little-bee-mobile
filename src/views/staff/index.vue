@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-30 14:19:49
+ * @LastEditTime: 2022-06-07 14:37:34
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -62,7 +62,9 @@
                 <td>{{item.name}}</td>
                 <td>
                   <div :class="['phone']" @click="item.hidePhone=!item.hidePhone">
-                    <span :class="['phone-text',item.hidePhone?'addblur':'']">{{item.phone}}</span>
+                  <span>{{item.phone.substring(0,3)}}</span>
+                    <span :class="['phone-text',item.hidePhone?'addblur':'']">{{item.phone.substring(3,7)}}</span>
+                    <span>{{item.phone.substring(7,11)}}</span>
                     <span class="phone-icon">
                       <van-icon v-if="item.hidePhone" name="closed-eye" />
                       <van-icon v-else name="eye-o" />

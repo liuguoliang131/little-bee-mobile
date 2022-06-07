@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 16:31:57
+ * @LastEditTime: 2022-06-07 13:19:10
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -52,7 +52,7 @@
               <van-radio-group v-model="form.salaryType"
                                direction="horizontal"
                                :disabled="!isMember">
-                <van-radio name="BASIC_SALARY">基本工资</van-radio>
+                <van-radio name="BASIC_SALARY">计件工资</van-radio>
                 <van-radio name="GUARANTEED_SALARY">保底工资</van-radio>
                 <van-radio name="FIXED_SALARY">固定工资</van-radio>
               </van-radio-group>

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-02 14:50:07
+ * @LastEditTime: 2022-06-07 13:41:48
  * @FilePath: \little-bee-mobile\src\views\operation\add.vue
  * @Description: 添加工序对账
 -->
@@ -434,12 +434,12 @@ export default {
   .views {
     height: calc(100vh - 88px);
     background-color: #ffff;
-    padding: 10px 15px;
+    padding: 10px 15px 0 15px;
     display: flex;
     .views-left {
       background-color: #f7f7f7;
       width: 100px;
-      height: calc(100vh - 97px);
+      height: 100%;
       position: relative;
       left: -15px;
       padding: 15px 0;
@@ -452,7 +452,7 @@ export default {
         padding-left: 15px;
       }
       .scroll-list {
-        height: calc(100vh - 170px);
+        height: calc( 100% - 36px );
         overflow-y: scroll;
         overflow-x: visible;
         font-size: 14px;
@@ -486,7 +486,7 @@ export default {
       flex: 1;
       background: #ffffff;
       height: calc(100vh - 97px);
-      padding: 15px 0;
+      // padding: 15px 0;
       overflow-y: scroll;
       overflow-x: hidden;
       /deep/.van-tabs__content {

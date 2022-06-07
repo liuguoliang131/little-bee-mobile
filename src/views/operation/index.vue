@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 10:35:54
+ * @LastEditTime: 2022-06-07 13:25:21
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -16,7 +16,7 @@
         <date-screen v-model="searchParams.billData"
                      @change="dateChange"></date-screen>
         <van-icon name="plus"
-                color="#cb9400" />
+                color="#cb9400" @click="handleAddBill" />
       </div>
       <div class="list">
         <van-pull-refresh v-model="reloading"
