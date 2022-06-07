@@ -279,7 +279,7 @@ export default {
   width: 100%;
   height: 100vh;
   background-color: #fff;
-  padding-top: 60px;
+  // padding-top: 60px;
   header {
     text-align: center;
     height: 60px;

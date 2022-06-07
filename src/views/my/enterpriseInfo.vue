@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-24 13:24:42
+ * @LastEditTime: 2022-06-07 16:09:55
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
@@ -14,11 +14,11 @@
     <div class="views">
       <van-form @submit="handleGoAdd">
         <van-cell-group inset>
-          <van-field v-model="form.num"
+          <!-- <van-field v-model="form.num"
                      name="企业号"
                      label="企业号"
                      placeholder=""
-                     readonly />
+                     readonly /> -->
           <van-field :value="form.name||form.companyName"
                      name="企业名称"
                      label="企业名称"

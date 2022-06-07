@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 13:25:21
+ * @LastEditTime: 2022-06-07 16:13:32
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -40,7 +40,7 @@
                     v-for="(item,index) in tableData"
                     :key="index" @click="handleView(item)">
                   <td>{{item.index}}</td>
-                  <td style="color:#cb9400;">{{item.title}}</td>
+                  <td style="color:#cb9400;">{{item.jobName}}</td>
                   <td>{{item.theDataFinishedNum||0}}</td>
                   <td>{{item.finishedNum||0}}/{{item.count||0}}</td>
                   <td>

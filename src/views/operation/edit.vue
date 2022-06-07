@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 13:40:09
+ * @LastEditTime: 2022-06-07 16:17:00
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -209,19 +209,24 @@ export default {
           return Toast(res.msg)
         }
         let staffList = res.model.data || []
-        let theStaff = staffList.find(item => {
-          return item.employeeId === Number(this.$route.query.employeeId)
-        })
-        this.staffList = [theStaff]
+        // let theStaff = staffList.find(item => {
+        //   return item.employeeId === Number(this.$route.query.employeeId)
+        // })
+        // this.staffList = [theStaff]
+        this.staffList = staffList
         this.activeStaff = {}
-        if (res.model.data.length) {
-          this.activeStaff = this.staffList.find(item => {
-            return item.employeeId === Number(this.$route.query.employeeId)
-          }) || res.model.data[0]
+        // if (res.model.data.length) {
+        //   this.activeStaff = this.staffList.find(item => {
+        //     return item.employeeId === Number(this.$route.query.employeeId)
+        //   }) || res.model.data[0]
 
 
-          this.echoData()
+        //   this.echoData()
+        // }
+        if(staffList.length) {
+          this.activeStaff = staffList[0]
         }
+        this.echoData()
       } catch (error) {
         console.log(error)
       }
