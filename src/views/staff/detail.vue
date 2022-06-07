@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 11:07:19
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 13:19:17
+ * @LastEditTime: 2022-06-07 16:37:53
  * @FilePath: \little-bee-mobile\src\views\staff\detail.vue
  * @Description: 员工详情
 -->
@@ -12,17 +12,18 @@
       <van-form @submit="handleGoAdd">
         <van-cell-group inset>
           <van-field v-model="form.name"
-                     :disabled="true"
+                     readonly
                      name="姓名"
                      label="姓名"
                      placeholder=""
                      :rules="[{ required: true, message: '请填写姓名' }]" />
           <van-field name="性别"
                      label="性别"
-                     :disabled="true"
+                     readonly
                      :rules="[{ required: true, message: '请选择性别' }]">
             <template #input>
-              <van-radio-group :disabled="true"
+              <van-radio-group readonly
+                               disabled
                                v-model="form.sex"
                                direction="horizontal">
                 <van-radio :name="1">男</van-radio>
@@ -30,26 +31,45 @@
               </van-radio-group>
             </template>
           </van-field>
-          <van-field v-model="form.phone"
-                     :disabled="true"
+          <van-field v-if="!hidePhone"
+                     :value="form.phone"
+                     readonly
                      name="手机号"
                      label="手机号"
                      placeholder=""
                      type="number"
-                     :rules="[{ required: true, message: '请填写手机号' },{pattern:/^[1]{1}[0-9]{10}$/,message: '手机号规则为11位数字'}]" />
+                     :rules="[{ required: true, message: '请填写手机号' }]">
+            <template #button>
+              <van-icon name="eye-o"
+                        @click="hidePhone=true" />
+            </template>
+          </van-field>
+          <van-field v-else
+                     :value="form.phone.substring(0,3)+'****'+form.phone.substring(7,11)"
+                     readonly
+                     name="手机号"
+                     label="手机号"
+                     placeholder=""
+                     type="number"
+                     :rules="[{ required: true, message: '请填写手机号' }]">
+            <template #button>
+              <van-icon name="closed-eye"
+                        @click="hidePhone=false" />
+            </template>
+          </van-field>
           <van-field v-model="form.cnTime"
-                     :disabled="true"
                      readonly
                      name="calendar"
                      label="入职时间"
                      placeholder="点击选择时间"
                      :rules="[{ required: true, message: '请选择入职时间' }]" />
           <van-field name="工资方式"
-                     :disabled="true"
+                     readonly
                      label="工资方式"
                      :rules="[{ required: true, message: '请填写选择工资方式' }]">
             <template #input>
-              <van-radio-group :disabled="true"
+              <van-radio-group readonly
+                               disabled
                                v-model="form.salaryType"
                                direction="horizontal">
                 <van-radio name="BASIC_SALARY">计件工资</van-radio>
@@ -59,17 +79,18 @@
             </template>
           </van-field>
           <van-field v-model="form.salaryAmount"
-                     :disabled="true"
+                     readonly
                      name="工资数额"
                      label="工资数额"
                      placeholder=""
                      type="number"
                      :rules="[{ required: true, message: '请填写工资数额' }]" />
           <van-field name="状态"
-                     :disabled="true"
+                     readonly
                      label="状态">
             <template #input>
-              <van-radio-group :disabled="true"
+              <van-radio-group readonly
+                               disabled
                                v-model="form.disabledStatus"
                                direction="horizontal">
                 <van-radio :name="false">在职</van-radio>
@@ -78,7 +99,7 @@
             </template>
           </van-field>
           <van-field v-model="form.remark"
-                     :disabled="true"
+                     readonly
                      name="备注"
                      label="备注"
                      placeholder="" />
@@ -103,6 +124,7 @@ import {
   CellGroup,
   RadioGroup,
   Radio,
+  Icon
 } from 'vant'
 export default {
   name: 'StaffDetail',
@@ -114,6 +136,7 @@ export default {
     VanCellGroup: CellGroup,
     VanRadioGroup: RadioGroup,
     VanRadio: Radio,
+    VanIcon: Icon
   },
   data() {
     return {
@@ -128,7 +151,8 @@ export default {
         remark: '',
         appId: '',
         openId: ''
-      }
+      },
+      hidePhone: true
     }
   },
   methods: {
@@ -136,7 +160,7 @@ export default {
       this.$router.push({
         path: '/staffEdit',
         query: {
-          id:this.$route.query.id
+          id: this.$route.query.id
         }
       })
     },

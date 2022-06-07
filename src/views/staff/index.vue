@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:11:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 14:37:34
+ * @LastEditTime: 2022-06-07 16:21:48
  * @FilePath: \little-bee-mobile\src\views\staff\index.vue
  * @Description: 员工列表
 -->
@@ -63,12 +63,12 @@
                 <td>
                   <div :class="['phone']" @click="item.hidePhone=!item.hidePhone">
                   <span>{{item.phone.substring(0,3)}}</span>
-                    <span :class="['phone-text',item.hidePhone?'addblur':'']">{{item.phone.substring(3,7)}}</span>
+                    <span :class="['phone-text',item.hidePhone?'addblur':'']">****</span>
                     <span>{{item.phone.substring(7,11)}}</span>
-                    <span class="phone-icon">
+                    <!-- <span class="phone-icon">
                       <van-icon v-if="item.hidePhone" name="closed-eye" />
                       <van-icon v-else name="eye-o" />
-                    </span>
+                    </span> -->
                   </div>
                 </td>
                 <!-- <td>{{$utils.formatTime(item.entryTime)}}</td> -->
@@ -314,7 +314,7 @@ export default {
       margin-left: 5px;
     }
     .addblur {
-      filter: blur(3px);
+      // filter: blur(3px);
     }
   }
 }

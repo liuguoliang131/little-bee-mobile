@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 10:33:32
+ * @LastEditTime: 2022-06-07 17:12:17
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -112,13 +112,13 @@
                         native-type="button"
                         size="small"
                         @click="handleComplete">完成</van-button>
-            <van-button v-show="sureShare&&form.jobStatus==='START'"
+            <!-- <van-button v-show="sureShare&&form.jobStatus==='START'"
                         color="#CB9400"
                         type="info"
                         plain
                         native-type="button"
                         size="small"
-                        @click="handleSuspend">暂停</van-button>
+                        @click="handleSuspend">暂停</van-button> -->
             <van-button color="#CB9400"
                         type="info"
                         native-type="button"
@@ -148,7 +148,8 @@
         </thead>
         <tbody v-if="form.jobDetailProcessResponseList.length">
           <tr v-for="(item,index) in form.jobDetailProcessResponseList"
-              :key="index" @click="handleGoProcessDetail(item)">
+              :key="index"
+              @click="handleGoProcessDetail(item)">
             <td>{{index+1}}</td>
             <td style="color:#cb9400;">{{item.name}}</td>
             <td>{{item.unitPrice.value}}</td>
@@ -249,7 +250,7 @@ import {
   Dialog
 } from 'vant'
 import Bread from '@/components/bread/index'
-import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare, h5_wx_getWxConfig, h5_jobShare_getShareCount } from '@/http/api'
+import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare, h5_wx_getWxConfig, h5_jobShare_getShareCount, h5_process_createBilling, h5_employee_findPage } from '@/http/api'
 import wx from 'weixin-js-sdk'
 export default {
   name: 'Detail',
@@ -264,6 +265,7 @@ export default {
   },
   data() {
     return {
+      activeStaff: {},
       form: {
         title: '',
         sortTitle: '',
@@ -579,7 +581,12 @@ export default {
     },
     // 开始
     async handleStart() {
+      const toast = Toast.loading({
+        message: '加载中',
+        forbidClick: true,
+      })
       const res = await this.changeStatus('START')
+      toast.clear()
       if (res) {
         Toast('开始')
         this.form.jobStatus = 'START'
@@ -595,6 +602,28 @@ export default {
           if (!res.success) {
             resolve(false)
           } else {
+            const employeeJobBillingList = [{
+              jobId: this.form.id,
+              finishedProductNum: 0,
+              employeeBillingList: []
+            }]
+            let params = {
+              billData: this.$utils.getToday(),
+              employeeId: this.activeStaff.employeeId,
+              name: this.form.title,
+              employeeJobBillingList
+            }
+
+            this.$http.post(h5_process_createBilling, params).then(res1 => {
+              if (!res1.success) {
+                resolve(false)
+              } else {
+                resolve(true)
+              }
+
+            }).catch(err1 => {
+              resolve(false)
+            })
             resolve(true)
           }
         }).catch(err => {
@@ -668,7 +697,6 @@ export default {
         url: h5_job_findById,
         params
       })
-      toast.clear()
       if (!res.success) {
         return Toast(res.msg)
       }
@@ -695,11 +723,20 @@ export default {
       //   Toast('可分享数量为0, 不能分享')
       // }
 
+      const res2 = await this.$http.post(h5_employee_findPage, { disabledStatus: false })
+      toast.clear()
+      if (!res2.success) {
+        return Toast(res.msg)
+      }
+      let staffList = res2.model.data || []
+      if (staffList.length > 0) {
+        this.activeStaff = staffList[0]
+      }
     },
     // 去往工序详情
     handleGoProcessDetail(item) {
       this.$router.push({
-        path:'/process',
+        path: '/process',
         query: {
           jobId: this.form.id,
           ...item
