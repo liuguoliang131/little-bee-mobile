@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 16:17:00
+ * @LastEditTime: 2022-06-08 16:44:03
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
@@ -162,9 +162,12 @@ export default {
         activeTaskItem.list.forEach(item => {
           employeeBillingList.push({
             jobId: activeTaskItem.id,
+            jobName:activeTaskItem.title,
             processId: item.id,
+            processName:item.name,
             count: item.countField,
-            finishedProductNum: activeTaskItem.todayCount
+            finishedProductNum: activeTaskItem.todayCount,
+            unitPrice: item.unitPrice.value || 0
           })
         })
         const employeeJobBillingList = [{

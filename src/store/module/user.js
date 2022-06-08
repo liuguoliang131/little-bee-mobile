@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-02 13:39:49
+ * @LastEditTime: 2022-06-08 16:06:06
  * @FilePath: \little-bee-mobile\src\store\module\user.js
  * @Description: 
  */
@@ -53,15 +53,16 @@ const user = {
   },
   actions: {
     // 登录
-    login(context, data) {
-      context.commit('set_userInfo', data)
+    async login(context, data) {
+      await context.commit('set_userInfo', data)
       // 企业登陆or员工登陆
       router.push(data.origin)
-      if (data.type === '1' || !data.type) {
-        router.push(data.origin)
-      } else if(data.type === '2'){
-        router.push('/wechatPushOperation')
-      }
+      // if (data.type === '1' || !data.type) {
+      //   router.push(data.origin)
+      // } else if(data.type === '2'){
+      //   let query = `employeeId=${data.employeeId}&statisticsData=${utils.getToday()}`
+      //   router.push(`/wechatPushOperation?${query}`)
+      // }
 
     }
   }

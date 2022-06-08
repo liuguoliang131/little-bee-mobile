@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 15:23:07
+ * @LastEditTime: 2022-06-08 16:15:46
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -98,22 +98,22 @@ router.onReady(() => {
 
   }
   // 判断是企业还是员工  sign 1企业 2员工
-  let sign = '1' //默认企业类型  1企业登录 2员工登录
   if (window.location.href.includes('#/')) {
     let endValue = `${window.location.href.split('#/').length > 1 ? window.location.href.split('#/')[1] : ''}`
     if (endValue.includes('?')) {
       let query = endValue.split('?')[1]
       if (query.includes('sign=')) {
         let arr = query.split('&')
+        let sign = '1' //默认企业类型  1企业登录 2员工登录
         arr.forEach(item => {
           if (item.includes('sign=')) {
             sign = item.substr(5) || '1'
           }
         })
+        window.localStorage.setItem('littleBeeSign', sign)
       }
     }
   }
-  window.localStorage.setItem('littleBeeSign', sign)
 
   const status = store.state.user.userInfo // 判断用户已登录且已有权限
   if (status) {
@@ -138,12 +138,9 @@ router.onReady(() => {
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('from', from)
+  console.log('from', from,'to',to)
   NProgress.start()
-  if (Object.is(to.path, '/login')) {
-    next()
-    return
-  }
+  
   if (to.meta.white) {
     console.log('tp.path', to.path)
     next()
@@ -153,7 +150,9 @@ router.beforeEach((to, from, next) => {
       // if(userInfo.type==='1') {
       //   return next()
       // }else {
-      //   return next('/wechatPushOperation')
+      //   let littleBeeLink = window.localStorage.getItem('littleBeeLink')||''
+      //   let query = littleBeeLink.split('?').length>0 ? littleBeeLink.split('?')[0]:''
+      //   return next(`/wechatPushOperation?${query}`)
       // }
       return next()
     } else {

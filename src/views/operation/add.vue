@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 13:41:48
+ * @LastEditTime: 2022-06-08 16:38:12
  * @FilePath: \little-bee-mobile\src\views\operation\add.vue
  * @Description: 添加工序对账
 -->
@@ -162,9 +162,12 @@ export default {
         activeTaskItem.list.forEach(item => {
           employeeBillingList.push({
             jobId: activeTaskItem.id,
+            jobName:activeTaskItem.title,
             processId: item.id,
+            processName:item.name,
             count: item.countField,
-            finishedProductNum: activeTaskItem.todayCount
+            finishedProductNum: activeTaskItem.todayCount,
+            unitPrice: item.unitPrice.value || 0
           })
         })
         const employeeJobBillingList = [{
@@ -259,22 +262,22 @@ export default {
         if (!res1.data.success) {
           return Toast(res1.data.msg)
         }
-        const todayOperationList = res1.data.model.data || [] 
+        const todayOperationList = res1.data.model.data || []
         const i = {
           count: tabs.length
         }
-        tabs.forEach(item=>{
+        tabs.forEach(item => {
           item.todayCount = 0 //今日完成成品数 输入框绑定的值
           item.list = []
           this.getTaskDetail(item, i, toast)
-          todayOperationList.forEach(item1=>{
-            if(item.id===item1.jobId) {
+          todayOperationList.forEach(item1 => {
+            if (item.id === item1.jobId) {
               item.shareCount = item1.finishedNum
               item.count = item1.count
             }
           })
         })
-        
+
         // tabs.forEach((item, index) => {
         //   item.todayCount = 0 //今日完成成品数 输入框绑定的值
         //   item.list = []
@@ -282,8 +285,8 @@ export default {
         // })
         this.tabs = tabs
         // 根据路由传值显示任务
-        if(this.$route.query.jobId) {
-          this.active = this.tabs.findIndex(item=>{
+        if (this.$route.query.jobId) {
+          this.active = this.tabs.findIndex(item => {
             return Number(this.$route.query.jobId) === item.id
           })
         }
@@ -385,7 +388,7 @@ export default {
     }
   },
   created() {
-    if(this.$route.query.billData) {
+    if (this.$route.query.billData) {
       this.searchParams.date = this.$route.query.billData
     }
     // this.getOperationList()
@@ -452,7 +455,7 @@ export default {
         padding-left: 15px;
       }
       .scroll-list {
-        height: calc( 100% - 36px );
+        height: calc(100% - 36px);
         overflow-y: scroll;
         overflow-x: visible;
         font-size: 14px;

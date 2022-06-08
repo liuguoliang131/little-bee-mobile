@@ -1,13 +1,17 @@
 <!--
  * @Date: 2022-05-26 15:42:26
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-08 17:40:02
- * @FilePath: \little-bee-mobile\src\views\wechatPush\operation.vue
+ * @LastEditTime: 2022-06-08 17:55:46
+ * @FilePath: \little-bee-mobile\src\views\wechatPush\operationAll.vue
  * @Description: 点击微信公众号员工登录后的页面
 -->
 <template>
   <div class="wechatPushOperation">
     <div class="head">
+      <div class="backbtn">
+        <van-icon name="arrow-left" color="#ffff"
+                  @click="$router.go(-1)" />
+      </div>
       <div class="zhj">总合计</div>
       <div class="number">
         <span>￥</span>
@@ -15,8 +19,8 @@
       </div>
     </div>
     <div class="head1">
-      <span class="month">{{searchParams.statisticsData}}</span>
-      <span class="staff-name">{{name||''}}</span>
+      <date-screen v-model="searchParams.statisticsData"
+                   @change="dateChange"></date-screen>
     </div>
     <div class="views">
       <van-pull-refresh v-model="reloading"
@@ -31,9 +35,10 @@
               <th>序号</th>
               <th>标题</th>
               <th>工序</th>
-              <th>单价</th>
               <th>数量</th>
-              <th>总价</th>
+              <th>单价</th>
+              <th>合价</th>
+              <th>企业名称</th>
             </tr>
           </thead>
           <tbody>
@@ -42,38 +47,36 @@
               <td>{{index+1}}</td>
               <td>{{item.jobName}}</td>
               <td>{{item.processName}}</td>
-              <td>{{item.unitPrice}}</td>
               <td>{{item.count}}</td>
+              <td>{{item.unitPrice}}</td>
               <td>{{(item.unitPrice*item.count)||'0'}}</td>
+              <td>{{$store.state.user.userInfo.name||$store.state.user.userInfo.companyName}}</td>
             </tr>
           </tbody>
         </table>
         <!-- </van-list> -->
       </van-pull-refresh>
     </div>
-    <div class="r-btn"
-         @click="handleGoAll">
-      <div>创建</div>
-      <div>任务</div>
+    <div class="back">
+      <van-button>123</van-button>
     </div>
   </div>
 </template>
 
 <script>
-import Bread from '@/components/bread/index'
+import DateScreen from '@/components/dateScreen/index'
 import axios from 'axios'
-import { host, h5_performanceStatistics_mechanicStatistics, h5_performanceStatistics_sum, h5_login_wxLogin, h5_employee_findById } from '@/http/api'
+import { host, h5_performanceStatistics_mechanicStatistics } from '@/http/api'
 import {
-  Toast,
+  Button,
   Icon,
+  Toast,
   PullRefresh,
-  List,
 } from 'vant'
 export default {
   name: 'WechatPushOperation',
   data() {
     return {
-      name: '',
       data: {
         name: "",
         finishedProductCount: null,
@@ -97,8 +100,10 @@ export default {
     }
   },
   components: {
-    // VanIcon: Icon,
-    VanPullRefresh: PullRefresh
+    DateScreen,
+    VanPullRefresh: PullRefresh,
+    VanButton: Button,
+    VanIcon: Icon
   },
   methods: {
     async refreshGetList() {
@@ -145,46 +150,13 @@ export default {
         throw error
       }
     },
-
-    async openIdLogin() {
-      const res = await axios({
-        method: 'get',
-        url: host + h5_login_wxLogin,
-        params: {
-          appId: this.$utils.getOpenId(),
-          type: '2'
-        }
-      })
-      console.log('wxlogin', res)
-      if (!res.data.success) {
-        Toast(res.data.msg)
-        return this.$router.push('/login')
-      }
-      let origin = this.$route.path
-      let keys = Object.keys(this.$route.query)
-      keys.forEach((key, idx) => {
-        if (idx !== 0) {
-          origin += '&'
-        } else {
-          origin += '?'
-        }
-        origin = origin + key + '=' + this.$route.query[key]
-      })
-      this.$store.commit('user/set_userInfo', { ...res.data.model, origin: origin || '/', type: '2' })
-      this.searchParams.employeeId = res.data.model.employeeId
-      this.name = res.data.model.name
+    dateChange() {
       this.refreshGetList()
-    },
-    handleGoAll() {
-      this.$router.push({
-        path: '/wechatPushOperationAll',
-        query: this.$route.query
-      })
     }
 
   },
   created() {
-    this.openIdLogin()
+    this.refreshGetList()
   }
 }
 </script>
@@ -194,6 +166,19 @@ export default {
   .head {
     background: #deb441;
     height: 100px;
+    position: relative;
+    .backbtn {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 36px;
+      height: 36px;
+      text-align: center;
+      line-height: 36px;
+      &:active {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
     .zhj {
       padding-top: 22px;
       text-align: center;
@@ -231,27 +216,6 @@ export default {
     height: calc(100vh - 149px);
     .van-pull-refresh {
       height: 100%;
-    }
-  }
-  .r-btn {
-    position: fixed;
-    right: 15px;
-    bottom: 120px;
-    width: 50px;
-    height: 50px;
-    background: #cb9400;
-    opacity: 0.94;
-    border-radius: 17.5px;
-    color: white;
-    font-size: 12px;
-    font-family: PingFang SC;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    div {
-      text-align: center;
     }
   }
 }
