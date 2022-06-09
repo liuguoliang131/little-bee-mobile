@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 15:23:46
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 16:13:32
+ * @LastEditTime: 2022-06-09 11:09:34
  * @FilePath: \little-bee-mobile\src\views\operation\index.vue
  * @Description: 工序记账
 -->
@@ -15,8 +15,8 @@
       <div class="search">
         <date-screen v-model="searchParams.billData"
                      @change="dateChange"></date-screen>
-        <van-icon name="plus"
-                color="#cb9400" @click="handleAddBill" />
+        <!-- <van-icon name="plus"
+                color="#cb9400" @click="handleAddBill" /> -->
       </div>
       <div class="list">
         <van-pull-refresh v-model="reloading"
@@ -132,7 +132,8 @@ export default {
         query: {
           employeeId: item.employeeId,
           billData: item.billData,
-          jobId:item.jobId
+          jobId:item.jobId,
+          jobName:item.jobName
         }
       })
     },
@@ -143,7 +144,8 @@ export default {
         query: {
           employeeId: item.employeeId,
           billData: item.billData,
-          jobId:item.jobId
+          jobId:item.jobId,
+          jobName:item.jobName
         }
       })
     },

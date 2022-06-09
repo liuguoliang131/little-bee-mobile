@@ -1,16 +1,18 @@
 <!--
  * @Date: 2022-04-29 13:51:09
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-08 16:44:03
+ * @LastEditTime: 2022-06-09 14:52:54
  * @FilePath: \little-bee-mobile\src\views\operation\edit.vue
  * @Description: 添加修改工序对账
 -->
 <template>
   <div class="operationEdit">
-    <bread></bread>
     <div class="search">
-      <span class="date">{{searchParams.date}}</span>
-      <!-- <div class="input">
+      <span class="date">
+        <date-screen v-model="searchParams.date"
+                     @change="dateChange"></date-screen>
+      </span>
+      <div class="input">
         <img src="../../assets/search.png"
              alt="">
         <input v-model="searchParams.keywords"
@@ -19,12 +21,12 @@
                name=""
                placeholder="请输入姓名"
                id="">
-      </div> -->
-      <van-button color="#CB9400"
-                  type="info"
-                  size="small"
-                  :disabled="JSON.stringify(activeStaff)==='{}'"
-                  @click="handleSubmit">保存</van-button>
+        <van-button color="#CB9400"
+                    type="info"
+                    size="small"
+                    @click="handleSearch">搜索</van-button>
+      </div>
+
     </div>
     <div class="views">
       <div class="views-left">
@@ -42,48 +44,56 @@
         </div>
       </div>
       <div class="views-right"
-           v-if="tabs.length">
-        <van-tabs v-model="active"
+           v-if="activeTask">
+        <!-- <van-tabs v-model="active"
                   color="#CB9400">
           <van-tab v-for="tabItem in tabs"
                    :title="tabItem.sortTitle"
-                   :key="tabItem.id">
-            <div class="tab-pane">
-              <div class="sum-count">
-                今日成品数量:&nbsp;
-                <input placeholder="今日完成成品数量"
-                       type="number"
-                       v-model="tabItem.todayCount"
-                       oninput="value=parseInt(Math.abs(value))">
-                &nbsp;{{tabItem.shareCount||'0'}}/{{tabItem.count||'0'}}
-              </div>
-              <div class="scroll-table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>序号</th>
-                      <th>名称</th>
-                      <th>已完成</th>
-                      <th>数量</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item,index) in tabItem.list"
-                        :key="item.id">
-                      <td>{{index+1}}</td>
-                      <td>{{item.name}}</td>
-                      <td>{{item.finishCount||0}}/{{item.count||0}}</td>
-                      <td><input type="number"
-                               oninput="value=parseInt(Math.abs(value))"
-                               v-model="item.countField" /></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <footer></footer>
-              </div>
+                   :key="tabItem.id"> -->
+        <div class="tab-pane">
+          <div class="scroll-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>名称</th>
+                  <th>已完成</th>
+                  <th>数量</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item,index) in activeTask.list"
+                    :key="item.id">
+                  <td>{{index+1}}</td>
+                  <td>{{item.name}}</td>
+                  <td>{{item.finishCount||0}}/{{item.count||0}}</td>
+                  <td><input type="number"
+                           oninput="value=parseInt(Math.abs(value))"
+                           v-model="item.countField" /></td>
+                </tr>
+              </tbody>
+            </table>
+            <footer></footer>
+          </div>
+        </div>
+        <!-- </van-tab>
+        </van-tabs> -->
+        <div class="sum-count">
+          <div class="chengpin">
+            <div class="ipt-box">
+              <input placeholder=""
+                   type="number"
+                   v-model="activeTask.todayCount"
+                   oninput="value=parseInt(Math.abs(value))">
             </div>
-          </van-tab>
-        </van-tabs>
+            &nbsp;{{activeTask.shareCount||'0'}}/{{activeTask.count||'0'}}
+          </div>
+          <div class="btns">
+            <button @click="$router.go(-1)">取消</button>
+            <button :disabled="JSON.stringify(activeStaff)==='{}'"
+                    @click="handleSubmit">保存</button>
+          </div>
+        </div>
       </div>
       <div class="views-right"
            v-else>
@@ -100,16 +110,16 @@ import {
   Tab,
   Toast
 } from 'vant'
-import Bread from '@/components/bread/index.vue'
+import DateScreen from '@/components/dateScreen/index'
 import axios from 'axios'
 import { host, h5_process_createBilling, h5_employee_findPage, h5_job_findPage, h5_job_findById, h5_process_billingDetails, h5_process_findPage } from '@/http/api'
 export default {
   name: 'OperationEdit',
   components: {
     VanButton: Button,
-    VanTabs: Tabs,
-    VanTab: Tab,
-    Bread
+    // VanTabs: Tabs,
+    // VanTab: Tab,
+    DateScreen
   },
   data() {
     return {
@@ -118,13 +128,17 @@ export default {
         keywords: '',
         keywordFields: 'name'
       },
-      active: null,
+      activeTask: null,
       staffList: [],
       tabs: [],
       activeStaff: {}
     }
   },
   methods: {
+    // 时间筛选
+    dateChange() {
+      this.getTaskList()
+    },
     handleActiveStaff(item) {
       this.activeStaff = item
       this.echoData()
@@ -134,10 +148,10 @@ export default {
         if (JSON.stringify(this.activeStaff) === '{}') {
           return Toast('请选择员工')
         }
-        if (!this.active && this.active !== 0) {
+        if (!this.activeTask) {
           return Toast('请选择任务,无任务不可提交保存')
         }
-        const activeTaskItem = this.tabs[this.active]
+        const activeTaskItem = this.activeTask
         if (!activeTaskItem.list.length) {
           return Toast('该任务下没有工序,不可提交保存')
         }
@@ -162,9 +176,9 @@ export default {
         activeTaskItem.list.forEach(item => {
           employeeBillingList.push({
             jobId: activeTaskItem.id,
-            jobName:activeTaskItem.title,
+            jobName: activeTaskItem.title,
             processId: item.id,
-            processName:item.name,
+            processName: item.name,
             count: item.countField,
             finishedProductNum: activeTaskItem.todayCount,
             unitPrice: item.unitPrice.value || 0
@@ -226,7 +240,7 @@ export default {
 
         //   this.echoData()
         // }
-        if(staffList.length) {
+        if (staffList.length) {
           this.activeStaff = staffList[0]
         }
         this.echoData()
@@ -257,7 +271,6 @@ export default {
         const theTask = tabs.find(item => {
           return Number(this.$route.query.jobId) === item.id
         })
-        tabs = [theTask]
         // 获取所有今天的工序  把已完成和总数量回显到当前所有任务列表上
         const res1 = await axios({
           method: 'post',
@@ -273,27 +286,21 @@ export default {
           return Toast(res1.data.msg)
         }
         const todayOperationList = res1.data.model.data || []
-        const i = {
-          count: tabs.length
-        }
-        tabs.forEach(item => {
-          item.todayCount = 0 //今日完成成品数 输入框绑定的值
-          item.list = []
-          this.getTaskDetail(item, i, toast)
-          todayOperationList.forEach(item1 => {
-            if (item.id === item1.jobId) {
-              item.shareCount = item1.finishedNum
-              item.count = item1.count
-            }
-          })
+        theTask.todayCount = 0
+        theTask.list = []
+        this.getTaskDetail(theTask, toast)
+        todayOperationList.forEach(item1 => {
+          if (theTask.id === item1.jobId) {
+            theTask.shareCount = item1.finishedNum
+            theTask.count = item1.count
+          }
         })
-
+        this.activeTask = theTask
         // tabs.forEach((item, index) => {
         //   item.todayCount = 0 //今日完成成品数 输入框绑定的值
         //   item.list = []
         //   this.getTaskDetail(item, i, toast)
         // })
-        this.tabs = tabs
         // 根据路由传值显示任务
         // if(this.$route.query.jobId) {
         //   this.active = this.tabs.findIndex(item=>{
@@ -306,7 +313,7 @@ export default {
       }
     },
     // 获取任务详情
-    async getTaskDetail(item, i, toast) {
+    async getTaskDetail(item, toast) {
       const params = {
         id: item.id
       }
@@ -323,11 +330,8 @@ export default {
         item.countField = 0
       })
       item.list = list
-      i.count--
-      if (i.count === 0) {
-        toast.clear()
-        this.getStaffList()
-      }
+      toast.clear()
+      this.getStaffList()
     },
     // 选择员工时调用 回显
     async echoData() {
@@ -338,7 +342,7 @@ export default {
       }
       const res = await this.$http.post(h5_process_billingDetails, params)
       console.log('billingJobs', res.model.billingJobs)
-      const activeTask = this.tabs[this.active]
+      const activeTask = this.activeTask
       const activeItem = res.model.billingJobs.find(item => {
         return item.id === activeTask.id
       }) //筛选出当前选中任务
@@ -398,6 +402,7 @@ export default {
     }
   },
   created() {
+    document.title = this.$route.query.jobName + '记账'
     if (this.$route.query.billData) {
       this.searchParams.date = this.$route.query.billData
     }
@@ -411,32 +416,38 @@ export default {
 .operationEdit {
   background-color: #ffff;
   .search {
-    padding: 10px 15px;
+    padding: 15px 15px 10px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #fff;
     .date {
-      width: 100px;
+      flex: 1;
       font-size: 12px;
+      .date-screen {
+        width: 130px;
+      }
     }
     .input {
-      flex: 1;
+      width: 205px;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
       img {
         position: absolute;
-        top: 7px;
-        left: 121px;
+        top: 9px;
+        left: 10px;
         width: 13px;
         height: 13px;
       }
       input {
-        width: 145px;
-        height: 30px;
+        width: 150px;
+        height: 32px;
         border: 1px solid #bbbbbb;
         border-radius: 3px;
         margin-right: 10px;
-        padding: 0 10px;
+        padding: 0 10px 0 29px;
         font-size: 14px;
         font-family: PingFang SC;
         font-weight: 500;
@@ -445,7 +456,7 @@ export default {
     }
   }
   .views {
-    height: calc(100vh - 88px);
+    height: calc(100vh - 62px);
     background-color: #ffff;
     padding: 10px 15px 0 15px;
     display: flex;
@@ -465,7 +476,7 @@ export default {
         padding-left: 15px;
       }
       .scroll-list {
-        height: calc( 100% - 36px );
+        height: calc(100% - 36px);
         overflow-y: scroll;
         overflow-x: visible;
         font-size: 14px;
@@ -498,25 +509,29 @@ export default {
     .views-right {
       flex: 1;
       background: #ffffff;
-      height: calc(100vh - 97px);
+      height: calc(100%);
       // padding: 15px 0;
       overflow-y: scroll;
       overflow-x: hidden;
-      /deep/.van-tabs__content {
-        height: calc(100vh - 188px);
-        overflow-y: scroll;
-        overflow-x: hidden;
-        .tab-pane {
-          .sum-count {
-            padding: 15px 0;
-            font-size: 12px;
-            font-family: PingFang SC;
-            font-weight: 500;
-            color: #333333;
-            display: flex;
-            align-items: center;
+      position: relative;
+      .sum-count {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        .chengpin {
+          padding: 15px 0;
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 500;
+          color: #333333;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .ipt-box {
+            width: 150px;
             input {
-              width: 70px;
+              width: 150px;
               height: 30px;
               border: 1px solid #bbbbbb;
               border-radius: 3px;
@@ -526,42 +541,75 @@ export default {
               font-family: PingFang SC;
               font-weight: 500;
               color: #333333;
+              background-color: transparent;
             }
           }
-          .scroll-table {
-            height: calc(100vh - 258px);
-            overflow-y: scroll;
-            overflow-x: hidden;
-            table {
-              margin: 0;
-              width: 100%;
-              input {
-                width: 35px;
-                height: 20px;
-                text-align: center;
-                border: 1px solid #bbbbbb;
-                border-radius: 3px;
-                font-size: 14px;
-                font-family: PingFang SC;
-                font-weight: 500;
-                color: #333333;
-              }
-            }
-            footer {
-              height: 100px;
+        }
+        .btns {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          button {
+            color: #ffff;
+            background-color: #cb9400;
+            border-radius: 5px;
+            border: 1px solid #cb9400;
+            font-size: 15px;
+            font-family: PingFang SC;
+            font-weight: 500;
+            width: 115px;
+            height: 40px;
+            &:active {
+              background-color: rgb(189, 141, 11);
             }
           }
-
-          .fixed-button {
+          button:nth-child(1) {
+            margin-right: 12px;
+            color: #cb9400;
+            background-color: #ffff;
+            &:active {
+              background-color: rgba(0, 0, 0, 0.05);
+            }
+          }
+        }
+      }
+      .tab-pane {
+        height: calc(100% - 110px);
+        overflow-y: hidden;
+        overflow-x: hidden;
+        .scroll-table {
+          height: 100%;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          table {
+            margin: 0;
             width: 100%;
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            bottom: 0;
-            left: 0;
-            .van-button {
-              width: 150px;
+            input {
+              width: 35px;
+              height: 20px;
+              text-align: center;
+              border: 1px solid #bbbbbb;
+              border-radius: 3px;
+              font-size: 14px;
+              font-family: PingFang SC;
+              font-weight: 500;
+              color: #333333;
             }
+          }
+          footer {
+            height: 200px;
+          }
+        }
+
+        .fixed-button {
+          width: 100%;
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          bottom: 0;
+          left: 0;
+          .van-button {
+            width: 150px;
           }
         }
       }
