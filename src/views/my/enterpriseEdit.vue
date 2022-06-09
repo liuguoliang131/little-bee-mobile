@@ -1,13 +1,13 @@
 <!--
  * @Date: 2022-04-22 15:50:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-25 17:24:47
+ * @LastEditTime: 2022-06-09 16:14:29
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseEdit.vue
  * @Description: 注册
 -->
 <template>
   <div class="register">
-    <bread></bread>
+    <!-- <bread></bread> -->
     <van-form @submit="onSubmit">
       <van-field v-model="form.companyPhone"
                  center
@@ -61,10 +61,9 @@
                       :after-read="businessPhotosAfterRead" />
       </div>
       <div class="sub-btn">
-        <van-button color="#CB9400"
-                    block
-                    type="info"
-                    native-type="submit">提交</van-button>
+        <button type="button"
+                @click="$router.go(-1)">取消</button>
+        <button type="submit">保存</button>
       </div>
       <footer></footer>
     </van-form>
@@ -126,7 +125,7 @@ export default {
         province: '',//省
         remark: '',//备注
         website: '',//官网
-        appId: this.$store.state.user.openId
+        appId: this.$store.state.user.userInfo.openId || this.$store.state.user.userInfo.appId || ''
       },
       showArea: false,
       areaList: areaList,
@@ -148,7 +147,7 @@ export default {
             ...this.form,
             businessPhotos,
             logoPath,
-            appId: this.$store.state.user.openId
+            appId: this.form.appId
           }
         })
         console.log(res)
@@ -252,8 +251,9 @@ export default {
         province: res.model.province,//省
         remark: res.model.remark,//备注
         website: res.model.website,//官网
-        appId: this.$store.state.user.openId
+        appId: this.$store.state.user.userInfo.openId || this.$store.state.user.userInfo.appId
       }
+      console.log('form',this.form)
       this.businessPhotos = []
       this.logoPath = []
       res.model.businessPhotos && res.model.businessPhotos.split(',').forEach(item => {
@@ -279,29 +279,36 @@ export default {
   width: 100%;
   height: 100vh;
   background-color: #fff;
-  // padding-top: 60px;
-  header {
-    text-align: center;
-    height: 60px;
-    line-height: 60px;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    background-color: #fff;
-  }
+  padding-top: 25px;
   .sub-btn {
     position: fixed;
+    bottom: 40px;
     left: 0;
-    bottom: 20px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100px;
-    .van-button {
-      width: 200px;
+    button {
+      color: #ffff;
+      background-color: #cb9400;
+      border-radius: 5px;
+      border: 1px solid #cb9400;
+      font-size: 15px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      width: 115px;
+      height: 40px;
+      &:active {
+        background-color: rgb(189, 141, 11);
+      }
+    }
+    button:nth-child(1) {
+      margin-right: 12px;
+      color: #cb9400;
+      background-color: #ffff;
+      &:active {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
     }
   }
   .file {

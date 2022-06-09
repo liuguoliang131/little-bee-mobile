@@ -1,86 +1,92 @@
 <!--
  * @Date: 2022-05-06 18:30:36
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 13:19:21
+ * @LastEditTime: 2022-06-09 16:26:55
  * @FilePath: \little-bee-mobile\src\views\staff\edit.vue
  * @Description: 编辑员工
 -->
 <template>
   <div class="staffAdd">
-    <bread></bread>
+    <!-- <bread></bread> -->
     <div class="views">
       <van-form @submit="onSubmit">
-        <van-cell-group inset>
-          <van-field v-model="form.name"
-                     name="姓名"
-                     label="姓名"
-                     placeholder=""
-                     :rules="[{ required: true, message: '请填写姓名' }]" />
-          <van-field name="性别"
-                     label="性别"
-                     :rules="[{ required: true, message: '请选择性别' }]">
-            <template #input>
-              <van-radio-group v-model="form.sex"
-                               direction="horizontal">
-                <van-radio :name="1">男</van-radio>
-                <van-radio :name="2">女</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-          <van-field v-model="form.phone"
-                     name="手机号"
-                     label="手机号"
-                     placeholder=""
-                     type="number"
-                     :rules="[{ required: true, message: '请填写手机号' },{pattern:/^[1]{1}[0-9]{10}$/,message: '手机号规则为11位数字'}]" />
-          <van-field v-model="form.cnTime"
-                     is-link
-                     readonly
-                     name="calendar"
-                     label="入职时间"
-                     placeholder="点击选择时间"
-                     @click="showCalendar = true"
-                     :rules="[{ required: true, message: '请选择入职时间' }]" />
-          <van-calendar :min-date="minDate()"
-                        :max-date="maxDate()"
-                        v-model="showCalendar"
-                        @confirm="handleTimeConfirm" />
-          <van-field name="工资方式"
-                     label="工资方式"
-                     :rules="[{ required: true, message: '请填写选择工资方式' }]">
-            <template #input>
-              <van-radio-group v-model="form.salaryType"
-                               direction="horizontal" :disabled="!isMember">
-                <van-radio name="BASIC_SALARY">计件工资</van-radio>
-                <van-radio name="GUARANTEED_SALARY">保底工资</van-radio>
-                <van-radio name="FIXED_SALARY">固定工资</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-          <van-field v-model="form.salaryAmount"
-                     name="工资数额"
-                     label="工资数额"
-                     placeholder=""
-                     type="number"
-                     :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[1-9]\d*.\d*|0.\d*[1-9]\d*$/,message: '数额必须大于0'}]" />
-          <van-field name="状态"
-                     label="状态">
-            <template #input>
-              <van-radio-group v-model="form.disabledStatus"
-                               direction="horizontal">
-                <van-radio :name="false">在职</van-radio>
-                <van-radio :name="true">离职</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-          <van-field v-model="form.remark"
-                     name="备注"
-                     label="备注"
-                     placeholder="" />
-        </van-cell-group>
-        <div class="fixed-button">
+        <!-- <van-cell-group inset> -->
+        <van-field v-model="form.name"
+                   name="姓名"
+                   label="姓名"
+                   placeholder=""
+                   :rules="[{ required: true, message: '请填写姓名' }]" />
+        <van-field name="性别"
+                   label="性别"
+                   :rules="[{ required: true, message: '请选择性别' }]">
+          <template #input>
+            <van-radio-group v-model="form.sex"
+                             direction="horizontal">
+              <van-radio :name="1">男</van-radio>
+              <van-radio :name="2">女</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+        <van-field v-model="form.phone"
+                   name="手机号"
+                   label="手机号"
+                   placeholder=""
+                   type="number"
+                   :rules="[{ required: true, message: '请填写手机号' },{pattern:/^[1]{1}[0-9]{10}$/,message: '手机号规则为11位数字'}]" />
+        <van-field v-model="form.cnTime"
+                   is-link
+                   readonly
+                   name="calendar"
+                   label="入职时间"
+                   placeholder=""
+                   @click="showCalendar = true"
+                   :rules="[{ required: true, message: '请选择入职时间' }]" />
+        <van-calendar :min-date="minDate()"
+                      :max-date="maxDate()"
+                      v-model="showCalendar"
+                      @confirm="handleTimeConfirm" />
+        <van-field name="工资方式"
+                   label="工资方式"
+                   :rules="[{ required: true, message: '请填写选择工资方式' }]">
+          <template #input>
+            <van-radio-group v-model="form.salaryType"
+                             direction="horizontal"
+                             :disabled="!isMember">
+              <van-radio name="BASIC_SALARY">计件工资</van-radio>
+              <van-radio name="GUARANTEED_SALARY">保底工资</van-radio>
+              <van-radio name="FIXED_SALARY">固定工资</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+        <van-field v-model="form.salaryAmount"
+                   name="工资数额"
+                   label="工资数额"
+                   placeholder=""
+                   type="number"
+                   :rules="[{ required: true, message: '请填写工资数额' },{pattern:/^[1-9]\d*.\d*|0.\d*[1-9]\d*$/,message: '数额必须大于0'}]" />
+        <van-field name="状态"
+                   label="状态">
+          <template #input>
+            <van-radio-group v-model="form.disabledStatus"
+                             direction="horizontal">
+              <van-radio :name="false">在职</van-radio>
+              <van-radio :name="true">离职</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
+        <van-field v-model="form.remark"
+                   name="备注"
+                   label="备注"
+                   placeholder="" />
+        <!-- </van-cell-group> -->
+        <!-- <div class="fixed-button">
           <van-button color="#CB9400"
                       type="info">保存</van-button>
+        </div> -->
+        <div class="sub-btn">
+          <button type="button"
+                  @click="$router.go(-1)">取消</button>
+          <button type="submit">保存</button>
         </div>
       </van-form>
       <footer></footer>
@@ -115,7 +121,7 @@ export default {
   },
   data() {
     return {
-      isMember:false,
+      isMember: false,
       form: {
         disabledStatus: false,
         entryTime: '',
@@ -203,6 +209,10 @@ export default {
 
 <style scoped lang="less">
 .staffAdd {
+  .views {
+    height: 100vh;
+    padding-top: 25px;
+  }
   .fixed-button {
     width: 100%;
     position: absolute;
@@ -216,6 +226,37 @@ export default {
   }
   footer {
     height: 100px;
+  }
+  .sub-btn {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      color: #ffff;
+      background-color: #cb9400;
+      border-radius: 5px;
+      border: 1px solid #cb9400;
+      font-size: 15px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      width: 115px;
+      height: 40px;
+      &:active {
+        background-color: rgb(189, 141, 11);
+      }
+    }
+    button:nth-child(1) {
+      margin-right: 12px;
+      color: #cb9400;
+      background-color: #ffff;
+      &:active {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
   }
 }
 </style>

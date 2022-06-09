@@ -1,16 +1,16 @@
 <!--
  * @Date: 2022-05-05 11:07:19
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 16:37:53
+ * @LastEditTime: 2022-06-09 16:27:17
  * @FilePath: \little-bee-mobile\src\views\staff\detail.vue
  * @Description: 员工详情
 -->
 <template>
   <div class="detail">
-    <bread></bread>
+    <!-- <bread></bread> -->
     <div class="views">
       <van-form @submit="handleGoAdd">
-        <van-cell-group inset>
+        <!-- <van-cell-group inset> -->
           <van-field v-model="form.name"
                      readonly
                      name="姓名"
@@ -61,7 +61,7 @@
                      readonly
                      name="calendar"
                      label="入职时间"
-                     placeholder="点击选择时间"
+                     placeholder=""
                      :rules="[{ required: true, message: '请选择入职时间' }]" />
           <van-field name="工资方式"
                      readonly
@@ -103,10 +103,15 @@
                      name="备注"
                      label="备注"
                      placeholder="" />
-        </van-cell-group>
-        <div class="fixed-button">
+        <!-- </van-cell-group> -->
+        <!-- <div class="fixed-button">
           <van-button color="#CB9400"
                       type="info">编辑</van-button>
+        </div> -->
+        <div class="sub-btn">
+          <button type="button"
+                  @click="$router.go(-1)">返回</button>
+          <button type="submit">编辑</button>
         </div>
       </van-form>
       <footer></footer>
@@ -183,6 +188,10 @@ export default {
 
 <style scoped lang="less">
 .detail {
+  .views {
+    height: 100vh;
+    padding-top: 25px;
+  }
   .fixed-button {
     width: 100%;
     position: absolute;
@@ -196,6 +205,37 @@ export default {
   }
   footer {
     height: 100px;
+  }
+  .sub-btn {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      color: #ffff;
+      background-color: #cb9400;
+      border-radius: 5px;
+      border: 1px solid #cb9400;
+      font-size: 15px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      width: 115px;
+      height: 40px;
+      &:active {
+        background-color: rgb(189, 141, 11);
+      }
+    }
+    button:nth-child(1) {
+      margin-right: 12px;
+      color: #cb9400;
+      background-color: #ffff;
+      &:active {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
   }
 }
 </style>

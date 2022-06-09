@@ -1,19 +1,19 @@
 <!--
  * @Date: 2022-05-05 17:10:06
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 16:09:55
+ * @LastEditTime: 2022-06-09 16:15:28
  * @FilePath: \little-bee-mobile\src\views\my\enterpriseInfo.vue
  * @Description: 企业信息
 -->
 <template>
   <div class="enterpriseInfo">
-    <bread @click="handleGoEdit">
+    <!-- <bread @click="handleGoEdit">
       <van-icon name="edit"
                 color="#cb9400" />
-    </bread>
+    </bread> -->
     <div class="views">
       <van-form @submit="handleGoAdd">
-        <van-cell-group inset>
+        <!-- <van-cell-group inset> -->
           <!-- <van-field v-model="form.num"
                      name="企业号"
                      label="企业号"
@@ -80,13 +80,17 @@
                           @click="$router.push('/renewalMember')">购买</van-button>
             </template>
           </van-field>
-        </van-cell-group>
+        <!-- </van-cell-group> -->
         <!-- <div class="fixed-button">
           <van-button color="#CB9400"
                       type="info">领取</van-button>
         </div> -->
       </van-form>
       <footer></footer>
+    </div>
+    <div class="fixed-btns">
+      <button @click="$router.go(-1)">返回</button>
+      <button @click="handleGoEdit">编辑</button>
     </div>
   </div>
 </template>
@@ -174,6 +178,10 @@ export default {
 
 <style scoped lang="less">
 .enterpriseInfo {
+  .views {
+    height: 100vh;
+    padding: 25px 0 15px 0;
+  }
   .fixed-button {
     width: 100%;
     position: absolute;
@@ -187,6 +195,37 @@ export default {
   }
   footer {
     height: 100px;
+  }
+  .fixed-btns {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      color: #ffff;
+      background-color: #cb9400;
+      border-radius: 5px;
+      border: 1px solid #cb9400;
+      font-size: 15px;
+      font-family: PingFang SC;
+      font-weight: 500;
+      width: 115px;
+      height: 40px;
+      &:active {
+        background-color: rgb(189, 141, 11);
+      }
+    }
+    button:nth-child(1) {
+      margin-right: 12px;
+      color: #cb9400;
+      background-color: #ffff;
+      &:active {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
   }
 }
 </style>
