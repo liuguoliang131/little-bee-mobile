@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-29 16:50:15
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-09 16:22:40
+ * @LastEditTime: 2022-06-10 10:36:22
  * @FilePath: \little-bee-mobile\src\views\staff\add.vue
  * @Description: 添加员工
 -->
@@ -91,13 +91,11 @@
 </template>
 
 <script>
-import Bread from '@/components/bread/index'
+// import Bread from '@/components/bread/index'
 import { h5_employee_create } from '@/http/api'
 import {
-  Button,
   Form,
   Field,
-  CellGroup,
   RadioGroup,
   Radio,
   Calendar,
@@ -106,11 +104,8 @@ import {
 export default {
   name: 'StaffAdd',
   components: {
-    Bread,
-    VanButton: Button,
     VanForm: Form,
     VanField: Field,
-    VanCellGroup: CellGroup,
     VanRadioGroup: RadioGroup,
     VanRadio: Radio,
     VanCalendar: Calendar

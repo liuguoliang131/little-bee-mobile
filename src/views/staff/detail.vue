@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 11:07:19
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-09 16:27:17
+ * @LastEditTime: 2022-06-10 10:35:59
  * @FilePath: \little-bee-mobile\src\views\staff\detail.vue
  * @Description: 员工详情
 -->
@@ -120,13 +120,11 @@
 </template>
 
 <script>
-import Bread from '@/components/bread/index'
-import { h5_employee_findById } from '@/http/api'
+// import Bread from '@/components/bread/index'
+// import { h5_employee_findById } from '@/http/api'
 import {
-  Button,
   Form,
   Field,
-  CellGroup,
   RadioGroup,
   Radio,
   Icon
@@ -134,11 +132,8 @@ import {
 export default {
   name: 'StaffDetail',
   components: {
-    Bread,
-    VanButton: Button,
     VanForm: Form,
     VanField: Field,
-    VanCellGroup: CellGroup,
     VanRadioGroup: RadioGroup,
     VanRadio: Radio,
     VanIcon: Icon
