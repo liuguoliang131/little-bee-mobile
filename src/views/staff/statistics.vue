@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 12:43:30
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 13:19:40
+ * @LastEditTime: 2022-06-13 10:43:22
  * @FilePath: \little-bee-mobile\src\views\staff\statistics.vue
  * @Description: 绩效统计
 -->
@@ -60,7 +60,6 @@ import {
   Popup,
   Field,
   Picker,
-  Button,
   Icon,
   Toast
 } from 'vant'
@@ -71,7 +70,6 @@ export default {
     VanPopup: Popup,
     VanField: Field,
     VanPicker: Picker,
-    VanButton: Button,
     VanIcon: Icon
   },
   data() {

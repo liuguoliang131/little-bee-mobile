@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 15:18:17
+ * @LastEditTime: 2022-06-20 15:55:47
  * @FilePath: \little-bee-mobile\src\views\Task\index.vue
  * @Description: 
 -->
@@ -130,11 +130,11 @@ export default {
       this.refreshGetList()
     },
     async getList() {
-      const toast = Toast.loading({
-        duration: 0, // 持续展示 toast
-        forbidClick: true,
-        message: '加载中'
-      })
+      // const toast = Toast.loading({
+      //   duration: 0, // 持续展示 toast
+      //   forbidClick: true,
+      //   message: '加载中'
+      // })
       try {
 
         const res = await this.$http({
@@ -142,7 +142,7 @@ export default {
           url: h5_job_findPage,
           data: this.searchParams
         })
-        toast.clear()
+        // toast.clear()
         if (!res.success) {
           return Toast(res.msg)
         }
@@ -160,11 +160,11 @@ export default {
     },
     // 刷新页面
     async refreshGetList() {
-      const toast = Toast.loading({
-        duration: 0, // 持续展示 toast
-        forbidClick: true,
-        message: '加载中'
-      })
+      // const toast = Toast.loading({
+      //   duration: 0, // 持续展示 toast
+      //   forbidClick: true,
+      //   message: '加载中'
+      // })
       try {
 
         const res = await this.$http({
@@ -172,7 +172,7 @@ export default {
           url: h5_job_findPage,
           data: this.searchParams
         })
-        toast.clear()
+        // toast.clear()
         this.reloading = false
         if (!res.success) {
           return Toast(res.msg)

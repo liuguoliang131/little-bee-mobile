@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 09:40:39
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-01 16:28:00
+ * @LastEditTime: 2022-06-20 14:05:00
  * @FilePath: \little-bee-mobile\src\utils\index.js
  * @Description: 
  */
@@ -103,7 +103,17 @@ utils.formatTimeDate = function (data) {
 }
 // return 22.6.30
 utils.formatTimeYYMMdd = function (data) {
+  // console.log('设备信息',navigator.userAgent)
+  // if(navigator.userAgent.includes('iPhone')) {
+  //   if(typeof data ==='string') {
+  //     data = data.replace(/-/g,'/')
+  //   }
+  // }
   const date = new Date(data)
+  console.log(date)
+  if(date=='Invalid Date') {
+    return data
+  }
   let y = date.getFullYear()
   let mon = date.getMonth() + 1
   let d = date.getDate()

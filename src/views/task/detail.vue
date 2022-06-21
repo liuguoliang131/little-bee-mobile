@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-04-26 10:45:14
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-07 17:12:17
+ * @LastEditTime: 2022-06-20 17:17:24
  * @FilePath: \little-bee-mobile\src\views\task\detail.vue
  * @Description: 任务详情
 -->
@@ -178,7 +178,20 @@
                 :showConfirmButton="false"
                 close-on-click-overlay
                 @close="close">
-      <div class="dialog-content">
+      <div class="dialog-content"
+           v-if="pasteText">
+        <div class="cp-text">{{pasteText}}</div>
+        <div class="cp-btn">
+          <van-button color="#CB9400"
+                      block
+                      type="info"
+                      id="copy-button"
+                      class="button"
+                      data-clipboard-target="#post-shortlink" @click="dialogVisible=false">复制链接</van-button>
+        </div>
+      </div>
+      <div v-else
+           class="dialog-content">
         <van-form @submit="handleConfirmShare"
                   ref="dialogForm">
           <van-field v-model.trim="dialogForm.title"
@@ -227,15 +240,16 @@
             <van-button color="#CB9400"
                         block
                         type="info"
-                        native-type="submit">分享到微信</van-button>
+                        native-type="submit">分享</van-button>
           </div>
         </van-form>
       </div>
     </van-dialog>
-    <textarea name=""
-              id="iosCopyInput"
+    <textarea id="post-shortlink"
+              name=""
               cols="30"
-              rows="10"></textarea>
+              rows="10"
+              v-model="pasteText" />
   </div>
 </template>
 
@@ -252,6 +266,7 @@ import {
 import Bread from '@/components/bread/index'
 import { h5_job_updateStatus, h5_job_findById, h5_jobShare_jobShare, h5_wx_getWxConfig, h5_jobShare_getShareCount, h5_process_createBilling, h5_employee_findPage } from '@/http/api'
 import wx from 'weixin-js-sdk'
+import Clipboard from 'clipboard'
 export default {
   name: 'Detail',
   components: {
@@ -265,6 +280,7 @@ export default {
   },
   data() {
     return {
+      pasteText: '',
       activeStaff: {},
       form: {
         title: '',
@@ -336,6 +352,7 @@ export default {
       if (this.sureShare <= 0) {
         return Toast('可分享数量为0, 不能分享')
       }
+      this.pasteText = ''
       this.dialogForm.title = this.form.title
       this.dialogForm.count = this.sureShare
       // this.dialogForm.unitPrice = this.form.unitPrice
@@ -364,80 +381,88 @@ export default {
         return Toast(res.msg)
       }
       const link = `${window.location.href.split('#')[0]}#/receiveTask/${res.model.id}`
-      this.handleCopyURL(link)
+      // this.handleCopyURL(link)
+      this.pasteText = link
+      // Toast('分享成功,已自动复制链接,请手动分享给其他人')
       // this.weixinShare(res.model.id)
-      this.dialogVisible = false
+      // this.dialogVisible = false
     },
     // 复制链接
     handleCopyURL(url) {
       // 第一种方法
-      // let userAgent = navigator.userAgent;
-      // let isiOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
-      // if (isiOS) {
-      //   //---------ios--------
-      //   window.getSelection().removeAllRanges();   //将页面所有的文本区域都从选区中移除
-      //   let range = document.createRange();   //创建一个文本区域
-      //   let outInput = document.getElementById('iosCopyInput');  //获取所需要复制的节点
-      //   outInput.value = url
-      //   console.log('ios value=',outInput.value)
-      //   range.selectNode(outInput);   //将我们的所选节点添加到文本区域中
-      //   window.getSelection().addRange(range);  //将文本区域添加至选区中
-      //   document.execCommand('copy');   //执行浏览器的复制命令
-      //   window.getSelection().removeAllRanges();  //最后再移除选区中的所有文本区域
-      //   // outInput.value = ''
-      // } else {
-      //   let outInput = document.createElement('textarea')
-      //   outInput.value = url
-      //   console.log('android value=',outInput.value)
-      //   document.body.appendChild(outInput)
-      //   outInput.select()
-      //   document.execCommand('copy')
-      //   document.body.removeChild(outInput)
+      // try {
+      //   let userAgent = navigator.userAgent;
+      //   let isiOS = !!userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) //ios终端
+      //   if (isiOS) {
+      //     //---------ios--------
+      //     window.getSelection().removeAllRanges();   //将页面所有的文本区域都从选区中移除
+      //     let range = document.createRange();   //创建一个文本区域
+      //     let outInput = document.getElementById('iosCopyInput');  //获取所需要复制的节点
+      //     outInput.value = url
+      //     console.log('ios value=', outInput.value)
+      //     range.selectNode(outInput);   //将我们的所选节点添加到文本区域中
+      //     window.getSelection().addRange(range);  //将文本区域添加至选区中
+      //     document.execCommand('copy');   //执行浏览器的复制命令
+      //     window.getSelection().removeAllRanges();  //最后再移除选区中的所有文本区域
+      //     // outInput.value = ''
+      //   } else {
+      //     let outInput = document.createElement('textarea')
+      //     outInput.value = url
+      //     console.log('android value=', outInput.value)
+      //     document.body.appendChild(outInput)
+      //     outInput.select()
+      //     document.execCommand('copy')
+      //     document.body.removeChild(outInput)
+      //   }
+      //   alert('分享成功,已自动复制链接,请手动分享给其他人')
+      //   alert(url)
+
+      // } catch (error) {
+      //   alert(error)
       // }
-      // Toast('分享成功,已自动复制链接,请手动分享给其他人')
 
       // 第二种
-      function copyText(text) {
-        // 数字没有 .length 不能执行selectText 需要转化成字符串
-        const textString = text.toString();
-        let input = document.querySelector('#copy-input');
-        if (!input) {
-          input = document.createElement('input');
-          input.id = "copy-input";
-          input.readOnly = "readOnly";        // 防止ios聚焦触发键盘事件
-          input.style.position = "absolute";
-          input.style.left = "-1000px";
-          input.style.zIndex = "-1000";
-          document.body.appendChild(input)
-        }
+      // function copyText(text) {
+      //   // input自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
+      //   // 选择文本。createTextRange(setSelectionRange)是input方法
+      //   function selectText(textbox, startIndex, stopIndex) {
+      //     if (textbox.createTextRange) {//ie
+      //       const range = textbox.createTextRange();
+      //       range.collapse(true);
+      //       range.moveStart('character', startIndex);//起始光标
+      //       range.moveEnd('character', stopIndex - startIndex);//结束光标
+      //       range.select();//不兼容苹果
+      //     } else {//firefox/chrome
+      //       textbox.setSelectionRange(startIndex, stopIndex);
+      //       textbox.focus();
+      //     }
+      //   }
+      //   // 数字没有 .length 不能执行selectText 需要转化成字符串
+      //   const textString = text.toString();
+      //   let input = document.querySelector('#copy-input');
+      //   if (!input) {
+      //     input = document.createElement('input');
+      //     input.id = "copy-input";
+      //     input.readOnly = "readOnly";        // 防止ios聚焦触发键盘事件
+      //     input.style.position = "absolute";
+      //     input.style.left = "-1000px";
+      //     input.style.zIndex = "-1000";
+      //     document.body.appendChild(input)
+      //   }
 
-        input.value = textString;
-        // ios必须先选中文字且不支持 input.select();
-        selectText(input, 0, textString.length);
-        console.log(document.execCommand('copy'), 'execCommand');
-        if (document.execCommand('copy')) {
-          document.execCommand('copy');
-          // alert('已复制到粘贴板');
-        }
-        input.blur();
+      //   input.value = textString;
+      //   // ios必须先选中文字且不支持 input.select();
+      //   selectText(input, 0, textString.length);
+      //   console.log(document.execCommand('copy'), 'execCommand');
+      //   if (document.execCommand('copy')) {
+      //     document.execCommand('copy');
+      //     // alert('已复制到粘贴板');
+      //   }
+      //   input.blur();
+      // }
+      // copyText(url)
+      // Toast('分享成功,已自动复制链接,请手动分享给其他人')
 
-        // input自带的select()方法在苹果端无法进行选择，所以需要自己去写一个类似的方法
-        // 选择文本。createTextRange(setSelectionRange)是input方法
-        function selectText(textbox, startIndex, stopIndex) {
-          if (textbox.createTextRange) {//ie
-            const range = textbox.createTextRange();
-            range.collapse(true);
-            range.moveStart('character', startIndex);//起始光标
-            range.moveEnd('character', stopIndex - startIndex);//结束光标
-            range.select();//不兼容苹果
-          } else {//firefox/chrome
-            textbox.setSelectionRange(startIndex, stopIndex);
-            textbox.focus();
-          }
-        }
-      }
-      copyText(url)
-      Toast('分享成功,已自动复制链接,请手动分享给其他人')
     },
     async setWx() {
       const res = await this.$http({
@@ -746,6 +771,9 @@ export default {
   },
   created() {
     this.echoData()
+  },
+  mounted() {
+    new Clipboard('#copy-button')
   }
 }
 </script>
@@ -863,9 +891,17 @@ export default {
     color: red;
     font-size: 12px;
   }
-  #iosCopyInput {
-    width: 0px;
-    height: 0px;
+  #post-shortlink {
+    position: fixed;
+    left: -1000px;
+    top: 0;
+  }
+  .cp-text {
+    padding: 40px 15px;
+    font-size: 12px;
+    text-align: center;
+    word-break: break-all;
+    word-wrap: break-word;
   }
 }
 </style>
