@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-05-05 19:09:22
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-05-27 18:00:39
+ * @LastEditTime: 2022-06-21 14:44:43
  * @FilePath: \little-bee-mobile\src\views\my\shareDetail.vue
  * @Description: 分享详情
 -->
@@ -41,7 +41,7 @@
                      label="备注"
                      placeholder=""
                      readonly />
-          <van-field v-model="form.createTime"
+          <van-field :value="$utils.formatTime(form.createTime)"
                      name="分享时间"
                      label="分享时间"
                      placeholder=""
@@ -51,7 +51,7 @@
                      label="任务出处"
                      placeholder=""
                      readonly />
-          <van-field v-model="form.status"
+          <van-field :value="form.shareStatus?'已接收':'未接收'"
                      name="任务状态"
                      label="任务状态"
                      placeholder=""
