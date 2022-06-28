@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-03-22 09:46:05
  * @LastEditors: 刘国亮
- * @LastEditTime: 2022-06-08 16:15:46
+ * @LastEditTime: 2022-06-28 14:50:48
  * @FilePath: \little-bee-mobile\src\router\index.js
  * @Description: 
  */
@@ -10,7 +10,7 @@ import VueRouter from 'vue-router'
 import constantRouterMap from './constantRouterMap'
 import dynamicRouterMap from './dynamicRouterMap'
 import store from '@/store/index'
-import { host, h5_wx_getOpenid, h5_login_wxLogin } from '../http/api'
+import { appId, host, h5_wx_getOpenid, h5_login_wxLogin } from '../http/api'
 // import axios from '../http/index'
 import utils from '@/utils/index'
 import axios from 'axios'
@@ -61,7 +61,7 @@ router.onReady(() => {
   if (process.env.NODE_ENV === 'test') {
     appURL = 'http://littlebee.ouryou.cn/'
   } else if (process.env.NODE_ENV === 'production') {
-    appURL = 'http://littlebee.forniao.cn/'
+    appURL = 'http://web.xmf123.cn'
   } else if (process.env.NODE_ENV === 'development') {
     appURL = 'http://littlebee.ouryou.cn/'
   }
@@ -93,7 +93,7 @@ router.onReady(() => {
     // history.pushState({ nowRoute }, 'firstPage', nowRoute)
     window.localStorage.setItem('littleBeeLink', appURL + nowRoute)
     if (process.env.NODE_ENV !== 'development') {
-      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdcc277beb5c6a25d&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${appURL}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
     }
 
   }
